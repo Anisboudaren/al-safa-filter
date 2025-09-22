@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -192,5 +192,53 @@ export default function ResetPasswordPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="mb-6">
+          <Link
+            href="/admin/login"
+            className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Login
+          </Link>
+        </div>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-white">Reset Password</CardTitle>
+            <p className="text-gray-400">
+              Loading...
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-gray-300">New Password</Label>
+                <div className="h-10 bg-gray-700 rounded-md animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Confirm Password</Label>
+                <div className="h-10 bg-gray-700 rounded-md animate-pulse"></div>
+              </div>
+              <div className="h-10 bg-gray-700 rounded-md animate-pulse"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }
