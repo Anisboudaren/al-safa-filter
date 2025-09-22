@@ -256,7 +256,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Team & Innovation Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -266,31 +266,195 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Pourquoi choisir Alsafa Filters ?</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Équipe & Innovation</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Nous nous engageons à fournir des filtres de la plus haute qualité avec un service client exceptionnel
+              Une équipe d'experts dédiée au développement de solutions de filtration innovantes
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900">Innovation & Excellence</h3>
+              </div>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Notre équipe d'ingénieurs spécialisés œuvre en continu au développement et à l'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l'objet de tests rigoureux afin d'assurer des performances optimales.
+              </p>
+              <div className="grid grid-cols-2 gap-6">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
+                >
+                  <div className="text-3xl font-bold text-orange-600 mb-2">15+</div>
+                  <div className="text-gray-600 font-medium">Ingénieurs</div>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
+                >
+                  <div className="text-3xl font-bold text-orange-600 mb-2">500+</div>
+                  <div className="text-gray-600 font-medium">Tests par mois</div>
+                </motion.div>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <img
+                src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
+                alt="Équipe de recherche et développement"
+                className="w-full h-80 object-cover rounded-2xl shadow-2xl"
+              />
               <motion.div
-                key={feature.title}
+                className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-6 shadow-xl"
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900">Laboratoire Certifié</div>
+                    <div className="text-sm text-gray-600">Tests de qualité</div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => window.location.href = '/a-propos'}
+            >
+              Découvrir notre histoire
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-orange-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">Certifications & Qualité</h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Des standards de qualité reconnus internationalement pour votre tranquillité d'esprit
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                image: "https://devlly.net/alsafa/resources/ISO%2014001.png",
+                title: "ISO 14001",
+                description: "Management environnemental",
+                icon: CheckCircle,
+                color: "green"
+              },
+              {
+                image: "https://devlly.net/alsafa/resources/the%20certifcate%20of%20ISO%209001.png",
+                title: "ISO 9001",
+                description: "Management de la qualité",
+                icon: CheckCircle,
+                color: "green"
+              },
+              {
+                image: "https://devlly.net/alsafa/resources/ISO%2045001.png",
+                title: "ISO 45001",
+                description: "Santé et sécurité au travail",
+                icon: CheckCircle,
+                color: "green"
+              },
+              {
+                image: "https://devlly.net/alsafa/resources/QR%20code%20%20elitifak%20filters%20black%20.png",
+                title: "Authentification",
+                description: "Vérification QR des produits",
+                icon: Shield,
+                color: "blue"
+              }
+            ].map((cert, index) => (
+              <motion.div
+                key={cert.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-                className="text-center group"
+                whileHover={{ y: -10, scale: 1.05 }}
+                className="group"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <Card className="text-center p-6 hover:shadow-2xl transition-all duration-300 border-0 bg-white/10 backdrop-blur-sm group-hover:bg-white/20">
+                  <CardContent className="p-0">
+                    <motion.div
+                      className="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all duration-300"
+                      whileHover={{ rotate: 5, scale: 1.1 }}
+                    >
+                      <img
+                        src={cert.image}
+                        alt={cert.title}
+                        className="h-12 w-12 object-contain"
+                      />
+                    </motion.div>
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange-300 transition-colors duration-300">{cert.title}</h3>
+                    <p className="text-gray-300 text-sm mb-4">
+                      {cert.description}
+                    </p>
+                    <div className={`flex items-center justify-center gap-2 ${
+                      cert.color === 'green' ? 'text-green-400' : 'text-blue-400'
+                    }`}>
+                      <cert.icon className="h-4 w-4" />
+                      <span className="text-xs font-medium">
+                        {cert.color === 'green' ? 'Certifié' : 'Vérifiable'}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => window.location.href = '/a-propos'}
+            >
+              En savoir plus sur nos certifications
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
@@ -618,105 +782,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Promotional Banners */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Offres spéciales</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Découvrez nos offres exclusives et bénéficiez de conditions avantageuses
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {[
-              {
-                title: "Qualité Supérieure",
-                description: "Filtres certifiés selon les normes internationales",
-                gradient: "from-orange-500 to-orange-600",
-                image: "https://elitifakfilter.com/wp-content/uploads/2024/05/h2-1.webp",
-                icon: Award,
-              },
-              {
-                title: "10% de Réduction",
-                description: "Sur votre premier achat avec le code WELCOME10",
-                gradient: "from-green-500 to-green-600",
-                image: "https://elitifakfilter.com/wp-content/uploads/2024/05/h1-3.webp",
-                icon: Zap,
-              },
-              {
-                title: "Support Expert",
-                description: "Assistance technique gratuite 7j/7",
-                gradient: "from-blue-500 to-blue-600",
-                image: "https://elitifakfilter.com/wp-content/uploads/2024/05/faq-1.webp",
-                icon: Users,
-              },
-            ].map((offer, index) => (
-              <motion.div
-                key={offer.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group"
-              >
-                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white">
-                  <div className={`aspect-video bg-gradient-to-r ${offer.gradient} relative overflow-hidden`}>
-                    <img
-                      src={offer.image}
-                      alt={offer.title}
-                      className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center p-6">
-                      <div className="text-center text-white">
-                        <motion.div
-                          className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-colors duration-300"
-                          whileHover={{ rotate: 5 }}
-                        >
-                          <offer.icon className="h-8 w-8" />
-                        </motion.div>
-                        <h3 className="text-2xl font-bold mb-2">{offer.title}</h3>
-                        <p className="text-sm opacity-90">{offer.description}</p>
-                      </div>
-                    </div>
-                    <motion.div
-                      className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-white"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      Offre limitée
-                    </motion.div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-semibold px-12 py-4 rounded-xl transition-all duration-300"
-              onClick={() => window.location.href = '/catalog'}
-            >
-              Découvrir toutes les offres
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Testimonials */}
       <section className="py-20 bg-white">

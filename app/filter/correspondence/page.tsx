@@ -35,7 +35,7 @@ export default function CorrespondenceFilterPage() {
 
     // Search for correspondence in various fields
     query = query.or(
-      `ALSAFA.ilike.%${competitorRef}%,SAFI.ilike.%${competitorRef}%,FLEETG.ilike.%${competitorRef}%,ASAS.ilike.%${competitorRef}%,"MECA F".ilike.%${competitorRef}%`,
+      `ALSAFA.ilike.%${competitorRef}%,SAFI.ilike.%${competitorRef}%,SARL_F.ilike.%${competitorRef}%,FLEETG.ilike.%${competitorRef}%,ASAS.ilike.%${competitorRef}%,MECA_F.ilike.%${competitorRef}%,REF_ORG.ilike.%${competitorRef}%,MANN.ilike.%${competitorRef}%,UFI.ilike.%${competitorRef}%,HIFI.ilike.%${competitorRef}%,WIX.ilike.%${competitorRef}%`,
     )
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE

@@ -110,7 +110,7 @@ export default function CatalogPage() {
     // Apply search filter
     if (searchTerm) {
       query = query.or(
-        `ALSAFA.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,filtration_system.ilike.%${searchTerm}%`,
+        `ALSAFA.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,SARL_F.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,ASAS.ilike.%${searchTerm}%,MECA_F.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,MANN.ilike.%${searchTerm}%,UFI.ilike.%${searchTerm}%,HIFI.ilike.%${searchTerm}%,WIX.ilike.%${searchTerm}%,filtration_system.ilike.%${searchTerm}%`,
       )
     }
 
@@ -174,6 +174,32 @@ export default function CatalogPage() {
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
+  // Function to find which reference field contains the search term
+  const findMatchingReference = (product: Product, searchTerm: string) => {
+    if (!searchTerm) return null
+    
+    const referenceFields = [
+      { key: 'ALSAFA', value: product.ALSAFA },
+      { key: 'SAFI', value: product.SAFI },
+      { key: 'SARL_F', value: product.SARL_F },
+      { key: 'FLEETG', value: product.FLEETG },
+      { key: 'ASAS', value: product.ASAS },
+      { key: 'MECA_F', value: product.MECA_F },
+      { key: 'REF_ORG', value: product.REF_ORG },
+      { key: 'MANN', value: product.MANN },
+      { key: 'UFI', value: product.UFI },
+      { key: 'HIFI', value: product.HIFI },
+      { key: 'WIX', value: product.WIX },
+    ]
+
+    for (const field of referenceFields) {
+      if (field.value && field.value.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return { field: field.key, value: field.value }
+      }
+    }
+    return null
+  }
+
   // Trigger search when page changes
   useEffect(() => {
     if (hasSearched && currentPage > 1) {
@@ -222,7 +248,7 @@ export default function CatalogPage() {
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <Input
-                      placeholder="Rechercher par nom, origine, ou spécifications..."
+                      placeholder="Rechercher par référence (ALSAFA, SAFI, SARL_F, FLEETG, ASAS, MECA_F, REF_ORG, MANN, UFI, HIFI, WIX)..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-12 h-12 text-lg rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"
@@ -496,6 +522,7 @@ export default function CatalogPage() {
                 <AnimatePresence>
                   {products.map((product, index) => {
                     const showAdditionalRefs = searchTerm.length > 0
+                    const matchingRef = findMatchingReference(product, searchTerm)
 
                     return (
                       <motion.div
@@ -515,12 +542,17 @@ export default function CatalogPage() {
                               </CardTitle>
                               {showAdditionalRefs && (
                                 <div className="flex flex-wrap gap-1 mt-2">
-                                  {product.REF_ORG && (
+                                  {matchingRef && (
+                                    <Badge variant="default" className="text-xs bg-green-100 text-green-800 border-green-200 font-semibold">
+                                      {matchingRef.field}: {matchingRef.value}
+                                    </Badge>
+                                  )}
+                                  {product.REF_ORG && !matchingRef && (
                                     <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
                                       {product.REF_ORG}
                                     </Badge>
                                   )}
-                                  {product.SAFI && (
+                                  {product.SAFI && !matchingRef && (
                                     <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
                                       SAFI: {product.SAFI}
                                     </Badge>
