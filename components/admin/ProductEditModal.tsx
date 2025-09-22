@@ -1,0 +1,426 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { supabase, type Product } from "@/lib/supabase"
+import { getProductImageUrlWithFallback } from "@/lib/image-utils"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { X, Save, Loader2, Upload, Image as ImageIcon } from "lucide-react"
+
+interface ProductEditModalProps {
+  product: Product
+  isOpen: boolean
+  onClose: () => void
+  onSave: () => void
+}
+
+export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEditModalProps) {
+  const [formData, setFormData] = useState<Product>(product)
+  const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setFormData(product)
+    setError("")
+    setSuccess(false)
+    setUploadSuccess(false)
+  }, [product])
+
+  const handleInputChange = (field: keyof Product, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file || !product.id) return
+
+    setUploading(true)
+    setError("")
+    setUploadSuccess(false)
+
+    try {
+      const formData = new FormData()
+      formData.append('image', file)
+      formData.append('productId', product.id.toString())
+
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed')
+      }
+
+      // Update form data with new image URL
+      setFormData(prev => ({
+        ...prev,
+        image_url: result.imageUrl
+      }))
+
+      setUploadSuccess(true)
+      setTimeout(() => setUploadSuccess(false), 3000)
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleSave = async () => {
+    setLoading(true)
+    setError("")
+    setSuccess(false)
+
+    try {
+      // Since we don't have a unique ID, we'll need to find the product by its unique combination
+      // For now, let's assume we can identify it by ALSAFA and ORIGINE combination
+      const { error } = await supabase
+        .from("products")
+        .update(formData)
+        .eq("id", product.id)
+
+      if (error) {
+        setError(error.message)
+      } else {
+        setSuccess(true)
+        setTimeout(() => {
+          onSave()
+        }, 1500)
+      }
+    } catch (err) {
+      setError("An unexpected error occurred")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-800 border-gray-700">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-white">Edit Product</CardTitle>
+          <div className="flex items-center space-x-2">
+            <Button
+              onClick={onClose}
+              variant="outline"
+              className="border-gray-500 text-white bg-gray-700 hover:bg-gray-600 hover:text-white hover:border-gray-400"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={loading}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="icon"
+              className="text-gray-400 hover:text-white hover:bg-gray-700 ml-2"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {error && (
+            <Alert className="bg-red-900/20 border-red-800 text-red-200">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {success && (
+            <Alert className="bg-green-900/20 border-green-800 text-green-200">
+              <AlertDescription>Product updated successfully!</AlertDescription>
+            </Alert>
+          )}
+
+          {uploadSuccess && (
+            <Alert className="bg-green-900/20 border-green-800 text-green-200">
+              <AlertDescription>Image uploaded successfully!</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Image Upload Section */}
+          <div className="space-y-4 p-4 bg-gray-700/50 rounded-lg">
+            <Label className="text-gray-300 text-sm font-medium">Product Image</Label>
+            <div className="flex items-center space-x-4">
+              <div className="w-20 h-20 bg-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
+                {(() => {
+                  const imageUrl = getProductImageUrlWithFallback(
+                    formData.ALSAFA, 
+                    formData.filtration_system, 
+                    formData.image_url
+                  );
+                  return imageUrl ? (
+                    <img 
+                      src={imageUrl} 
+                      alt={formData.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                      }}
+                    />
+                  ) : null;
+                })()}
+                <div className={`w-full h-full flex items-center justify-center text-gray-400 ${getProductImageUrlWithFallback(formData.ALSAFA, formData.filtration_system, formData.image_url) ? 'hidden' : ''}`}>
+                  <ImageIcon className="h-8 w-8" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <Button
+                  type="button"
+                  onClick={triggerFileInput}
+                  disabled={uploading}
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Image
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-gray-400 mt-1">
+                  Supports JPG, PNG, WebP. Will be converted to AVIF/WebP for optimal performance.
+                </p>
+                <p className="text-xs text-blue-400 mt-1">
+                  💡 Automatic images are loaded from /public/images/ based on ALSAFA code and filter type.
+                </p>
+              </div>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="alsafa" className="text-gray-300">ALSAFA</Label>
+              <Input
+                id="alsafa"
+                value={formData.ALSAFA || ""}
+                onChange={(e) => handleInputChange("ALSAFA", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ext" className="text-gray-300">Ext</Label>
+              <Input
+                id="ext"
+                value={formData.Ext || ""}
+                onChange={(e) => handleInputChange("Ext", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="int" className="text-gray-300">Int</Label>
+              <Input
+                id="int"
+                value={formData.Int || ""}
+                onChange={(e) => handleInputChange("Int", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="h" className="text-gray-300">H</Label>
+              <Input
+                id="h"
+                value={formData.H || ""}
+                onChange={(e) => handleInputChange("H", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="safi" className="text-gray-300">SAFI</Label>
+              <Input
+                id="safi"
+                value={formData.SAFI || ""}
+                onChange={(e) => handleInputChange("SAFI", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="sarl_f" className="text-gray-300">SARL F</Label>
+              <Input
+                id="sarl_f"
+                value={formData.SARL_F || ""}
+                onChange={(e) => handleInputChange("SARL_F", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fleetg" className="text-gray-300">FLEETG</Label>
+              <Input
+                id="fleetg"
+                value={formData.FLEETG || ""}
+                onChange={(e) => handleInputChange("FLEETG", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="asas" className="text-gray-300">ASAS</Label>
+              <Input
+                id="asas"
+                value={formData.ASAS || ""}
+                onChange={(e) => handleInputChange("ASAS", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="meca_f" className="text-gray-300">MECA F</Label>
+              <Input
+                id="meca_f"
+                value={formData.MECA_F || ""}
+                onChange={(e) => handleInputChange("MECA_F", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ref_org" className="text-gray-300">REF_ORG</Label>
+              <Input
+                id="ref_org"
+                value={formData.REF_ORG || ""}
+                onChange={(e) => handleInputChange("REF_ORG", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="divers_vehicules" className="text-gray-300">Divers Véhicules</Label>
+              <Input
+                id="divers_vehicules"
+                value={formData.divers_vehicules || ""}
+                onChange={(e) => handleInputChange("divers_vehicules", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-gray-300">Name</Label>
+              <Input
+                id="name"
+                value={formData.name || ""}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="filtration_system" className="text-gray-300">Filtration System</Label>
+              <Input
+                id="filtration_system"
+                value={formData.filtration_system || ""}
+                onChange={(e) => handleInputChange("filtration_system", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+                disabled
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ptte" className="text-gray-300">Ptte</Label>
+              <Input
+                id="ptte"
+                value={formData.Ptte || ""}
+                onChange={(e) => handleInputChange("Ptte", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="mann" className="text-gray-300">MANN</Label>
+              <Input
+                id="mann"
+                value={formData.MANN || ""}
+                onChange={(e) => handleInputChange("MANN", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ufi" className="text-gray-300">UFI</Label>
+              <Input
+                id="ufi"
+                value={formData.UFI || ""}
+                onChange={(e) => handleInputChange("UFI", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="hifi" className="text-gray-300">HIFI</Label>
+              <Input
+                id="hifi"
+                value={formData.HIFI || ""}
+                onChange={(e) => handleInputChange("HIFI", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="wix" className="text-gray-300">WIX</Label>
+              <Input
+                id="wix"
+                value={formData.WIX || ""}
+                onChange={(e) => handleInputChange("WIX", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+          </div>
+
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
