@@ -59,10 +59,6 @@ export async function GET(request: NextRequest) {
       endDate: endDate.toISOString().split('T')[0]
     }
 
-    // For GA4, we need to use the Google Analytics Data API instead of the Reporting API
-    // Let's try a different approach using the Analytics Data API
-    const analyticsData = google.analyticsdata({ version: 'v1beta', auth })
-    
     // Fetch analytics data using GA4 Data API
     const [overviewData, pageViewsData, trafficData] = await Promise.all([
       // Overview metrics
