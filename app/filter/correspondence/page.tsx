@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Search, Filter, Package, ArrowRight, RefreshCw, Grid, List, ChevronLeft, ChevronRight, X, CheckCircle, Zap, ArrowLeft } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -16,7 +16,7 @@ import { SharedFooter } from "@/components/shared-footer"
 
 const ITEMS_PER_PAGE = 12
 
-export default function CorrespondenceFilterPage() {
+function CorrespondenceFilterContent() {
   const searchParams = useSearchParams()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
@@ -533,5 +533,27 @@ export default function CorrespondenceFilterPage() {
       
       <SharedFooter />
     </div>
+  )
+}
+
+export default function CorrespondenceFilterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+        <MobileHeader />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 sm:pt-20">
+          <div className="text-center py-20">
+            <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-200 rounded-3xl flex items-center justify-center mx-auto mb-8">
+              <RefreshCw className="h-12 w-12 text-orange-600 animate-spin" />
+            </div>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Chargement...</h3>
+            <p className="text-lg text-gray-600">Préparation de la recherche par correspondance</p>
+          </div>
+        </div>
+        <SharedFooter />
+      </div>
+    }>
+      <CorrespondenceFilterContent />
+    </Suspense>
   )
 }
