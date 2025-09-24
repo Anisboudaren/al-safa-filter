@@ -17,9 +17,12 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
-  Filter
+  Filter,
+  BarChart3,
+  Settings
 } from "lucide-react"
 import { ProductEditModal } from "@/components/admin/ProductEditModal"
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
@@ -31,6 +34,7 @@ export default function AdminDashboard() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState<'products' | 'analytics'>('products')
   const router = useRouter()
 
   const ITEMS_PER_PAGE = 20
@@ -141,10 +145,42 @@ export default function AdminDashboard() {
         </div>
       </header>
 
+      {/* Navigation Tabs */}
+      <div className="bg-gray-800 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('products')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'products'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              }`}
+            >
+              <Package className="h-4 w-4 inline mr-2" />
+              Products
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'analytics'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              }`}
+            >
+              <BarChart3 className="h-4 w-4 inline mr-2" />
+              Analytics
+            </button>
+          </nav>
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Stats */}
-        <div className="mb-8">
+        {activeTab === 'products' ? (
+          <>
+            {/* Search and Stats */}
+            <div className="mb-8">
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
               <div className="relative">
@@ -348,6 +384,10 @@ export default function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+          </>
+        ) : (
+          <AnalyticsDashboard />
+        )}
       </main>
 
       {/* Edit Modal */}
