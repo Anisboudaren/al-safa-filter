@@ -171,6 +171,13 @@ export default function AdminDashboard() {
               <BarChart3 className="h-4 w-4 inline mr-2" />
               Analytics
             </button>
+            <button
+              onClick={() => router.push('/admin/setup-analytics')}
+              className="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300 font-medium text-sm transition-colors"
+            >
+              <Settings className="h-4 w-4 inline mr-2" />
+              Setup Analytics
+            </button>
           </nav>
         </div>
       </div>

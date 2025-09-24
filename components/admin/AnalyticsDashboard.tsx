@@ -62,11 +62,18 @@ export default function AnalyticsDashboard() {
     setError(null)
     
     try {
-      const response = await fetch(`/api/analytics?days=${days}`)
+      // Try the simple endpoint first for debugging
+      const response = await fetch(`/api/analytics/simple?days=${days}`)
       if (!response.ok) {
-        throw new Error('Failed to fetch analytics data')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch analytics data')
       }
       const analyticsData = await response.json()
+      
+      if (analyticsData.error) {
+        throw new Error(analyticsData.error)
+      }
+      
       setData(analyticsData)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
