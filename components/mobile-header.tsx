@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info } from "lucide-react"
+import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info, Car, Ruler, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -12,6 +12,7 @@ interface MobileHeaderProps {
 export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isCatalogDropdownOpen, setIsCatalogDropdownOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,12 +22,30 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isCatalogDropdownOpen) {
+        const target = event.target as Element
+        if (!target.closest('.catalog-dropdown')) {
+          setIsCatalogDropdownOpen(false)
+        }
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isCatalogDropdownOpen])
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
   const closeMenu = () => {
     setIsMenuOpen(false)
+  }
+
+  const closeCatalogDropdown = () => {
+    setIsCatalogDropdownOpen(false)
   }
 
   const handleSearchClick = () => {
@@ -109,18 +128,78 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   Accueil
                 </Link>
               </motion.div>
-              <motion.div
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
-              >
-                      <Link href="/catalog" className={`font-medium transition-colors duration-300 ${
-                        forceSolid || isScrolled
-                          ? 'text-gray-700 hover:text-orange-600'
-                          : 'text-white hover:text-orange-300'
-                      }`}>
-                  Catalogue
-                </Link>
-              </motion.div>
+              {/* Catalog Dropdown */}
+              <div className="relative catalog-dropdown">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <button
+                    onClick={() => setIsCatalogDropdownOpen(!isCatalogDropdownOpen)}
+                    className={`font-medium transition-colors duration-300 flex items-center gap-1 ${
+                      forceSolid || isScrolled
+                        ? 'text-gray-700 hover:text-orange-600'
+                        : 'text-white hover:text-orange-300'
+                    }`}
+                  >
+                    Catalogue
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                      isCatalogDropdownOpen ? 'rotate-180' : ''
+                    }`} />
+                  </button>
+                </motion.div>
+
+                {/* Dropdown Menu */}
+                <AnimatePresence>
+                  {isCatalogDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50"
+                    >
+                      <div className="space-y-1">
+                        <Link
+                          href="/catalog"
+                          onClick={closeCatalogDropdown}
+                          className="block px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium"
+                        >
+                          📋 Catalogue Principal
+                        </Link>
+                        <div className="border-t border-gray-100 my-2"></div>
+                        <div className="px-3 py-2">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                            Filtres Spécialisés
+                          </p>
+                        </div>
+                        {[
+                          { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "text-blue-600" },
+                          { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "text-green-600" },
+                          { href: "/filter/reference", label: "Par Référence", icon: Search, color: "text-purple-600" },
+                          { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "text-orange-600" }
+                        ].map((filter, index) => (
+                          <motion.div
+                            key={filter.href}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                          >
+                            <Link
+                              href={filter.href}
+                              onClick={closeCatalogDropdown}
+                              className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200"
+                            >
+                              <filter.icon className={`h-4 w-4 ${filter.color}`} />
+                              <span className="text-sm font-medium">{filter.label}</span>
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               <motion.div
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
@@ -257,7 +336,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
               <nav className="space-y-2 mb-8 flex-1">
                 {[
                   { href: "/home", label: "Accueil", icon: Home },
-                  { href: "/catalog", label: "Catalogue", icon: FileText },
+                  { href: "/catalog", label: "Catalogue Principal", icon: FileText },
                   { href: "/a-propos", label: "À propos", icon: Info },
                 ].map((item, index) => (
                   <motion.div
@@ -281,6 +360,45 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                     </Link>
                   </motion.div>
                 ))}
+
+                {/* Filter Options */}
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="border-t border-gray-200 pt-4 mt-4"
+                >
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-4">
+                    Filtres Spécialisés
+                  </p>
+                  {[
+                    { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "bg-blue-100 text-blue-600" },
+                    { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "bg-green-100 text-green-600" },
+                    { href: "/filter/reference", label: "Par Référence", icon: Search, color: "bg-purple-100 text-purple-600" },
+                    { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "bg-orange-100 text-orange-600" }
+                  ].map((filter, index) => (
+                    <motion.div
+                      key={filter.href}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.6 + index * 0.1 }}
+                      whileHover={{ x: 5 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Link
+                        href={filter.href}
+                        className="flex items-center gap-4 py-3 px-4 text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 rounded-xl transition-all duration-300 group"
+                        onClick={closeMenu}
+                      >
+                        <div className={`w-8 h-8 ${filter.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <filter.icon className="h-4 w-4" />
+                        </div>
+                        <span>{filter.label}</span>
+                        <ArrowRight className="h-4 w-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.div>
 
                 {/* Search Button */}
                 <motion.div

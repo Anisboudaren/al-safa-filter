@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Car, Ruler, RefreshCw, Star, Phone, Mail, ChevronRight, Filter, ArrowRight, CheckCircle, Shield, Zap, Award, Users, Clock, MapPin } from "lucide-react"
+import { Search, Car, Ruler, RefreshCw, Star, Phone, Mail, ChevronRight, Filter, ArrowRight, CheckCircle, Shield, Zap, Award, Users, Clock, MapPin, Package } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,7 +12,6 @@ import { SharedFooter } from "@/components/shared-footer"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
 export default function HomePage() {
   const [filterType, setFilterType] = useState("vehicle")
-  const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [dimensions, setDimensions] = useState({
     external: "",
@@ -20,6 +19,8 @@ export default function HomePage() {
     height: ""
   })
   const [correspondenceRef, setCorrespondenceRef] = useState("")
+  const [vehicleBrand, setVehicleBrand] = useState("")
+  const [vehicleModel, setVehicleModel] = useState("")
   const { scrollYProgress } = useScroll()
 
   const carBrands = [
@@ -75,29 +76,31 @@ export default function HomePage() {
     },
   ]
 
-  const handleSearch = async () => {
-    setIsLoading(true)
-    
+  const handleSearch = () => {
     // Build search parameters based on filter type
     const searchParams = new URLSearchParams()
+    let targetUrl = "/catalog" // Default to catalog
     
-    if (filterType === "reference" && searchTerm) {
+    if (filterType === "vehicle") {
+      if (vehicleBrand) searchParams.set("brand", vehicleBrand)
+      if (vehicleModel) searchParams.set("model", vehicleModel)
+      targetUrl = "/filter/vehicle"
+    } else if (filterType === "reference" && searchTerm) {
       searchParams.set("search", searchTerm)
+      targetUrl = "/catalog"
     } else if (filterType === "dimensions") {
       if (dimensions.external) searchParams.set("external", dimensions.external)
       if (dimensions.internal) searchParams.set("internal", dimensions.internal)
       if (dimensions.height) searchParams.set("height", dimensions.height)
+      targetUrl = "/filter/dimensions"
     } else if (filterType === "correspondence" && correspondenceRef) {
       searchParams.set("correspondence", correspondenceRef)
+      targetUrl = "/filter/correspondence"
     }
     
-    // Simulate search delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsLoading(false)
-    
-    // Navigate to catalog with search params
-    const catalogUrl = searchParams.toString() ? `/catalog?${searchParams.toString()}` : "/catalog"
-    window.location.href = catalogUrl
+    // Navigate to appropriate page with search params
+    const finalUrl = searchParams.toString() ? `${targetUrl}?${searchParams.toString()}` : targetUrl
+    window.location.href = finalUrl
   }
 
   return (
@@ -519,42 +522,58 @@ export default function HomePage() {
                   className="space-y-6"
                 >
                   {filterType === "vehicle" && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Select value={vehicleBrand} onValueChange={setVehicleBrand}>
                         <SelectTrigger className="h-12 rounded-xl">
                           <SelectValue placeholder="Marque" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="audi">Audi</SelectItem>
-                          <SelectItem value="toyota">Toyota</SelectItem>
-                          <SelectItem value="volkswagen">Volkswagen</SelectItem>
-                          <SelectItem value="ford">Ford</SelectItem>
-                          <SelectItem value="mercedes">Mercedes</SelectItem>
-                          <SelectItem value="bmw">BMW</SelectItem>
+                          <SelectItem value="Audi">Audi</SelectItem>
+                          <SelectItem value="Toyota">Toyota</SelectItem>
+                          <SelectItem value="Volkswagen">Volkswagen</SelectItem>
+                          <SelectItem value="Ford">Ford</SelectItem>
+                          <SelectItem value="Mercedes">Mercedes</SelectItem>
+                          <SelectItem value="BMW">BMW</SelectItem>
+                          <SelectItem value="Peugeot">Peugeot</SelectItem>
+                          <SelectItem value="Renault">Renault</SelectItem>
+                          <SelectItem value="Nissan">Nissan</SelectItem>
+                          <SelectItem value="Honda">Honda</SelectItem>
+                          <SelectItem value="Hyundai">Hyundai</SelectItem>
+                          <SelectItem value="Kia">Kia</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Select>
+                      <Select value={vehicleModel} onValueChange={setVehicleModel}>
                         <SelectTrigger className="h-12 rounded-xl">
                           <SelectValue placeholder="Modèle" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="a3">A3</SelectItem>
-                          <SelectItem value="a4">A4</SelectItem>
-                          <SelectItem value="a6">A6</SelectItem>
-                          <SelectItem value="q5">Q5</SelectItem>
-                          <SelectItem value="q7">Q7</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select>
-                        <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue placeholder="Année" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="2024">2024</SelectItem>
-                          <SelectItem value="2023">2023</SelectItem>
-                          <SelectItem value="2022">2022</SelectItem>
-                          <SelectItem value="2021">2021</SelectItem>
-                          <SelectItem value="2020">2020</SelectItem>
+                          <SelectItem value="A3">A3</SelectItem>
+                          <SelectItem value="A4">A4</SelectItem>
+                          <SelectItem value="A6">A6</SelectItem>
+                          <SelectItem value="Q5">Q5</SelectItem>
+                          <SelectItem value="Q7">Q7</SelectItem>
+                          <SelectItem value="Corolla">Corolla</SelectItem>
+                          <SelectItem value="Camry">Camry</SelectItem>
+                          <SelectItem value="Yaris">Yaris</SelectItem>
+                          <SelectItem value="RAV4">RAV4</SelectItem>
+                          <SelectItem value="Golf">Golf</SelectItem>
+                          <SelectItem value="Passat">Passat</SelectItem>
+                          <SelectItem value="Polo">Polo</SelectItem>
+                          <SelectItem value="Tiguan">Tiguan</SelectItem>
+                          <SelectItem value="Focus">Focus</SelectItem>
+                          <SelectItem value="Fiesta">Fiesta</SelectItem>
+                          <SelectItem value="Mondeo">Mondeo</SelectItem>
+                          <SelectItem value="C-Class">C-Class</SelectItem>
+                          <SelectItem value="E-Class">E-Class</SelectItem>
+                          <SelectItem value="A-Class">A-Class</SelectItem>
+                          <SelectItem value="GLC">GLC</SelectItem>
+                          <SelectItem value="208">208</SelectItem>
+                          <SelectItem value="308">308</SelectItem>
+                          <SelectItem value="3008">3008</SelectItem>
+                          <SelectItem value="Clio">Clio</SelectItem>
+                          <SelectItem value="Megane">Megane</SelectItem>
+                          <SelectItem value="Captur">Captur</SelectItem>
+                          <SelectItem value="Kadjar">Kadjar</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -572,21 +591,10 @@ export default function HomePage() {
                       <Button 
                         className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl"
                         onClick={handleSearch}
-                        disabled={isLoading || !searchTerm.trim()}
+                        disabled={!searchTerm.trim()}
                       >
-                        {isLoading ? (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          >
-                            <RefreshCw className="h-5 w-5" />
-                          </motion.div>
-                        ) : (
-                          <>
-                            <Search className="h-5 w-5 mr-2" />
-                            Rechercher
-                          </>
-                        )}
+                        <Search className="h-5 w-5 mr-2" />
+                        Rechercher
                       </Button>
                     </div>
                   )}
@@ -626,21 +634,10 @@ export default function HomePage() {
                       <Button 
                         className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl"
                         onClick={handleSearch}
-                        disabled={isLoading || !correspondenceRef.trim()}
+                        disabled={!correspondenceRef.trim()}
                       >
-                        {isLoading ? (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          >
-                            <RefreshCw className="h-5 w-5" />
-                          </motion.div>
-                        ) : (
-                          <>
-                            <RefreshCw className="h-5 w-5 mr-2" />
-                            Trouver
-                          </>
-                        )}
+                        <RefreshCw className="h-5 w-5 mr-2" />
+                        Trouver
                       </Button>
                     </div>
                   )}
@@ -650,23 +647,9 @@ export default function HomePage() {
                       size="lg"
                       className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                       onClick={handleSearch}
-                      disabled={isLoading}
                     >
-                      {isLoading ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="flex items-center gap-2"
-                        >
-                          <RefreshCw className="h-5 w-5" />
-                          Recherche en cours...
-                        </motion.div>
-                      ) : (
-                        <>
-                          <Filter className="h-5 w-5 mr-2" />
-                          Rechercher Maintenant
-                        </>
-                      )}
+                      <Filter className="h-5 w-5 mr-2" />
+                      Rechercher Maintenant
                     </Button>
                   </div>
                 </motion.div>
@@ -675,6 +658,7 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
 
       {/* Popular Products */}
       {/* <section className="py-16">

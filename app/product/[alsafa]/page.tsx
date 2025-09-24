@@ -11,9 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { supabase, type Product } from "@/lib/supabase"
+import { generateProductPDF } from "@/lib/pdf-generator"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 
@@ -24,12 +23,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showContactPopup, setShowContactPopup] = useState(false)
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    contact: "",
-    note: "",
-  })
-  const [submitting, setSubmitting] = useState(false)
+  const [generatingPDF, setGeneratingPDF] = useState(false)
 
   const alsafa = decodeURIComponent(params.alsafa as string)
 
@@ -58,36 +52,28 @@ export default function ProductDetailPage() {
     }
   }, [alsafa])
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
 
+  const handleGeneratePDF = async () => {
+    if (!product) return
+    
+    setGeneratingPDF(true)
     try {
-      const emailBody = `
-Nouvelle demande de contact pour le produit: ${product?.ALSAFA}
-Lien du produit: ${window.location.href}
-
-Nom: ${contactForm.name}
-Contact: ${contactForm.contact}
-Note: ${contactForm.note}
-      `.trim()
-
-      // In a real application, you would send this to your backend
-      console.log("Email to send:", {
-        to: "contact@elitifakfilters.com",
-        subject: `Demande de contact - ${product?.ALSAFA}`,
-        body: emailBody,
+      await generateProductPDF({
+        product,
+        companyInfo: {
+          name: "Alsafa Filters",
+          logo: "/ALSAFA LOGO.png",
+          phone: "0555046890",
+          email: "contact@elitifakfilters.com",
+          website: "https://devlly.net/alsafa",
+          address: "Algérie"
+        }
       })
-
-      // Reset form and close popup
-      setContactForm({ name: "", contact: "", note: "" })
-      setShowContactPopup(false)
-      alert("Votre demande a été envoyée avec succès!")
     } catch (error) {
-      console.error("Error sending contact request:", error)
-      alert("Erreur lors de l'envoi de la demande. Veuillez réessayer.")
+      console.error("Error generating PDF:", error)
+      alert("Erreur lors de la génération du PDF. Veuillez réessayer.")
     } finally {
-      setSubmitting(false)
+      setGeneratingPDF(false)
     }
   }
 
@@ -230,7 +216,7 @@ Note: ${contactForm.note}
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
       <MobileHeader forceSolid={true} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 sm:pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-28 sm:pt-24 lg:pt-28">
         {/* Product Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -358,11 +344,26 @@ Note: ${contactForm.note}
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
+                  onClick={handleGeneratePDF}
+                  disabled={generatingPDF}
                   variant="outline"
-                  className="h-12 px-6 rounded-xl border-2 border-orange-200 hover:border-orange-300 text-orange-600 hover:text-orange-700"
+                  className="h-12 px-6 rounded-xl border-2 border-orange-200 hover:border-orange-300 text-orange-600 hover:text-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Download className="h-5 w-5 mr-2" />
-                  PDF
+                  {generatingPDF ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-orange-600 border-t-transparent rounded-full" />
+                      Génération...
+                    </motion.div>
+                  ) : (
+                    <>
+                      <Download className="h-5 w-5 mr-2" />
+                      PDF
+                    </>
+                  )}
                 </Button>
               </motion.div>
             </motion.div>
@@ -493,9 +494,9 @@ Note: ${contactForm.note}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ duration: 0.3, type: "spring", damping: 25 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl mx-4"
+              className="w-full max-w-2xl mx-4 h-full max-h-[90vh] sm:max-h-[85vh] flex flex-col"
             >
-              <Card className="w-full shadow-2xl border-0 bg-white overflow-hidden">
+              <Card className="w-full shadow-2xl border-0 bg-white overflow-hidden flex flex-col h-full">
                 <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -522,7 +523,7 @@ Note: ${contactForm.note}
                     </motion.div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8">
+                <CardContent className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 flex-1 overflow-y-auto">
                   {/* Contact Information */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -534,133 +535,101 @@ Note: ${contactForm.note}
                       <CheckCircle className="h-5 w-5 text-orange-500" />
                       Contactez-nous directement
                     </h3>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 sm:p-6 rounded-xl"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-orange-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <Phone className="h-6 w-6 text-orange-600" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm text-orange-600 font-medium mb-1">Téléphone</p>
-                            <a href="tel:0555046890" className="text-orange-800 font-bold hover:underline text-lg sm:text-xl break-all">
-                              0555046890
+                    <div className="space-y-4">
+                      {/* Phone Numbers */}
+                      <div>
+                        <h4 className="text-sm font-bold text-orange-600 mb-3 flex items-center gap-2">
+                          <Phone className="h-4 w-4" />
+                          TÉLÉPHONES
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-orange-50 to-orange-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-orange-600 font-medium mb-1">Téléphone Fixe</p>
+                            <a href="tel:+21332503168" className="text-orange-800 font-bold hover:underline text-sm break-all">
+                              +213 32503168
                             </a>
-                          </div>
-                        </div>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 sm:p-6 rounded-xl"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-blue-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <Mail className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Email</p>
-                            <a href="mailto:contact@elitifakfilters.com" className="text-blue-800 font-bold hover:underline text-sm sm:text-base break-all">
-                              contact@elitifakfilters.com
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-green-50 to-green-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-green-600 font-medium mb-1">Mobile 1</p>
+                            <a href="tel:+213555046890" className="text-green-800 font-bold hover:underline text-sm break-all">
+                              +213 555046890
                             </a>
-                          </div>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-blue-600 font-medium mb-1">Mobile 2</p>
+                            <a href="tel:+213676888271" className="text-blue-800 font-bold hover:underline text-sm break-all">
+                              +213 676888271
+                            </a>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-purple-50 to-purple-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-purple-600 font-medium mb-1">Fax</p>
+                            <a href="tel:+21332503169" className="text-purple-800 font-bold hover:underline text-sm break-all">
+                              +213 32503169
+                            </a>
+                          </motion.div>
                         </div>
-                      </motion.div>
+                      </div>
+
+                      {/* Email Addresses */}
+                      <div>
+                        <h4 className="text-sm font-bold text-blue-600 mb-3 flex items-center gap-2">
+                          <Mail className="h-4 w-4" />
+                          EMAILS
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-blue-600 font-medium mb-1">Général</p>
+                            <a href="mailto:sarlelitifak@gmail.com" className="text-blue-800 font-bold hover:underline text-xs break-all">
+                              sarlelitifak@gmail.com
+                            </a>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-orange-50 to-orange-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-orange-600 font-medium mb-1">Commercial</p>
+                            <a href="mailto:commercial@elitifakfilters.com" className="text-orange-800 font-bold hover:underline text-xs break-all">
+                              commercial@elitifakfilters.com
+                            </a>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-green-50 to-green-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-green-600 font-medium mb-1">Achats</p>
+                            <a href="mailto:purchase@elitifakfilters.com" className="text-green-800 font-bold hover:underline text-xs break-all">
+                              purchase@elitifakfilters.com
+                            </a>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-gradient-to-r from-purple-50 to-purple-100 p-3 rounded-xl"
+                          >
+                            <p className="text-xs text-purple-600 font-medium mb-1">Marketing</p>
+                            <a href="mailto:marketing@elitifakfilters.com" className="text-purple-800 font-bold hover:underline text-xs break-all">
+                              marketing@elitifakfilters.com
+                            </a>
+                          </motion.div>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
 
-                  <Separator className="bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-
-                  {/* Contact Form */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                  >
-                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-orange-500" />
-                      Ou laissez-nous un message
-                    </h3>
-                    <form onSubmit={handleContactSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Nom *</label>
-                          <Input
-                            required
-                            value={contactForm.name}
-                            onChange={(e) => setContactForm((prev) => ({ ...prev, name: e.target.value }))}
-                            placeholder="Votre nom complet"
-                            className="h-12 rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Téléphone ou Email *</label>
-                          <Input
-                            required
-                            value={contactForm.contact}
-                            onChange={(e) => setContactForm((prev) => ({ ...prev, contact: e.target.value }))}
-                            placeholder="Votre téléphone ou email"
-                            className="h-12 rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Message</label>
-                        <Textarea
-                          value={contactForm.note}
-                          onChange={(e) => setContactForm((prev) => ({ ...prev, note: e.target.value }))}
-                          placeholder="Votre message concernant ce produit..."
-                          rows={4}
-                          className="rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"
-                        />
-                      </div>
-                      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl">
-                        <div className="flex items-center gap-2">
-                          <Package className="h-4 w-4 text-gray-500" />
-                          <p className="text-sm text-gray-600">
-                            <span className="font-medium">Produit concerné:</span> {product?.ALSAFA}
-                          </p>
-                        </div>
-                      </div>
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex flex-col sm:flex-row gap-3"
-                      >
-                        <Button
-                          type="submit"
-                          disabled={submitting}
-                          className="flex-1 h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                        >
-                          {submitting ? (
-                            <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                              className="flex items-center gap-2"
-                            >
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-                              Envoi en cours...
-                            </motion.div>
-                          ) : (
-                            <>
-                              <Mail className="h-5 w-5 mr-2" />
-                              Envoyer la Demande
-                            </>
-                          )}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setShowContactPopup(false)}
-                          className="h-12 px-6 rounded-xl border-2 border-gray-300 hover:border-gray-400 text-gray-600 hover:text-gray-700"
-                        >
-                          <X className="h-4 w-4 mr-2" />
-                          Annuler
-                        </Button>
-                      </motion.div>
-                    </form>
-                  </motion.div>
                 </CardContent>
               </Card>
             </motion.div>
