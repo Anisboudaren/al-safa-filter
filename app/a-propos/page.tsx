@@ -62,7 +62,7 @@ export default function AProposPage() {
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium"
               >
                 <CheckCircle className="h-4 w-4 text-green-400" />
-                Depuis 2002
+                Depuis 1994
               </motion.div>
 
               <motion.h1
@@ -84,7 +84,7 @@ export default function AProposPage() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
               >
-                Leader algérien dans la filtration automobile, offrant des solutions innovantes et de haute qualité pour tous types de véhicules.
+                SARL ELITIFAK, fabricant de la marque Alsafa Filters, fondée en 1994 à Aïn M'lila – Algérie. Le plus grand fabricant de filtres (air, huile, carburant) du pays.
               </motion.p>
 
               <motion.div
@@ -112,16 +112,16 @@ export default function AProposPage() {
                 className="grid grid-cols-3 gap-8 pt-8"
               >
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">20+</div>
+                  <div className="text-3xl font-bold text-orange-400">30+</div>
                   <div className="text-sm text-gray-400">Années d'expérience</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">2,500+</div>
+                  <div className="text-3xl font-bold text-orange-400">1,179</div>
                   <div className="text-sm text-gray-400">Références</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">50,000+</div>
-                  <div className="text-sm text-gray-400">Filtres/mois</div>
+                  <div className="text-3xl font-bold text-orange-400">2M+</div>
+                  <div className="text-sm text-gray-400">Filtres/an</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -162,8 +162,83 @@ export default function AProposPage() {
       </section>
 
       <main id="about-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Team & R&D Section */}
+        {/* Company History Section */}
         <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Histoire</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                De l'importation à la fabrication : 30 ans d'excellence en filtration automobile
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                    <Building2 className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900">Notre Parcours</h3>
+                </div>
+                <div className="space-y-6">
+                  <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl">
+                    <h4 className="text-xl font-bold text-orange-600 mb-2">1994 - Fondation</h4>
+                    <p className="text-gray-700">SARL ELITIFAK a été fondée à Aïn M'lila – Algérie. Elle était à l'époque la plus grande entreprise d'importation de pièces de rechange automobiles en Algérie.</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl">
+                    <h4 className="text-xl font-bold text-blue-600 mb-2">2002 - Transition</h4>
+                    <p className="text-gray-700">ELITIFAK s'est imposée comme le plus grand fabricant de filtres (air, huile, carburant) dans le pays, en offrant des produits conformes aux standards internationaux.</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl">
+                    <h4 className="text-xl font-bold text-green-600 mb-2">Aujourd'hui</h4>
+                    <p className="text-gray-700">Elle demeure un acteur de référence sur le marché algérien et ambitionne d'élargir sa présence sur les marchés africains et internationaux.</p>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <img
+                  src="https://devlly.net/alsafa/resources/photo%20of%20a%20man%20in%20the%20USINE%20ALSAFA%20FILTRES.jpg"
+                  alt="Usine Alsafa Filters - Histoire de l'entreprise"
+                  className="w-full h-80 object-cover rounded-2xl shadow-2xl"
+                />
+                <motion.div
+                  className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-6 shadow-xl"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                      <Award className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">Leader National</div>
+                      <div className="text-sm text-gray-600">Depuis 2002</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Team & R&D Section */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -243,7 +318,7 @@ export default function AProposPage() {
         </section>
 
         {/* Factory & Production Section */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -297,15 +372,15 @@ export default function AProposPage() {
                     whileHover={{ scale: 1.05 }}
                     className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                   >
-                    <div className="text-3xl font-bold text-orange-600 mb-2">50,000+</div>
-                    <div className="text-gray-600 font-medium">Filtres/mois</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">2M+</div>
+                    <div className="text-gray-600 font-medium">Filtres/an</div>
                   </motion.div>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                   >
-                    <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-                    <div className="text-gray-600 font-medium">Production</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">90%</div>
+                    <div className="text-gray-600 font-medium">Taux d'intégration</div>
                   </motion.div>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -324,8 +399,104 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* Products Section */}
+        {/* Production Details Section */}
         <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Production</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Capacité de production et caractéristiques de nos filtres
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-gray-50 hover:from-orange-50 hover:to-orange-100">
+                  <CardContent className="p-0">
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <Package className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres à Huile</h3>
+                    <div className="text-4xl font-bold text-orange-600 mb-2">140</div>
+                    <div className="text-gray-600 font-medium mb-4">Références</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">1,200,000</div>
+                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-gray-50 hover:from-blue-50 hover:to-blue-100">
+                  <CardContent className="p-0">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <Package className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres Gas-oil</h3>
+                    <div className="text-4xl font-bold text-blue-600 mb-2">78</div>
+                    <div className="text-gray-600 font-medium mb-4">Références</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">300,000</div>
+                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-gray-50 hover:from-green-50 hover:to-green-100">
+                  <CardContent className="p-0">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <Package className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres à Air</h3>
+                    <div className="text-4xl font-bold text-green-600 mb-2">961</div>
+                    <div className="text-gray-600 font-medium mb-4">Références</div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">500,000</div>
+                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center p-8 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
+            >
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Service Personnalisé</h3>
+              <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+                En plus de notre gamme standard, nous concevons et réalisons également tout type de filtre sur modèle fourni par le client.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Products Section */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -371,10 +542,10 @@ export default function AProposPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { number: "2,500+", label: "Références disponibles" },
-                { number: "150+", label: "Marques compatibles" },
-                { number: "99.8%", label: "Taux de satisfaction" },
-                { number: "48h", label: "Livraison express" }
+                { number: "1,179", label: "Références disponibles" },
+                { number: "164", label: "Emplois créés" },
+                { number: "90%", label: "Taux d'intégration" },
+                { number: "2M+", label: "Filtres/an" }
               ].map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -396,8 +567,48 @@ export default function AProposPage() {
           </div>
         </section>
 
+        {/* Trusted Brands Section */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Marques qui nous font confiance</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Des partenaires de confiance qui font appel à notre expertise en filtration
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-8">
+              {[9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map((brandNumber, index) => (
+                <motion.div
+                  key={brandNumber}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.1 }}
+                  className="flex items-center justify-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl hover:from-orange-50 hover:to-orange-100 transition-all duration-300"
+                >
+                  <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                    <img
+                      src={`/brands/${brandNumber}.png`}
+                      alt={`Brand ${brandNumber}`}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Certifications Section */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -416,24 +627,27 @@ export default function AProposPage() {
               {[
                 {
                   image: "https://devlly.net/alsafa/resources/ISO%2014001.png",
-                  title: "ISO 14001",
+                  title: "ISO 14001:2015",
                   description: "Management environnemental pour une production respectueuse de l'environnement",
                   icon: CheckCircle,
-                  color: "green"
+                  color: "green",
+                  certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%2014001-2015-ACCREDIA.pdf"
                 },
                 {
                   image: "https://devlly.net/alsafa/resources/the%20certifcate%20of%20ISO%209001.png",
-                  title: "ISO 9001",
+                  title: "ISO 9001:2015",
                   description: "Management de la qualité garantissant l'excellence de nos processus de production",
                   icon: CheckCircle,
-                  color: "green"
+                  color: "green",
+                  certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%209001-2015-ACCREDIA.pdf"
                 },
                 {
                   image: "https://devlly.net/alsafa/resources/ISO%2045001.png",
-                  title: "ISO 45001",
+                  title: "ISO 45001:2018",
                   description: "Système de management de la santé et sécurité au travail pour la protection de nos équipes et partenaires",
                   icon: CheckCircle,
-                  color: "green"
+                  color: "green",
+                  certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%2045001-2018-ACCREDIA.pdf"
                 },
                 {
                   image: "https://devlly.net/alsafa/resources/QR%20code%20%20elitifak%20filters%20black%20.png",
@@ -476,10 +690,114 @@ export default function AProposPage() {
                           {cert.color === 'green' ? 'Certifié' : 'Vérifiable'}
                         </span>
                       </div>
+                      {cert.certificateUrl && (
+                        <motion.div
+                          className="mt-4"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          <a
+                            href={cert.certificateUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Voir le certificat
+                          </a>
+                        </motion.div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Legal Information Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Informations Légales</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                SARL ELITIFAK - Informations officielles et réglementaires
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white">
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                        <Building2 className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900">Identité Juridique</h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Raison Sociale</h4>
+                        <p className="text-gray-600">SARL ELITIFAK</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Registre du Commerce</h4>
+                        <p className="text-gray-600">04/00-97B0402007 DU 11-12-2019</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Identification Fiscale (NIF)</h4>
+                        <p className="text-gray-600">099704040200734</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white">
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+                        <Shield className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900">Identifications</h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Identification Statistique (NIS)</h4>
+                        <p className="text-gray-600">099404040287330</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Article d'Imposition</h4>
+                        <p className="text-gray-600">04810840421</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Forme Juridique</h4>
+                        <p className="text-gray-600">Société à Responsabilité Limitée</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -496,7 +814,7 @@ export default function AProposPage() {
             >
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Contact & Identité</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                SARL EL ITIFAK - Votre partenaire de confiance en filtration automobile
+                SARL ELITIFAK - Votre partenaire de confiance en filtration automobile
               </p>
             </motion.div>
 
@@ -525,28 +843,33 @@ export default function AProposPage() {
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-3xl font-bold text-gray-900 mb-8">SARL EL ITIFAK</h3>
+                <h3 className="text-3xl font-bold text-gray-900 mb-8">SARL ELITIFAK</h3>
                 <div className="space-y-6">
                   {[
                     {
                       icon: MapPin,
                       title: "Adresse",
-                      content: "Z.A.D.N N 100 - 04300 AIN MLILA, Algérie"
+                      content: "Z.A.D Rte/Nat n°100 Ain M'Lila, 04300 O.E.B. - ALGERIE"
                     },
                     {
                       icon: Phone,
                       title: "Téléphone",
-                      content: "+213 555 046 890"
+                      content: "032 50 31 68 / 0555 04 68 90 / 0676 88 82 71"
                     },
                     {
                       icon: Mail,
                       title: "Email",
-                      content: "contact@elitifakfilters.com"
+                      content: "contact@elitifakfilters.com / sarlelitifak@gmail.com"
                     },
                     {
                       icon: Building2,
-                      title: "Statut",
-                      content: "Société à Responsabilité Limitée"
+                      title: "Site Web",
+                      content: "alsafafilters.com"
+                    },
+                    {
+                      icon: Building2,
+                      title: "Fax",
+                      content: "032 50 31 69"
                     }
                   ].map((contact, index) => (
                     <motion.div

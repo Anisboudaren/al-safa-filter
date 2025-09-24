@@ -157,6 +157,14 @@ export function SharedFooter() {
                 <Link href="#" className="hover:text-orange-400 transition-colors">
                   Politique de confidentialité
                 </Link>
+                <a 
+                  href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/IMG_2354.jpeg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-400 transition-colors"
+                >
+                  Politique de qualité
+                </a>
                 <Link href="#" className="hover:text-orange-400 transition-colors">
                   Plan du site
                 </Link>
