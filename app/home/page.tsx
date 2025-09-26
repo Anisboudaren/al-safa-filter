@@ -10,6 +10,7 @@ import Link from "next/link"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
+import vehicleData from "@/lib/vehicle-data.json"
 export default function HomePage() {
   const [filterType, setFilterType] = useState("vehicle")
   const [searchTerm, setSearchTerm] = useState("")
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [correspondenceRef, setCorrespondenceRef] = useState("")
   const [vehicleBrand, setVehicleBrand] = useState("")
   const [vehicleModel, setVehicleModel] = useState("")
+  const [availableModels, setAvailableModels] = useState<string[]>([])
   const { scrollYProgress } = useScroll()
 
   const carBrands = [
@@ -31,6 +33,17 @@ export default function HomePage() {
     { name: "Mercedes", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-8.webp" },
     { name: "BMW", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-9.webp" },
   ]
+
+  // Update available models when brand changes
+  useEffect(() => {
+    if (vehicleBrand && vehicleData[vehicleBrand as keyof typeof vehicleData]) {
+      setAvailableModels(vehicleData[vehicleBrand as keyof typeof vehicleData].models)
+      // Reset model when brand changes
+      setVehicleModel("")
+    } else {
+      setAvailableModels([])
+    }
+  }, [vehicleBrand])
 
   const testimonials = [
     {
@@ -58,11 +71,6 @@ export default function HomePage() {
       icon: Shield,
       title: "Qualité Garantie",
       description: "Filtres certifiés selon les normes internationales",
-    },
-    {
-      icon: Zap,
-      title: "Livraison Rapide",
-      description: "Expédition sous 24h dans toute l'Algérie",
     },
     {
       icon: Award,
@@ -207,7 +215,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="grid grid-cols-3 gap-8 pt-8"
+                className="grid grid-cols-2 gap-8 pt-8"
               >
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400">1000+</div>
@@ -216,10 +224,6 @@ export default function HomePage() {
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400">50+</div>
                   <div className="text-sm text-gray-400">Marques</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">24h</div>
-                  <div className="text-sm text-gray-400">Livraison</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -528,18 +532,11 @@ export default function HomePage() {
                           <SelectValue placeholder="Marque" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Audi">Audi</SelectItem>
-                          <SelectItem value="Toyota">Toyota</SelectItem>
-                          <SelectItem value="Volkswagen">Volkswagen</SelectItem>
-                          <SelectItem value="Ford">Ford</SelectItem>
-                          <SelectItem value="Mercedes">Mercedes</SelectItem>
-                          <SelectItem value="BMW">BMW</SelectItem>
-                          <SelectItem value="Peugeot">Peugeot</SelectItem>
-                          <SelectItem value="Renault">Renault</SelectItem>
-                          <SelectItem value="Nissan">Nissan</SelectItem>
-                          <SelectItem value="Honda">Honda</SelectItem>
-                          <SelectItem value="Hyundai">Hyundai</SelectItem>
-                          <SelectItem value="Kia">Kia</SelectItem>
+                          {Object.keys(vehicleData).map((brand) => (
+                            <SelectItem key={brand} value={brand}>
+                              {brand}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <Select value={vehicleModel} onValueChange={setVehicleModel}>
@@ -547,33 +544,11 @@ export default function HomePage() {
                           <SelectValue placeholder="Modèle" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="A3">A3</SelectItem>
-                          <SelectItem value="A4">A4</SelectItem>
-                          <SelectItem value="A6">A6</SelectItem>
-                          <SelectItem value="Q5">Q5</SelectItem>
-                          <SelectItem value="Q7">Q7</SelectItem>
-                          <SelectItem value="Corolla">Corolla</SelectItem>
-                          <SelectItem value="Camry">Camry</SelectItem>
-                          <SelectItem value="Yaris">Yaris</SelectItem>
-                          <SelectItem value="RAV4">RAV4</SelectItem>
-                          <SelectItem value="Golf">Golf</SelectItem>
-                          <SelectItem value="Passat">Passat</SelectItem>
-                          <SelectItem value="Polo">Polo</SelectItem>
-                          <SelectItem value="Tiguan">Tiguan</SelectItem>
-                          <SelectItem value="Focus">Focus</SelectItem>
-                          <SelectItem value="Fiesta">Fiesta</SelectItem>
-                          <SelectItem value="Mondeo">Mondeo</SelectItem>
-                          <SelectItem value="C-Class">C-Class</SelectItem>
-                          <SelectItem value="E-Class">E-Class</SelectItem>
-                          <SelectItem value="A-Class">A-Class</SelectItem>
-                          <SelectItem value="GLC">GLC</SelectItem>
-                          <SelectItem value="208">208</SelectItem>
-                          <SelectItem value="308">308</SelectItem>
-                          <SelectItem value="3008">3008</SelectItem>
-                          <SelectItem value="Clio">Clio</SelectItem>
-                          <SelectItem value="Megane">Megane</SelectItem>
-                          <SelectItem value="Captur">Captur</SelectItem>
-                          <SelectItem value="Kadjar">Kadjar</SelectItem>
+                          {availableModels.map((model) => (
+                            <SelectItem key={model} value={model}>
+                              {model}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>

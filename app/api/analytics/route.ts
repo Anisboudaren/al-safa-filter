@@ -59,8 +59,8 @@ export async function GET(request: NextRequest) {
       endDate: endDate.toISOString().split('T')[0]
     }
 
-    // Fetch analytics data using GA4 Data API
-    const [overviewData, pageViewsData, trafficData] = await Promise.all([
+    // Fetch comprehensive analytics data using GA4 Data API
+    const [overviewData, pageViewsData, topPagesData, sessionDurationData, deviceData, countryData] = await Promise.all([
       // Overview metrics
       analyticsData.properties.runReport({
         property: `properties/${gaPropertyId || measurementId.replace('G-', '')}`,
@@ -71,7 +71,8 @@ export async function GET(request: NextRequest) {
             { name: 'totalUsers' },
             { name: 'screenPageViews' },
             { name: 'bounceRate' },
-            { name: 'averageSessionDuration' }
+            { name: 'averageSessionDuration' },
+            { name: 'newUsers' }
           ]
         }
       }),
@@ -87,13 +88,47 @@ export async function GET(request: NextRequest) {
         }
       }),
       
-      // Traffic sources
+      // Top pages
+      analyticsData.properties.runReport({
+        property: `properties/${gaPropertyId || measurementId.replace('G-', '')}`,
+        requestBody: {
+          dateRanges: [dateRange],
+          metrics: [{ name: 'screenPageViews' }],
+          dimensions: [{ name: 'pagePath' }],
+          orderBys: [{ metric: { metricName: 'screenPageViews' } }],
+          limit: 10
+        }
+      }),
+      
+      // Session duration over time
+      analyticsData.properties.runReport({
+        property: `properties/${gaPropertyId || measurementId.replace('G-', '')}`,
+        requestBody: {
+          dateRanges: [dateRange],
+          metrics: [{ name: 'averageSessionDuration' }],
+          dimensions: [{ name: 'date' }],
+          orderBys: [{ dimension: { dimensionName: 'date' } }]
+        }
+      }),
+      
+      // Device categories
       analyticsData.properties.runReport({
         property: `properties/${gaPropertyId || measurementId.replace('G-', '')}`,
         requestBody: {
           dateRanges: [dateRange],
           metrics: [{ name: 'sessions' }],
-          dimensions: [{ name: 'sessionSource' }],
+          dimensions: [{ name: 'deviceCategory' }],
+          orderBys: [{ metric: { metricName: 'sessions' } }]
+        }
+      }),
+      
+      // Country data
+      analyticsData.properties.runReport({
+        property: `properties/${gaPropertyId || measurementId.replace('G-', '')}`,
+        requestBody: {
+          dateRanges: [dateRange],
+          metrics: [{ name: 'sessions' }],
+          dimensions: [{ name: 'country' }],
           orderBys: [{ metric: { metricName: 'sessions' } }],
           limit: 10
         }
@@ -108,7 +143,8 @@ export async function GET(request: NextRequest) {
       users: parseInt(overviewMetrics[1]?.value || '0'),
       pageviews: parseInt(overviewMetrics[2]?.value || '0'),
       bounceRate: parseFloat(overviewMetrics[3]?.value || '0'),
-      avgSessionDuration: parseFloat(overviewMetrics[4]?.value || '0')
+      avgSessionDuration: parseFloat(overviewMetrics[4]?.value || '0'),
+      newUsers: parseInt(overviewMetrics[5]?.value || '0')
     }
 
     // Process page views data
@@ -119,18 +155,45 @@ export async function GET(request: NextRequest) {
       pageviews: parseInt(row.metricValues?.[0]?.value || '0')
     }))
 
-    // Process traffic data
-    const trafficRows = trafficData.data.rows || []
+    // Process top pages data
+    const topPagesRows = topPagesData.data.rows || []
     
-    const trafficSources = trafficRows.map(row => ({
-      source: row.dimensionValues?.[0]?.value || 'Direct',
+    const topPages = topPagesRows.map(row => ({
+      page: row.dimensionValues?.[0]?.value || '/',
+      pageviews: parseInt(row.metricValues?.[0]?.value || '0')
+    }))
+
+    // Process session duration data
+    const sessionDurationRows = sessionDurationData.data.rows || []
+    
+    const sessionDuration = sessionDurationRows.map(row => ({
+      date: row.dimensionValues?.[0]?.value || '',
+      duration: parseFloat(row.metricValues?.[0]?.value || '0')
+    }))
+
+    // Process device data
+    const deviceRows = deviceData.data.rows || []
+    
+    const devices = deviceRows.map(row => ({
+      device: row.dimensionValues?.[0]?.value || 'Unknown',
+      sessions: parseInt(row.metricValues?.[0]?.value || '0')
+    }))
+
+    // Process country data
+    const countryRows = countryData.data.rows || []
+    
+    const countries = countryRows.map(row => ({
+      country: row.dimensionValues?.[0]?.value || 'Unknown',
       sessions: parseInt(row.metricValues?.[0]?.value || '0')
     }))
 
     return NextResponse.json({
       overview,
       pageViews,
-      trafficSources,
+      topPages,
+      sessionDuration,
+      devices,
+      countries,
       dateRange
     })
 

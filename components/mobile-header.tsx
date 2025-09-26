@@ -176,7 +176,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                         {[
                           { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "text-blue-600" },
                           { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "text-green-600" },
-                          { href: "/filter/reference", label: "Par Référence", icon: Search, color: "text-purple-600" },
+                          { href: "/catalog", label: "Par Référence", icon: Search, color: "text-purple-600" },
                           { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "text-orange-600" }
                         ].map((filter, index) => (
                           <motion.div
@@ -374,7 +374,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   {[
                     { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "bg-blue-100 text-blue-600" },
                     { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "bg-green-100 text-green-600" },
-                    { href: "/filter/reference", label: "Par Référence", icon: Search, color: "bg-purple-100 text-purple-600" },
+                    { href: "/catalog", label: "Par Référence", icon: Search, color: "bg-purple-100 text-purple-600" },
                     { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "bg-orange-100 text-orange-600" }
                   ].map((filter, index) => (
                     <motion.div

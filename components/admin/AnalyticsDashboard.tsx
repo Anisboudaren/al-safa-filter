@@ -34,13 +34,26 @@ interface AnalyticsData {
     pageviews: number
     bounceRate: number
     avgSessionDuration: number
+    newUsers: number
   }
   pageViews: Array<{
     date: string
     pageviews: number
   }>
-  trafficSources: Array<{
-    source: string
+  topPages: Array<{
+    page: string
+    pageviews: number
+  }>
+  sessionDuration: Array<{
+    date: string
+    duration: number
+  }>
+  devices: Array<{
+    device: string
+    sessions: number
+  }>
+  countries: Array<{
+    country: string
     sessions: number
   }>
   dateRange: {
@@ -62,8 +75,7 @@ export default function AnalyticsDashboard() {
     setError(null)
     
     try {
-      // Try the simple endpoint first for debugging
-      const response = await fetch(`/api/analytics/simple?days=${days}`)
+      const response = await fetch(`/api/analytics?days=${days}`)
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to fetch analytics data')
@@ -87,7 +99,20 @@ export default function AnalyticsDashboard() {
   }, [selectedDays])
 
   const formatDate = (dateStr: string) => {
+    // Handle GA4 date format (YYYYMMDD)
+    if (dateStr.length === 8 && /^\d{8}$/.test(dateStr)) {
+      const year = dateStr.substring(0, 4)
+      const month = dateStr.substring(4, 6)
+      const day = dateStr.substring(6, 8)
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+    
+    // Handle other date formats
     const date = new Date(dateStr)
+    if (isNaN(date.getTime())) {
+      return dateStr // Return original string if invalid
+    }
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
@@ -95,6 +120,12 @@ export default function AnalyticsDashboard() {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = Math.floor(seconds % 60)
     return `${minutes}m ${remainingSeconds}s`
+  }
+
+  const formatDateRange = (startDate: string, endDate: string) => {
+    const start = formatDate(startDate)
+    const end = formatDate(endDate)
+    return `${start} - ${end}`
   }
 
   const formatNumber = (num: number) => {
@@ -182,7 +213,7 @@ export default function AnalyticsDashboard() {
         <div>
           <h2 className="text-2xl font-bold text-white">Analytics Dashboard</h2>
           <p className="text-gray-400">
-            {formatDate(data.dateRange.startDate)} - {formatDate(data.dateRange.endDate)}
+            {formatDateRange(data.dateRange.startDate, data.dateRange.endDate)}
           </p>
         </div>
         <div className="flex gap-2">
@@ -213,7 +244,19 @@ export default function AnalyticsDashboard() {
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <Users className="h-8 w-8 text-orange-500" />
+              <Eye className="h-8 w-8 text-orange-500" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-400">Total Page Views</p>
+                <p className="text-2xl font-bold text-white">{formatNumber(data.overview.pageviews)}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Users className="h-8 w-8 text-blue-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-400">Sessions</p>
                 <p className="text-2xl font-bold text-white">{formatNumber(data.overview.sessions)}</p>
@@ -225,34 +268,22 @@ export default function AnalyticsDashboard() {
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <MousePointer className="h-8 w-8 text-blue-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Users</p>
-                <p className="text-2xl font-bold text-white">{formatNumber(data.overview.users)}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Eye className="h-8 w-8 text-green-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Page Views</p>
-                <p className="text-2xl font-bold text-white">{formatNumber(data.overview.pageviews)}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Clock className="h-8 w-8 text-purple-500" />
+              <Clock className="h-8 w-8 text-green-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-400">Avg. Session</p>
                 <p className="text-2xl font-bold text-white">{formatDuration(data.overview.avgSessionDuration)}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <TrendingUp className="h-8 w-8 text-purple-500" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-400">Bounce Rate</p>
+                <p className="text-2xl font-bold text-white">{data.overview.bounceRate.toFixed(1)}%</p>
               </div>
             </div>
           </CardContent>
@@ -300,28 +331,68 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
 
-        {/* Traffic Sources */}
+        {/* Session Duration Over Time */}
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-white flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-orange-500" />
-              Traffic Sources
+              <Clock className="h-5 w-5 mr-2 text-green-500" />
+              Session Duration Over Time
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data.sessionDuration}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#9ca3af"
+                  tickFormatter={formatDate}
+                />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#fff'
+                  }}
+                  labelFormatter={(value) => formatDate(value)}
+                  formatter={(value) => [formatDuration(Number(value)), 'Duration']}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="duration" 
+                  stroke="#10b981" 
+                  strokeWidth={2}
+                  dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Device Categories */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-blue-500" />
+              Device Categories
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={data.trafficSources}
+                  data={data.devices}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ source, percent }) => `${source} ${(percent * 100).toFixed(0)}%`}
+                  label={({ device, percent }) => `${device} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="sessions"
                 >
-                  {data.trafficSources.map((entry, index) => (
+                  {data.devices.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -337,32 +408,68 @@ export default function AnalyticsDashboard() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        {/* Top Countries */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <Users className="h-5 w-5 mr-2 text-purple-500" />
+              Top Countries
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.countries.slice(0, 5)}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis 
+                  dataKey="country" 
+                  stroke="#9ca3af"
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#fff'
+                  }}
+                />
+                <Bar dataKey="sessions" fill="#8b5cf6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Traffic Sources Table */}
+      {/* Top Pages Table */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Top Traffic Sources</CardTitle>
+          <CardTitle className="text-white">Most Viewed Pages</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-700">
-                  <th className="text-left py-3 px-4 text-gray-300 font-medium">Source</th>
-                  <th className="text-left py-3 px-4 text-gray-300 font-medium">Sessions</th>
+                  <th className="text-left py-3 px-4 text-gray-300 font-medium">Page</th>
+                  <th className="text-left py-3 px-4 text-gray-300 font-medium">Page Views</th>
                   <th className="text-left py-3 px-4 text-gray-300 font-medium">Percentage</th>
                 </tr>
               </thead>
               <tbody>
-                {data.trafficSources.map((source, index) => {
-                  const totalSessions = data.trafficSources.reduce((sum, s) => sum + s.sessions, 0)
-                  const percentage = ((source.sessions / totalSessions) * 100).toFixed(1)
+                {data.topPages.map((page, index) => {
+                  const totalPageViews = data.topPages.reduce((sum, p) => sum + p.pageviews, 0)
+                  const percentage = ((page.pageviews / totalPageViews) * 100).toFixed(1)
                   
                   return (
-                    <tr key={source.source} className="border-b border-gray-700 hover:bg-gray-750">
-                      <td className="py-3 px-4 text-white font-medium">{source.source}</td>
-                      <td className="py-3 px-4 text-white">{formatNumber(source.sessions)}</td>
+                    <tr key={page.page} className="border-b border-gray-700 hover:bg-gray-750">
+                      <td className="py-3 px-4 text-white font-medium">
+                        <span className="font-mono text-sm">{page.page}</span>
+                      </td>
+                      <td className="py-3 px-4 text-white">{formatNumber(page.pageviews)}</td>
                       <td className="py-3 px-4 text-white">{percentage}%</td>
                     </tr>
                   )

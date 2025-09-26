@@ -14,6 +14,7 @@ import { supabase, type Product } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import vehicleData from "@/lib/vehicle-data.json"
 
 const ITEMS_PER_PAGE = 12
 
@@ -29,8 +30,8 @@ export default function VehicleFilterPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
-  const brands = ["Audi", "Toyota", "Volkswagen", "Ford", "Mercedes", "BMW", "Peugeot", "Renault", "Nissan", "Honda", "Hyundai", "Kia", "Chevrolet", "Opel", "Citroën", "Fiat", "Seat", "Skoda"]
-  const models = ["A3", "A4", "A6", "Q5", "Q7", "Corolla", "Camry", "Yaris", "RAV4", "Golf", "Passat", "Polo", "Tiguan", "Focus", "Fiesta", "Mondeo", "C-Class", "E-Class", "A-Class", "GLC", "208", "308", "3008", "Clio", "Megane", "Captur", "Kadjar"]
+  const brands = Object.keys(vehicleData)
+  const [availableModels, setAvailableModels] = useState<string[]>([])
 
   // Handle URL parameters on page load
   useEffect(() => {
@@ -44,6 +45,17 @@ export default function VehicleFilterPage() {
       setModel(modelParam)
     }
   }, [searchParams])
+
+  // Update available models when brand changes
+  useEffect(() => {
+    if (brand && vehicleData[brand as keyof typeof vehicleData]) {
+      setAvailableModels(vehicleData[brand as keyof typeof vehicleData].models)
+      // Reset model when brand changes
+      setModel("")
+    } else {
+      setAvailableModels([])
+    }
+  }, [brand])
 
   const fetchProducts = async () => {
     if (!brand && !model) {
@@ -168,7 +180,7 @@ export default function VehicleFilterPage() {
                         <SelectValue placeholder="Sélectionner un modèle" />
                       </SelectTrigger>
                       <SelectContent>
-                        {models.map((modelOption) => (
+                        {availableModels.map((modelOption) => (
                           <SelectItem key={modelOption} value={modelOption}>
                             {modelOption}
                           </SelectItem>

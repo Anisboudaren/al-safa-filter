@@ -431,7 +431,7 @@ export default function AProposPage() {
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres à Huile</h3>
                     <div className="text-4xl font-bold text-orange-600 mb-2">140</div>
                     <div className="text-gray-600 font-medium mb-4">Références</div>
-                    <div className="text-3xl font-bold text-orange-600 mb-2">1,200,000</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">600,000</div>
                     <div className="text-gray-600 font-medium">Pièces/An</div>
                   </CardContent>
                 </Card>
@@ -452,7 +452,7 @@ export default function AProposPage() {
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres Gas-oil</h3>
                     <div className="text-4xl font-bold text-blue-600 mb-2">78</div>
                     <div className="text-gray-600 font-medium mb-4">Références</div>
-                    <div className="text-3xl font-bold text-blue-600 mb-2">300,000</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">500,000</div>
                     <div className="text-gray-600 font-medium">Pièces/An</div>
                   </CardContent>
                 </Card>
@@ -543,7 +543,7 @@ export default function AProposPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { number: "1,179", label: "Références disponibles" },
-                { number: "164", label: "Emplois créés" },
+                { number: "300", label: "Emplois créés" },
                 { number: "90%", label: "Taux d'intégration" },
                 { number: "2M+", label: "Filtres/an" }
               ].map((stat, index) => (
@@ -726,9 +726,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Informations Légales</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Conformité & Transparence</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                SARL ELITIFAK - Informations officielles et réglementaires
+                SARL ELITIFAK - Une entreprise conforme et transparente dans toutes ses activités
               </p>
             </motion.div>
 
@@ -746,7 +746,7 @@ export default function AProposPage() {
                       <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                         <Building2 className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Identité Juridique</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">Statut Légal</h3>
                     </div>
                     <div className="space-y-4">
                       <div>
@@ -754,12 +754,12 @@ export default function AProposPage() {
                         <p className="text-gray-600">SARL ELITIFAK</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Registre du Commerce</h4>
-                        <p className="text-gray-600">04/00-97B0402007 DU 11-12-2019</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">Enregistrement</h4>
+                        <p className="text-gray-600">Société légalement enregistrée et conforme</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Identification Fiscale (NIF)</h4>
-                        <p className="text-gray-600">099704040200734</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">Forme Juridique</h4>
+                        <p className="text-gray-600">Société à Responsabilité Limitée</p>
                       </div>
                     </div>
                   </CardContent>
@@ -779,26 +779,48 @@ export default function AProposPage() {
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
                         <Shield className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Identifications</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">Conformité Réglementaire</h3>
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Identification Statistique (NIS)</h4>
-                        <p className="text-gray-600">099404040287330</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">Fiscalité</h4>
+                        <p className="text-gray-600">Conformité fiscale complète et à jour</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Article d'Imposition</h4>
-                        <p className="text-gray-600">04810840421</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">Statistiques</h4>
+                        <p className="text-gray-600">Enregistrement statistique national</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Forme Juridique</h4>
-                        <p className="text-gray-600">Société à Responsabilité Limitée</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">Transparence</h4>
+                        <p className="text-gray-600">Pratiques commerciales transparentes</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </motion.div>
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="mt-12 text-center"
+            >
+              <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Notre Engagement</h3>
+                <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+                  SARL ELITIFAK s'engage à respecter toutes les réglementations en vigueur et à maintenir 
+                  la plus haute transparence dans ses activités commerciales. Notre entreprise est 
+                  légalement constituée, fiscalement conforme et statistiquement enregistrée, 
+                  garantissant ainsi la confiance et la sécurité de nos partenaires et clients.
+                </p>
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                  <span className="text-green-700 font-semibold">Entreprise Conforme & Transparente</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
