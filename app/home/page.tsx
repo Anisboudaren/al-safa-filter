@@ -10,6 +10,7 @@ import Link from "next/link"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
+import { useTranslation } from "@/components/language-provider"
 import vehicleData from "@/lib/vehicle-data.json"
 export default function HomePage() {
   const [filterType, setFilterType] = useState("vehicle")
@@ -24,6 +25,7 @@ export default function HomePage() {
   const [vehicleModel, setVehicleModel] = useState("")
   const [availableModels, setAvailableModels] = useState<string[]>([])
   const { scrollYProgress } = useScroll()
+  const t = useTranslation()
 
   const carBrands = [
     { name: "Audi", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-7.webp" },
@@ -47,21 +49,21 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      name: "Karim B.",
-      location: "ALGER",
-      text: "Depuis que j'utilise les filtres Alsafa, je remarque une meilleure performance de ma voiture et une consommation réduite.",
+      name: t.testimonial1Name,
+      location: t.testimonial1Location,
+      text: t.testimonial1Text,
       rating: 5,
     },
     {
-      name: "Hassim T.",
-      location: "ORAN",
-      text: "J'ai trouvé exactement les filtres dont j'avais besoin, à un prix plus que raisonnable. Merci Alsafa Filters !",
+      name: t.testimonial2Name,
+      location: t.testimonial2Location,
+      text: t.testimonial2Text,
       rating: 5,
     },
     {
-      name: "Mehdi L.",
-      location: "SIDI BEL ABBES",
-      text: "Je suis très satisfait de l'expérience d'achat. Très simple et rapide, avec une excellente qualité de produit. Je recommande vivement.",
+      name: t.testimonial3Name,
+      location: t.testimonial3Location,
+      text: t.testimonial3Text,
       rating: 5,
     },
   ]
@@ -69,18 +71,18 @@ export default function HomePage() {
   const features = [
     {
       icon: Shield,
-      title: "Qualité Garantie",
-      description: "Filtres certifiés selon les normes internationales",
+      title: t.qualityGuaranteed,
+      description: t.qualityDescription,
     },
     {
       icon: Award,
-      title: "Expertise Technique",
-      description: "Plus de 20 ans d'expérience dans le domaine",
+      title: t.technicalExpertise,
+      description: t.expertiseDescription,
     },
     {
       icon: Users,
-      title: "Support Client",
-      description: "Assistance technique 7j/7",
+      title: t.customerSupport,
+      description: t.supportDescription,
     },
   ]
 
@@ -161,7 +163,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium"
               >
                 <CheckCircle className="h-4 w-4 text-green-400" />
-                Qualité Certifiée
+                {t.certifiedQuality}
               </motion.div>
 
               <motion.h1
@@ -170,10 +172,10 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="text-5xl md:text-7xl font-bold leading-tight"
               >
-                Filtres de
+                {t.highQualityFilters.split(' ').slice(0, -2).join(' ')}
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-                  Qualité Supérieure
+                  {t.superiorQuality}
                 </span>
               </motion.h1>
 
@@ -183,7 +185,7 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
               >
-                Trouvez le filtre parfait pour votre véhicule avec notre technologie de recherche avancée
+                {t.findPerfectFilterForVehicle}
               </motion.p>
 
               <motion.div
@@ -197,7 +199,7 @@ export default function HomePage() {
                   className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-2xl hover:shadow-orange-500/25 transition-all duration-300"
                   onClick={() => document.getElementById('search-section')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Commencer la Recherche
+                  {t.startSearch}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button
@@ -206,7 +208,7 @@ export default function HomePage() {
                   className="border-white/30 text-primary border-primary hover:bg-white/10 font-semibold px-8 py-4 rounded-xl backdrop-blur-sm"
                   onClick={() => window.location.href = '/catalog'}
                 >
-                  Voir le Catalogue
+                  {t.viewCatalog}
                 </Button>
               </motion.div>
 
@@ -218,12 +220,12 @@ export default function HomePage() {
                 className="grid grid-cols-2 gap-8 pt-8"
               >
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">1000+</div>
-                  <div className="text-sm text-gray-400">Modèles</div>
+                  <div className="text-3xl font-bold text-orange-400">{t.modelsCount}</div>
+                  <div className="text-sm text-gray-400">{t.models}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400">50+</div>
-                  <div className="text-sm text-gray-400">Marques</div>
+                  <div className="text-3xl font-bold text-orange-400">{t.brandsCount}</div>
+                  <div className="text-sm text-gray-400">{t.brands}</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -238,7 +240,7 @@ export default function HomePage() {
               <div className="relative z-10">
                 <img
                   src="https://elitifakfilter.com/wp-content/uploads/revslider/video-media/202501281743_10.jpeg"
-                  alt="Filtres automobiles"
+                  alt={t.automotiveFiltersAlt}
                   className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
                 />
                 <motion.div
@@ -252,7 +254,7 @@ export default function HomePage() {
                       <CheckCircle className="h-6 w-6 text-green-600" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Qualité Certifiée</div>
+                      <div className="font-semibold text-gray-900">{t.certifiedQuality}</div>
                       <div className="text-sm text-gray-600">ISO 9001</div>
                     </div>
                   </div>
@@ -273,9 +275,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Équipe & Innovation</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourTeamInnovation}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Une équipe d'experts dédiée au développement de solutions de filtration innovantes
+              {t.expertTeamDescription}
             </p>
           </motion.div>
 
@@ -290,10 +292,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                   <Users className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Innovation & Excellence</h3>
+                <h3 className="text-3xl font-bold text-gray-900">{t.innovationExcellence}</h3>
               </div>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Notre équipe d'ingénieurs spécialisés œuvre en continu au développement et à l'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l'objet de tests rigoureux afin d'assurer des performances optimales.
+                {t.engineeringDescription}
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <motion.div
@@ -301,14 +303,14 @@ export default function HomePage() {
                   className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                 >
                   <div className="text-3xl font-bold text-orange-600 mb-2">15+</div>
-                  <div className="text-gray-600 font-medium">Ingénieurs</div>
+                  <div className="text-gray-600 font-medium">{t.engineers}</div>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                 >
                   <div className="text-3xl font-bold text-orange-600 mb-2">500+</div>
-                  <div className="text-gray-600 font-medium">Tests par mois</div>
+                  <div className="text-gray-600 font-medium">{t.testsPerMonth}</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -321,7 +323,7 @@ export default function HomePage() {
             >
               <img
                 src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
-                alt="Équipe de recherche et développement"
+                alt={t.researchTeamAlt}
                 className="w-full h-80 object-cover rounded-2xl shadow-2xl"
               />
               <motion.div
@@ -333,8 +335,8 @@ export default function HomePage() {
                     <CheckCircle className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Laboratoire Certifié</div>
-                    <div className="text-sm text-gray-600">Tests de qualité</div>
+                    <div className="font-semibold text-gray-900">{t.certifiedLab}</div>
+                    <div className="text-sm text-gray-600">{t.qualityTests}</div>
                   </div>
                 </div>
               </motion.div>
@@ -353,7 +355,7 @@ export default function HomePage() {
               className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => window.location.href = '/a-propos'}
             >
-              Découvrir notre histoire
+              {t.discoverOurStory}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -370,9 +372,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">Certifications & Qualité</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">{t.certificationsQuality}</h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Des standards de qualité reconnus internationalement pour votre tranquillité d'esprit
+              {t.qualityStandardsDescription}
             </p>
           </motion.div>
 
@@ -381,28 +383,28 @@ export default function HomePage() {
               {
                 image: "https://devlly.net/alsafa/resources/ISO%2014001.png",
                 title: "ISO 14001",
-                description: "Management environnemental",
+                description: t.environmentalManagement,
                 icon: CheckCircle,
                 color: "green"
               },
               {
                 image: "https://devlly.net/alsafa/resources/the%20certifcate%20of%20ISO%209001.png",
                 title: "ISO 9001",
-                description: "Management de la qualité",
+                description: t.qualityManagement,
                 icon: CheckCircle,
                 color: "green"
               },
               {
                 image: "https://devlly.net/alsafa/resources/ISO%2045001.png",
                 title: "ISO 45001",
-                description: "Santé et sécurité au travail",
+                description: t.healthSafetyWork,
                 icon: CheckCircle,
                 color: "green"
               },
               {
                 image: "https://devlly.net/alsafa/resources/QR%20code%20%20elitifak%20filters%20black%20.png",
-                title: "Authentification",
-                description: "Vérification QR des produits",
+                title: t.authentication,
+                description: t.qrProductVerification,
                 icon: Shield,
                 color: "blue"
               }
@@ -437,7 +439,7 @@ export default function HomePage() {
                     }`}>
                       <cert.icon className="h-4 w-4" />
                       <span className="text-xs font-medium">
-                        {cert.color === 'green' ? 'Certifié' : 'Vérifiable'}
+                        {cert.color === 'green' ? t.certified : t.verifiable}
                       </span>
                     </div>
                   </CardContent>
@@ -458,7 +460,7 @@ export default function HomePage() {
               className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => window.location.href = '/a-propos'}
             >
-              En savoir plus sur nos certifications
+              {t.learnMoreCertifications}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -475,9 +477,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Trouvez votre filtre</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.findYourFilter}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choisissez votre méthode de recherche préférée pour trouver le filtre parfait
+              {t.chooseSearchMethod}
             </p>
           </motion.div>
 
@@ -492,10 +494,10 @@ export default function HomePage() {
               <CardContent className="p-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {[
-                    { type: "vehicle", icon: Car, label: "Par Véhicule" },
-                    { type: "reference", icon: Search, label: "Par Référence" },
-                    { type: "dimensions", icon: Ruler, label: "Par Dimensions" },
-                    { type: "correspondence", icon: RefreshCw, label: "Par Correspondance" },
+                    { type: "vehicle", icon: Car, label: t.byVehicle },
+                    { type: "reference", icon: Search, label: t.byReference },
+                    { type: "dimensions", icon: Ruler, label: t.byDimensions },
+                    { type: "correspondence", icon: RefreshCw, label: t.byCorrespondence },
                   ].map((option) => (
                     <motion.div
                       key={option.type}
@@ -529,7 +531,7 @@ export default function HomePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Select value={vehicleBrand} onValueChange={setVehicleBrand}>
                         <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue placeholder="Marque" />
+                          <SelectValue placeholder={t.vehicleBrand} />
                         </SelectTrigger>
                         <SelectContent>
                           {Object.keys(vehicleData).map((brand) => (
@@ -541,7 +543,7 @@ export default function HomePage() {
                       </Select>
                       <Select value={vehicleModel} onValueChange={setVehicleModel}>
                         <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue placeholder="Modèle" />
+                          <SelectValue placeholder={t.vehicleModel} />
                         </SelectTrigger>
                         <SelectContent>
                           {availableModels.map((model) => (
@@ -557,7 +559,7 @@ export default function HomePage() {
                   {filterType === "reference" && (
                     <div className="flex gap-4">
                       <Input 
-                        placeholder="Entrez la référence du filtre..." 
+                        placeholder={t.enterFilterReference} 
                         className="flex-1 h-12 rounded-xl text-lg"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -577,19 +579,19 @@ export default function HomePage() {
                   {filterType === "dimensions" && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <Input 
-                        placeholder="Diamètre externe (mm)" 
+                        placeholder={t.externalDiameter} 
                         className="h-12 rounded-xl text-lg"
                         value={dimensions.external}
                         onChange={(e) => setDimensions(prev => ({ ...prev, external: e.target.value }))}
                       />
                       <Input 
-                        placeholder="Diamètre interne (mm)" 
+                        placeholder={t.internalDiameter} 
                         className="h-12 rounded-xl text-lg"
                         value={dimensions.internal}
                         onChange={(e) => setDimensions(prev => ({ ...prev, internal: e.target.value }))}
                       />
                       <Input 
-                        placeholder="Hauteur (mm)" 
+                        placeholder={t.height} 
                         className="h-12 rounded-xl text-lg"
                         value={dimensions.height}
                         onChange={(e) => setDimensions(prev => ({ ...prev, height: e.target.value }))}
@@ -600,7 +602,7 @@ export default function HomePage() {
                   {filterType === "correspondence" && (
                     <div className="flex gap-4">
                       <Input 
-                        placeholder="Référence concurrente..." 
+                        placeholder={t.competitorReference} 
                         className="flex-1 h-12 rounded-xl text-lg"
                         value={correspondenceRef}
                         onChange={(e) => setCorrespondenceRef(e.target.value)}
@@ -612,7 +614,7 @@ export default function HomePage() {
                         disabled={!correspondenceRef.trim()}
                       >
                         <RefreshCw className="h-5 w-5 mr-2" />
-                        Trouver
+                        {t.find}
                       </Button>
                     </div>
                   )}
@@ -624,7 +626,7 @@ export default function HomePage() {
                       onClick={handleSearch}
                     >
                       <Filter className="h-5 w-5 mr-2" />
-                      Rechercher Maintenant
+                      {t.searchNow}
                     </Button>
                   </div>
                 </motion.div>
@@ -684,9 +686,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Marques automobiles supportées</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.supportedCarBrands}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Filtres compatibles avec toutes les grandes marques automobiles
+              {t.compatibleFiltersDescription}
             </p>
           </motion.div>
 
@@ -734,7 +736,7 @@ export default function HomePage() {
               className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => window.location.href = '/catalog'}
             >
-              Voir tous les filtres
+              {t.seeAllFilters}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -752,9 +754,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ce que nos clients disent</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.whatClientsSay}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Découvrez les témoignages de nos clients satisfaits
+              {t.discoverTestimonials}
             </p>
           </motion.div>
 
@@ -815,16 +817,16 @@ export default function HomePage() {
             className="text-center mt-16"
           >
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Rejoignez nos clients satisfaits</h3>
+              <h3 className="text-2xl font-bold mb-4">{t.joinSatisfiedClients}</h3>
               <p className="text-orange-100 mb-6 max-w-2xl mx-auto">
-                Découvrez pourquoi plus de 10,000 clients nous font confiance pour leurs filtres automobiles
+                {t.why10000ClientsTrust}
               </p>
               <Button
                 size="lg"
                 className="bg-white text-orange-600 hover:bg-orange-50 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => window.location.href = '/catalog'}
               >
-                Commencer maintenant
+                {t.startNow}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>

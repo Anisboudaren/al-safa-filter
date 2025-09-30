@@ -14,12 +14,14 @@ import { supabase, type Product } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { useTranslation } from "@/components/language-provider"
 import vehicleData from "@/lib/vehicle-data.json"
 
 const ITEMS_PER_PAGE = 12
 
 export default function VehicleFilterPage() {
   const searchParams = useSearchParams()
+  const t = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [brand, setBrand] = useState("")
@@ -140,10 +142,10 @@ export default function VehicleFilterPage() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Recherche par Véhicule
+              {t.searchByVehicle}
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Trouvez les filtres compatibles avec votre véhicule
+              {t.findPerfectFilterForVehicle}
             </p>
           </motion.div>
 
@@ -158,10 +160,10 @@ export default function VehicleFilterPage() {
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Marque</label>
+                    <label className="text-sm font-medium text-gray-700">{t.brand}</label>
                     <Select value={brand} onValueChange={setBrand}>
                       <SelectTrigger className="h-12 text-lg rounded-xl border-2 focus:border-blue-500 focus:ring-blue-500">
-                        <SelectValue placeholder="Sélectionner une marque" />
+                        <SelectValue placeholder={t.selectBrand} />
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brandOption) => (
@@ -174,10 +176,10 @@ export default function VehicleFilterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Modèle</label>
+                    <label className="text-sm font-medium text-gray-700">{t.model}</label>
                     <Select value={model} onValueChange={setModel}>
                       <SelectTrigger className="h-12 text-lg rounded-xl border-2 focus:border-blue-500 focus:ring-blue-500">
-                        <SelectValue placeholder="Sélectionner un modèle" />
+                        <SelectValue placeholder={t.selectModel} />
                       </SelectTrigger>
                       <SelectContent>
                         {availableModels.map((modelOption) => (
@@ -218,7 +220,7 @@ export default function VehicleFilterPage() {
                       ) : (
                         <>
                           <Search className="h-5 w-5 mr-2" />
-                          Rechercher
+                          {t.searchButton}
                         </>
                       )}
                     </Button>
@@ -226,10 +228,10 @@ export default function VehicleFilterPage() {
                 </div>
 
                 <p className="text-sm text-gray-500 text-center mt-4">
-                  Sélectionnez la marque et le modèle de votre véhicule pour trouver les filtres compatibles.
+                  {t.selectBrandModelDescription}
                 </p>
 
-                {/* Advanced Filters */}
+                {/* {t.advancedFilters} */}
                 <AnimatePresence>
                   {showFilters && (
                     <motion.div
@@ -246,7 +248,7 @@ export default function VehicleFilterPage() {
                           className="rounded-xl border-2 border-gray-300 hover:border-gray-400"
                         >
                           <X className="h-4 w-4 mr-2" />
-                          Effacer les filtres
+                          {t.clearFilters}
                         </Button>
                       </div>
                     </motion.div>
@@ -275,9 +277,9 @@ export default function VehicleFilterPage() {
             >
               <Car className="h-12 w-12 text-blue-600" />
             </motion.div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Recherche par Véhicule</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.searchByVehicle}</h3>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Sélectionnez la marque et le modèle de votre véhicule pour trouver les filtres compatibles.
+              {t.chooseSearchMethod}
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -306,12 +308,12 @@ export default function VehicleFilterPage() {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-blue-500" />
                   <p className="text-lg font-medium text-gray-900">
-                    {loading ? "Recherche en cours..." : `${totalCount} filtres trouvés`}
+                    {loading ? t.searchingInProgress : `${totalCount} ${t.filtersFound}`}
                   </p>
                 </div>
                 {totalPages > 1 && (
                   <Badge variant="outline" className="text-sm">
-                    Page {currentPage} sur {totalPages}
+                    {t.pageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
                   </Badge>
                 )}
               </div>
@@ -376,9 +378,9 @@ export default function VehicleFilterPage() {
                 >
                   <Car className="h-10 w-10 text-gray-400" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucun filtre trouvé</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">{t.noFiltersFound}</h3>
                 <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Essayez avec d'autres critères de véhicule.
+                  {t.tryDifferentCriteria}
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.05 }}

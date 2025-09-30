@@ -1,0 +1,1431 @@
+export type SupportedLanguage = 'en' | 'fr' | 'ar'
+
+export interface Translations {
+  // Brand and Company
+  brandName: string
+  tagline: string
+  taglineShort: string
+  
+  // Navigation
+  home: string
+  catalog: string
+  catalogMain: string
+  about: string
+  search: string
+  searchShort: string
+  back: string
+  menu: string
+  navigation: string
+  
+  // Filter Types
+  specializedFilters: string
+  byVehicle: string
+  byDimensions: string
+  byReference: string
+  byCorrespondence: string
+  
+  // Actions
+  downloadPdf: string
+  downloadPdfShort: string
+  downloadCatalog: string
+  searchFilter: string
+  
+  // Contact
+  phone: string
+  email: string
+  phoneNumber: string
+  emailAddress: string
+  
+  // Homepage Content
+  heroTitle: string
+  heroSubtitle: string
+  findPerfectFilter: string
+  searchVastCollection: string
+  
+  // Features
+  qualityGuaranteed: string
+  qualityDescription: string
+  technicalExpertise: string
+  expertiseDescription: string
+  customerSupport: string
+  supportDescription: string
+  
+  // Testimonials
+  testimonialsTitle: string
+  testimonial1Text: string
+  testimonial1Name: string
+  testimonial1Location: string
+  testimonial2Text: string
+  testimonial2Name: string
+  testimonial2Location: string
+  testimonial3Text: string
+  testimonial3Name: string
+  testimonial3Location: string
+  
+  // Car Brands (keeping as arrays for dynamic content)
+  carBrands: string[]
+  
+  // Filter Options
+  filterType: string
+  vehicle: string
+  dimensions: string
+  correspondence: string
+  reference: string
+  
+  // Search and Filter
+  searchTerm: string
+  searchPlaceholder: string
+  searchBy: string
+  externalDimensions: string
+  internalDimensions: string
+  height: string
+  correspondenceRef: string
+  vehicleBrand: string
+  vehicleModel: string
+  
+  // Catalog
+  catalogTitle: string
+  catalogDescription: string
+  itemsPerPage: number
+  totalItems: string
+  showingResults: string
+  noResults: string
+  clearFilters: string
+  
+  // Product Details
+  productDetails: string
+  specifications: string
+  origin: string
+  brand: string
+  model: string
+  price: string
+  availability: string
+  inStock: string
+  outOfStock: string
+  
+  // Common
+  loading: string
+  error: string
+  success: string
+  cancel: string
+  save: string
+  edit: string
+  delete: string
+  confirm: string
+  
+  // Admin
+  adminDashboard: string
+  adminLogin: string
+  adminSetup: string
+  resetPassword: string
+  
+  // Analytics
+  analytics: string
+  setupAnalytics: string
+  
+  // Form Labels
+  username: string
+  password: string
+  email: string
+  confirmPassword: string
+  rememberMe: string
+  forgotPassword: string
+  
+  // Messages
+  welcomeMessage: string
+  loginSuccess: string
+  logoutSuccess: string
+  errorOccurred: string
+  tryAgain: string
+  
+  // Numbers and Formats
+  currency: string
+  dateFormat: string
+  timeFormat: string
+  
+  // Homepage specific content
+  certifiedQuality: string
+  highQualityFilters: string
+  superiorQuality: string
+  findPerfectFilterForVehicle: string
+  startSearch: string
+  viewCatalog: string
+  modelsCount: string
+  brandsCount: string
+  models: string
+  brands: string
+  
+  // Team & Innovation Section
+  ourTeamInnovation: string
+  expertTeamDescription: string
+  innovationExcellence: string
+  engineeringDescription: string
+  engineers: string
+  testsPerMonth: string
+  certifiedLab: string
+  qualityTests: string
+  discoverOurStory: string
+  
+  // Certifications Section
+  certificationsQuality: string
+  qualityStandardsDescription: string
+  environmentalManagement: string
+  qualityManagement: string
+  healthSafetyWork: string
+  authentication: string
+  qrProductVerification: string
+  certified: string
+  verifiable: string
+  learnMoreCertifications: string
+  
+  // Search Section
+  findYourFilter: string
+  chooseSearchMethod: string
+  enterFilterReference: string
+  externalDiameter: string
+  internalDiameter: string
+  height: string
+  competitorReference: string
+  find: string
+  searchNow: string
+  
+  // Car Brands Section
+  supportedCarBrands: string
+  compatibleFiltersDescription: string
+  seeAllFilters: string
+  
+  // Testimonials Section
+  whatClientsSay: string
+  discoverTestimonials: string
+  joinSatisfiedClients: string
+  why10000ClientsTrust: string
+  startNow: string
+  
+  // Alt texts and placeholders
+  automotiveFiltersAlt: string
+  researchTeamAlt: string
+  
+  // Footer content
+  backgroundLogoAlt: string
+  companyDescription: string
+  downloadCatalogPdf: string
+  navigation: string
+  services: string
+  searchByVehicle: string
+  searchByReference: string
+  searchByDimensions: string
+  correspondences: string
+  contact: string
+  allRightsReserved: string
+  termsOfUse: string
+  privacyPolicy: string
+  qualityPolicy: string
+  siteMap: string
+  
+  // Filter pages content
+  searchByDimensions: string
+  searchByVehicle: string
+  searchByReference: string
+  searchByCorrespondence: string
+  searchByReferencePlaceholder: string
+  preparingCorrespondenceSearch: string
+  
+  // Search form elements
+  searchButton: string
+  selectBrand: string
+  selectModel: string
+  externalDiameter: string
+  internalDiameter: string
+  height: string
+  externalDiameterPlaceholder: string
+  internalDiameterPlaceholder: string
+  heightPlaceholder: string
+  referencePlaceholder: string
+  correspondencePlaceholder: string
+  searchReferenceButton: string
+  clearFilters: string
+  brand: string
+  model: string
+  filterReference: string
+  competitorReference: string
+  
+  // Advanced filters and search states
+  advancedFilters: string
+  noFiltersFound: string
+  tryDifferentCriteria: string
+  tryAdjustingDimensions: string
+  selectBrandModelDescription: string
+  enterExactDimensionsDescription: string
+  findEquivalentFiltersDescription: string
+  enterCompetitorReferenceDescription: string
+  enterAtLeastOneDimensionDescription: string
+  enterCompleteOrPartialReferenceDescription: string
+  enterExactOrPartialReferenceDescription: string
+  
+  // Loading and results text
+  searchingInProgress: string
+  referencesFound: string
+  filtersFound: string
+  correspondencesFound: string
+  
+  // Pagination
+  pageOf: string
+  
+  // About page content
+  aboutUs: string
+  aboutAlsafaFilters: string
+  companyDescription: string
+  since1994: string
+  thirtyYearsExcellence: string
+  foundation1994: string
+  foundationDescription: string
+  transition2002: string
+  transitionDescription: string
+  nationalLeader: string
+  since2002: string
+  ourTeamResearch: string
+  expertTeamDescription: string
+  innovationExcellence: string
+  teamDescription: string
+  certifiedQuality: string
+  iso9001: string
+  ourFactoryProduction: string
+  modernProduction: string
+  factoryDescription: string
+  filtersInProduction: string
+  automatedProduction: string
+  ourProduction: string
+  productionCapacityDescription: string
+  oilFilters: string
+  dieselFilters: string
+  airFilters: string
+  integrationRate: string
+  filtersPerYear: string
+  completeRange: string
+  completeRangeDescription: string
+  differentFilterTypes: string
+  filterCatalog: string
+  researchDevelopmentTeam: string
+  ourCommitment: string
+  commitmentDescription: string
+  
+  // Additional About page content
+  ourHistory: string
+  ourJourney: string
+  today: string
+  todayDescription: string
+  ourProducts: string
+  references: string
+  piecesPerYear: string
+  availableReferences: string
+  jobsCreated: string
+  qualityControl: string
+  compliantTransparentCompany: string
+  alsafaFiltersFactory: string
+  modernInfrastructure: string
+  superiorQualityProduction: string
+  alsafaFiltersFactoryHistory: string
+  yearsOfExperience: string
+  completeTraceability: string
+  
+  // Hero button and additional sections
+  discoverOurHistory: string
+  trustedBrands: string
+  trustedPartnersDescription: string
+  ourCertifications: string
+  qualityStandardsDescription: string
+  complianceTransparency: string
+  compliantTransparentActivities: string
+  contactIdentity: string
+  trustedPartnerDescription: string
+  legalStatus: string
+  transparency: string
+  transparentBusinessPractices: string
+  
+  // Social media links
+  followUs: string
+  socialMedia: string
+  
+  // RTL specific
+  direction: 'ltr' | 'rtl'
+  textAlign: 'left' | 'right'
+  marginStart: string
+  marginEnd: string
+  paddingStart: string
+  paddingEnd: string
+}
+
+export const translations: Record<SupportedLanguage, Translations> = {
+  en: {
+    // Brand and Company
+    brandName: 'Alsafa Filters',
+    tagline: 'Automotive filtration solutions',
+    taglineShort: 'Auto filters',
+    
+    // Navigation
+    home: 'Home',
+    catalog: 'Catalog',
+    catalogMain: 'Main Catalog',
+    about: 'About',
+    search: 'Search',
+    searchShort: 'Search',
+    back: 'Back',
+    menu: 'Menu',
+    navigation: 'Navigation',
+    
+    // Filter Types
+    specializedFilters: 'Specialized Filters',
+    byVehicle: 'By Vehicle',
+    byDimensions: 'By Dimensions',
+    byReference: 'By Reference',
+    byCorrespondence: 'By Correspondence',
+    
+    // Actions
+    downloadPdf: 'Download PDF',
+    downloadPdfShort: 'PDF',
+    downloadCatalog: 'Download Catalog',
+    searchFilter: 'Search for a filter',
+    
+    // Contact
+    phone: 'Phone',
+    email: 'Email',
+    phoneNumber: '+213 555 046 890',
+    emailAddress: 'contact@elitifakfilters.com',
+    
+    // Homepage Content
+    heroTitle: 'Find the Perfect Filter',
+    heroSubtitle: 'Search through our vast collection of high-quality filters',
+    findPerfectFilter: 'Find the Perfect Filter',
+    searchVastCollection: 'Search through our vast collection of high-quality filters',
+    
+    // Features
+    qualityGuaranteed: 'Quality Guaranteed',
+    qualityDescription: 'Filters certified according to international standards',
+    technicalExpertise: 'Technical Expertise',
+    expertiseDescription: 'Over 20 years of experience in the field',
+    customerSupport: 'Customer Support',
+    supportDescription: 'Technical assistance 7 days a week',
+    
+    // Testimonials
+    testimonialsTitle: 'Customer Testimonials',
+    testimonial1Text: 'Since using Alsafa filters, I notice better car performance and reduced consumption.',
+    testimonial1Name: 'Karim B.',
+    testimonial1Location: 'ALGIERS',
+    testimonial2Text: 'I found exactly the filters I needed at a more than reasonable price. Thank you Alsafa Filters!',
+    testimonial2Name: 'Hassim T.',
+    testimonial2Location: 'ORAN',
+    testimonial3Text: 'I am very satisfied with the shopping experience. Very simple and fast, with excellent product quality. I highly recommend.',
+    testimonial3Name: 'Mehdi L.',
+    testimonial3Location: 'SIDI BEL ABBES',
+    
+    // Car Brands
+    carBrands: ['Audi', 'Toyota', 'Volkswagen', 'Ford', 'Mercedes'],
+    
+    // Filter Options
+    filterType: 'Filter Type',
+    vehicle: 'Vehicle',
+    dimensions: 'Dimensions',
+    correspondence: 'Correspondence',
+    reference: 'Reference',
+    
+    // Search and Filter
+    searchTerm: 'Search Term',
+    searchPlaceholder: 'Search by name, origin, or specifications...',
+    searchBy: 'Search by',
+    externalDimensions: 'External Dimensions',
+    internalDimensions: 'Internal Dimensions',
+    height: 'Height',
+    correspondenceRef: 'Correspondence Reference',
+    vehicleBrand: 'Vehicle Brand',
+    vehicleModel: 'Vehicle Model',
+    
+    // Catalog
+    catalogTitle: 'Product Catalog',
+    catalogDescription: 'Browse our complete range of automotive filters',
+    itemsPerPage: 12,
+    totalItems: 'Total Items',
+    showingResults: 'Showing Results',
+    noResults: 'No results found',
+    clearFilters: 'Clear Filters',
+    
+    // Product Details
+    productDetails: 'Product Details',
+    specifications: 'Specifications',
+    origin: 'Origin',
+    brand: 'Brand',
+    model: 'Model',
+    price: 'Price',
+    availability: 'Availability',
+    inStock: 'In Stock',
+    outOfStock: 'Out of Stock',
+    
+    // Common
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    cancel: 'Cancel',
+    save: 'Save',
+    edit: 'Edit',
+    delete: 'Delete',
+    confirm: 'Confirm',
+    
+    // Admin
+    adminDashboard: 'Admin Dashboard',
+    adminLogin: 'Admin Login',
+    adminSetup: 'Admin Setup',
+    resetPassword: 'Reset Password',
+    
+    // Analytics
+    analytics: 'Analytics',
+    setupAnalytics: 'Setup Analytics',
+    
+    // Form Labels
+    username: 'Username',
+    password: 'Password',
+    email: 'Email',
+    confirmPassword: 'Confirm Password',
+    rememberMe: 'Remember Me',
+    forgotPassword: 'Forgot Password',
+    
+    // Messages
+    welcomeMessage: 'Welcome to Alsafa Filters',
+    loginSuccess: 'Login successful',
+    logoutSuccess: 'Logout successful',
+    errorOccurred: 'An error occurred',
+    tryAgain: 'Try again',
+    
+    // Numbers and Formats
+    currency: 'DZD',
+    dateFormat: 'MM/DD/YYYY',
+    timeFormat: 'HH:mm',
+    
+    // Homepage specific content
+    certifiedQuality: 'Certified Quality',
+    highQualityFilters: 'High Quality Filters',
+    superiorQuality: 'Superior Quality',
+    findPerfectFilterForVehicle: 'Find the perfect filter for your vehicle with our advanced search technology',
+    startSearch: 'Start Search',
+    viewCatalog: 'View Catalog',
+    modelsCount: '1000+',
+    brandsCount: '50+',
+    models: 'Models',
+    brands: 'Brands',
+    
+    // Team & Innovation Section
+    ourTeamInnovation: 'Our Team & Innovation',
+    expertTeamDescription: 'A team of experts dedicated to developing innovative filtration solutions',
+    innovationExcellence: 'Innovation & Excellence',
+    engineeringDescription: 'Our team of specialized engineers continuously works on developing and improving our filters. Thanks to our state-of-the-art laboratory, each product undergoes rigorous testing to ensure optimal performance.',
+    engineers: 'Engineers',
+    testsPerMonth: 'Tests per month',
+    certifiedLab: 'Certified Laboratory',
+    qualityTests: 'Quality tests',
+    discoverOurStory: 'Discover our story',
+    
+    // Certifications Section
+    certificationsQuality: 'Certifications & Quality',
+    qualityStandardsDescription: 'Internationally recognized quality standards for your peace of mind',
+    environmentalManagement: 'Environmental management',
+    qualityManagement: 'Quality management',
+    healthSafetyWork: 'Health and safety at work',
+    authentication: 'Authentication',
+    qrProductVerification: 'QR product verification',
+    certified: 'Certified',
+    verifiable: 'Verifiable',
+    learnMoreCertifications: 'Learn more about our certifications',
+    
+    // Search Section
+    findYourFilter: 'Find your filter',
+    chooseSearchMethod: 'Choose your preferred search method to find the perfect filter',
+    enterFilterReference: 'Enter filter reference...',
+    externalDiameter: 'External diameter (mm)',
+    internalDiameter: 'Internal diameter (mm)',
+    height: 'Height (mm)',
+    competitorReference: 'Competitor reference...',
+    find: 'Find',
+    searchNow: 'Search Now',
+    
+    // Car Brands Section
+    supportedCarBrands: 'Supported automotive brands',
+    compatibleFiltersDescription: 'Filters compatible with all major automotive brands',
+    seeAllFilters: 'See all filters',
+    
+    // Testimonials Section
+    whatClientsSay: 'What our clients say',
+    discoverTestimonials: 'Discover testimonials from our satisfied clients',
+    joinSatisfiedClients: 'Join our satisfied clients',
+    why10000ClientsTrust: 'Discover why more than 10,000 clients trust us for their automotive filters',
+    startNow: 'Start now',
+    
+    // Alt texts and placeholders
+    automotiveFiltersAlt: 'Automotive filters',
+    researchTeamAlt: 'Research and development team',
+    
+    // Footer content
+    backgroundLogoAlt: 'Background Logo',
+    companyDescription: 'Alsafa Filters guarantees you high-quality filters for all types of vehicles, with exceptional customer service and recognized technical expertise throughout Algeria.',
+    downloadCatalogPdf: 'Download PDF Catalog',
+    navigation: 'Navigation',
+    services: 'Services',
+    searchByVehicle: 'Search by vehicle',
+    searchByReference: 'Search by reference',
+    searchByDimensions: 'Search by dimensions',
+    correspondences: 'Correspondences',
+    contact: 'Contact',
+    allRightsReserved: '© 2025 By Elitifak filters. All rights reserved.',
+    termsOfUse: 'Terms of Use',
+    privacyPolicy: 'Privacy Policy',
+    qualityPolicy: 'Quality Policy',
+    siteMap: 'Site Map',
+    
+    // Filter pages content
+    searchByDimensions: 'Search by Dimensions',
+    searchByVehicle: 'Search by Vehicle',
+    searchByReference: 'Search by Reference',
+    searchByCorrespondence: 'Search by Correspondence',
+    searchByReferencePlaceholder: 'Search by reference (ALSAFA, SAFI, SARL_F, FLEETG, ASAS, MECA_F, REF_ORG, MANN, UFI, HIFI, WIX)...',
+    preparingCorrespondenceSearch: 'Preparing correspondence search',
+    
+    // Search form elements
+    searchButton: 'Search',
+    selectBrand: 'Select a brand',
+    selectModel: 'Select a model',
+    externalDiameter: 'External Diameter (mm)',
+    internalDiameter: 'Internal Diameter (mm)',
+    height: 'Height (mm)',
+    externalDiameterPlaceholder: 'Ex: 65',
+    internalDiameterPlaceholder: 'Ex: 30',
+    heightPlaceholder: 'Ex: 85',
+    referencePlaceholder: 'Ex: OBB-128A, AF-2547, HU-925/4X...',
+    correspondencePlaceholder: 'Ex: MANN-FILTER HU7008Z, UFI 23.155.00...',
+    searchReferenceButton: 'Search Reference',
+    clearFilters: 'Clear',
+    brand: 'Brand',
+    model: 'Model',
+    filterReference: 'Filter Reference',
+    competitorReference: 'Competitor Reference',
+    
+    // Advanced filters and search states
+    advancedFilters: 'Advanced Filters',
+    noFiltersFound: 'No filters found',
+    tryDifferentCriteria: 'Try with different vehicle criteria.',
+    tryAdjustingDimensions: 'Try adjusting your dimensions or using less precise values.',
+    selectBrandModelDescription: 'Select the brand and model of your vehicle to find compatible filters.',
+    enterExactDimensionsDescription: 'Enter the exact dimensions of the filter you are looking for. Our system uses partial matching to find compatible filters.',
+    findEquivalentFiltersDescription: 'Find equivalent filters from a competitor reference',
+    enterCompetitorReferenceDescription: 'Enter the competitor filter reference to find Al Safa equivalents.',
+    enterAtLeastOneDimensionDescription: 'Enter at least one dimension to perform the search. The search uses partial matching.',
+    enterCompleteOrPartialReferenceDescription: 'Enter the complete or partial reference of the filter you are looking for',
+    enterExactOrPartialReferenceDescription: 'Enter the exact or partial reference of the filter you are looking for. Our system will search in all available references.',
+    
+    // Loading and results text
+    searchingInProgress: 'Search in progress...',
+    referencesFound: 'references found',
+    filtersFound: 'filters found',
+    correspondencesFound: 'correspondences found',
+    
+    // Pagination
+    pageOf: 'Page {current} of {total}',
+    
+    // About page content
+    aboutUs: 'About Us',
+    aboutAlsafaFilters: 'About Alsafa Filters',
+    companyDescription: 'SARL ELITIFAK, manufacturer of the Alsafa Filters brand, founded in 1994 in Aïn M\'lila – Algeria. The largest manufacturer of filters (air, oil, fuel) in the country.',
+    since1994: 'Since 1994',
+    thirtyYearsExcellence: 'From import to manufacturing: 30 years of excellence in automotive filtration',
+    foundation1994: '1994 - Foundation',
+    foundationDescription: 'SARL ELITIFAK was founded in Aïn M\'lila – Algeria. At the time, it was the largest automotive spare parts import company in Algeria.',
+    transition2002: '2002 - Transition',
+    transitionDescription: 'ELITIFAK established itself as the largest manufacturer of filters (air, oil, fuel) in the country, offering products that meet international standards.',
+    nationalLeader: 'National Leader',
+    since2002: 'Since 2002',
+    ourTeamResearch: 'Our Team & Research',
+    expertTeamDescription: 'A team of experts dedicated to developing innovative filtration solutions',
+    innovationExcellence: 'Innovation & Excellence',
+    teamDescription: 'Our specialized engineering team continuously works on developing and improving our filters. Thanks to our state-of-the-art laboratory, each product undergoes rigorous testing to ensure optimal performance.',
+    certifiedQuality: 'Certified Quality',
+    iso9001: 'ISO 9001',
+    ourFactoryProduction: 'Our Factory & Production',
+    modernProduction: 'Modern Production',
+    factoryDescription: 'Our modern factory, located in Algeria, uses cutting-edge technologies for automotive filter production. We maintain high quality standards while optimizing our production capacity to efficiently meet growing demand.',
+    filtersInProduction: 'Filters in production',
+    automatedProduction: 'Automated production',
+    ourProduction: 'Our Production',
+    productionCapacityDescription: 'Production capacity and characteristics of our filters',
+    oilFilters: 'Oil Filters',
+    dieselFilters: 'Diesel Filters',
+    airFilters: 'Air Filters',
+    integrationRate: 'Integration rate',
+    filtersPerYear: 'Filters/year',
+    completeRange: 'Complete Range',
+    completeRangeDescription: 'A complete range of automotive filters to meet all your needs',
+    differentFilterTypes: 'Different types of filters',
+    filterCatalog: 'Filter catalog',
+    researchDevelopmentTeam: 'Research and development team Alsafa Filters',
+    ourCommitment: 'Our Commitment',
+    commitmentDescription: 'SARL ELITIFAK is committed to respecting all current regulations and maintaining the highest transparency in its commercial activities. Our company is legally constituted, fiscally compliant and statistically registered, thus guaranteeing the trust and security of our partners and clients.',
+    
+    // Additional About page content
+    ourHistory: 'Our History',
+    ourJourney: 'Our Journey',
+    today: 'Today',
+    todayDescription: 'It remains a reference player in the Algerian market and aims to expand its presence in African and international markets.',
+    ourProducts: 'Our Products',
+    references: 'References',
+    piecesPerYear: 'Pieces/Year',
+    availableReferences: 'Available references',
+    jobsCreated: 'Jobs created',
+    qualityControl: 'Quality control',
+    compliantTransparentCompany: 'Compliant & Transparent Company',
+    alsafaFiltersFactory: 'Alsafa Filters Factory',
+    modernInfrastructure: 'Modern infrastructure for superior quality production',
+    superiorQualityProduction: 'Modern infrastructure for superior quality production',
+    alsafaFiltersFactoryHistory: 'Alsafa Filters Factory - Company history',
+    yearsOfExperience: 'Years of experience',
+    completeTraceability: 'Complete traceability',
+    
+    // Hero button and additional sections
+    discoverOurHistory: 'Discover our history',
+    trustedBrands: 'Brands that trust us',
+    trustedPartnersDescription: 'Trusted partners who rely on our filtration expertise',
+    ourCertifications: 'Our Certifications',
+    qualityStandardsDescription: 'Internationally recognized quality standards for your peace of mind',
+    complianceTransparency: 'Compliance & Transparency',
+    compliantTransparentActivities: 'SARL ELITIFAK - A compliant and transparent company in all its activities',
+    contactIdentity: 'Contact & Identity',
+    trustedPartnerDescription: 'SARL ELITIFAK - Your trusted partner in automotive filtration',
+    legalStatus: 'Legal Status',
+    transparency: 'Transparency',
+    transparentBusinessPractices: 'Transparent business practices',
+    
+    // Social media links
+    followUs: 'Follow Us',
+    socialMedia: 'Social Media',
+    
+    // RTL specific
+    direction: 'ltr',
+    textAlign: 'left',
+    marginStart: 'ml-',
+    marginEnd: 'mr-',
+    paddingStart: 'pl-',
+    paddingEnd: 'pr-',
+  },
+  
+  fr: {
+    // Brand and Company
+    brandName: 'Alsafa Filters',
+    tagline: 'Solutions de filtration automobile',
+    taglineShort: 'Filtres auto',
+    
+    // Navigation
+    home: 'Accueil',
+    catalog: 'Catalogue',
+    catalogMain: 'Catalogue Principal',
+    about: 'À propos',
+    search: 'Rechercher',
+    searchShort: 'Recherche',
+    back: 'Retour',
+    menu: 'Menu',
+    navigation: 'Navigation',
+    
+    // Filter Types
+    specializedFilters: 'Filtres Spécialisés',
+    byVehicle: 'Par Véhicule',
+    byDimensions: 'Par Dimensions',
+    byReference: 'Par Référence',
+    byCorrespondence: 'Par Correspondance',
+    
+    // Actions
+    downloadPdf: 'Catalogue PDF',
+    downloadPdfShort: 'PDF',
+    downloadCatalog: 'Télécharger le catalogue PDF',
+    searchFilter: 'Rechercher un filtre',
+    
+    // Contact
+    phone: 'Téléphone',
+    email: 'Email',
+    phoneNumber: '+213 555 046 890',
+    emailAddress: 'contact@elitifakfilters.com',
+    
+    // Homepage Content
+    heroTitle: 'Trouvez le filtre parfait',
+    heroSubtitle: 'Recherchez parmi notre vaste collection de filtres de qualité supérieure',
+    findPerfectFilter: 'Trouvez le filtre parfait',
+    searchVastCollection: 'Recherchez parmi notre vaste collection de filtres de qualité supérieure',
+    
+    // Features
+    qualityGuaranteed: 'Qualité Garantie',
+    qualityDescription: 'Filtres certifiés selon les normes internationales',
+    technicalExpertise: 'Expertise Technique',
+    expertiseDescription: 'Plus de 20 ans d\'expérience dans le domaine',
+    customerSupport: 'Support Client',
+    supportDescription: 'Assistance technique 7j/7',
+    
+    // Testimonials
+    testimonialsTitle: 'Témoignages Clients',
+    testimonial1Text: 'Depuis que j\'utilise les filtres Alsafa, je remarque une meilleure performance de ma voiture et une consommation réduite.',
+    testimonial1Name: 'Karim B.',
+    testimonial1Location: 'ALGER',
+    testimonial2Text: 'J\'ai trouvé exactement les filtres dont j\'avais besoin, à un prix plus que raisonnable. Merci Alsafa Filters !',
+    testimonial2Name: 'Hassim T.',
+    testimonial2Location: 'ORAN',
+    testimonial3Text: 'Je suis très satisfait de l\'expérience d\'achat. Très simple et rapide, avec une excellente qualité de produit. Je recommande vivement.',
+    testimonial3Name: 'Mehdi L.',
+    testimonial3Location: 'SIDI BEL ABBES',
+    
+    // Car Brands
+    carBrands: ['Audi', 'Toyota', 'Volkswagen', 'Ford', 'Mercedes'],
+    
+    // Filter Options
+    filterType: 'Type de Filtre',
+    vehicle: 'Véhicule',
+    dimensions: 'Dimensions',
+    correspondence: 'Correspondance',
+    reference: 'Référence',
+    
+    // Search and Filter
+    searchTerm: 'Terme de Recherche',
+    searchPlaceholder: 'Rechercher par nom, origine, ou spécifications...',
+    searchBy: 'Rechercher par',
+    externalDimensions: 'Dimensions Externes',
+    internalDimensions: 'Dimensions Internes',
+    height: 'Hauteur',
+    correspondenceRef: 'Référence de Correspondance',
+    vehicleBrand: 'Marque du Véhicule',
+    vehicleModel: 'Modèle du Véhicule',
+    
+    // Catalog
+    catalogTitle: 'Catalogue de Produits',
+    catalogDescription: 'Parcourez notre gamme complète de filtres automobiles',
+    itemsPerPage: 12,
+    totalItems: 'Total des Articles',
+    showingResults: 'Affichage des Résultats',
+    noResults: 'Aucun résultat trouvé',
+    clearFilters: 'Effacer les Filtres',
+    
+    // Product Details
+    productDetails: 'Détails du Produit',
+    specifications: 'Spécifications',
+    origin: 'Origine',
+    brand: 'Marque',
+    model: 'Modèle',
+    price: 'Prix',
+    availability: 'Disponibilité',
+    inStock: 'En Stock',
+    outOfStock: 'Rupture de Stock',
+    
+    // Common
+    loading: 'Chargement...',
+    error: 'Erreur',
+    success: 'Succès',
+    cancel: 'Annuler',
+    save: 'Enregistrer',
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    confirm: 'Confirmer',
+    
+    // Admin
+    adminDashboard: 'Tableau de Bord Admin',
+    adminLogin: 'Connexion Admin',
+    adminSetup: 'Configuration Admin',
+    resetPassword: 'Réinitialiser le Mot de Passe',
+    
+    // Analytics
+    analytics: 'Analytiques',
+    setupAnalytics: 'Configurer les Analytiques',
+    
+    // Form Labels
+    username: 'Nom d\'utilisateur',
+    password: 'Mot de passe',
+    email: 'Email',
+    confirmPassword: 'Confirmer le mot de passe',
+    rememberMe: 'Se souvenir de moi',
+    forgotPassword: 'Mot de passe oublié',
+    
+    // Messages
+    welcomeMessage: 'Bienvenue chez Alsafa Filters',
+    loginSuccess: 'Connexion réussie',
+    logoutSuccess: 'Déconnexion réussie',
+    errorOccurred: 'Une erreur s\'est produite',
+    tryAgain: 'Réessayer',
+    
+    // Numbers and Formats
+    currency: 'DZD',
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: 'HH:mm',
+    
+    // Homepage specific content
+    certifiedQuality: 'Qualité Certifiée',
+    highQualityFilters: 'Filtres de Qualité Supérieure',
+    superiorQuality: 'Qualité Supérieure',
+    findPerfectFilterForVehicle: 'Trouvez le filtre parfait pour votre véhicule avec notre technologie de recherche avancée',
+    startSearch: 'Commencer la Recherche',
+    viewCatalog: 'Voir le Catalogue',
+    modelsCount: '1000+',
+    brandsCount: '50+',
+    models: 'Modèles',
+    brands: 'Marques',
+    
+    // Team & Innovation Section
+    ourTeamInnovation: 'Notre Équipe & Innovation',
+    expertTeamDescription: 'Une équipe d\'experts dédiée au développement de solutions de filtration innovantes',
+    innovationExcellence: 'Innovation & Excellence',
+    engineeringDescription: 'Notre équipe d\'ingénieurs spécialisés œuvre en continu au développement et à l\'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l\'objet de tests rigoureux afin d\'assurer des performances optimales.',
+    engineers: 'Ingénieurs',
+    testsPerMonth: 'Tests par mois',
+    certifiedLab: 'Laboratoire Certifié',
+    qualityTests: 'Tests de qualité',
+    discoverOurStory: 'Découvrir notre histoire',
+    
+    // Certifications Section
+    certificationsQuality: 'Certifications & Qualité',
+    qualityStandardsDescription: 'Des standards de qualité reconnus internationalement pour votre tranquillité d\'esprit',
+    environmentalManagement: 'Management environnemental',
+    qualityManagement: 'Management de la qualité',
+    healthSafetyWork: 'Santé et sécurité au travail',
+    authentication: 'Authentification',
+    qrProductVerification: 'Vérification QR des produits',
+    certified: 'Certifié',
+    verifiable: 'Vérifiable',
+    learnMoreCertifications: 'En savoir plus sur nos certifications',
+    
+    // Search Section
+    findYourFilter: 'Trouvez votre filtre',
+    chooseSearchMethod: 'Choisissez votre méthode de recherche préférée pour trouver le filtre parfait',
+    enterFilterReference: 'Entrez la référence du filtre...',
+    externalDiameter: 'Diamètre externe (mm)',
+    internalDiameter: 'Diamètre interne (mm)',
+    height: 'Hauteur (mm)',
+    competitorReference: 'Référence concurrente...',
+    find: 'Trouver',
+    searchNow: 'Rechercher Maintenant',
+    
+    // Car Brands Section
+    supportedCarBrands: 'Marques automobiles supportées',
+    compatibleFiltersDescription: 'Filtres compatibles avec toutes les grandes marques automobiles',
+    seeAllFilters: 'Voir tous les filtres',
+    
+    // Testimonials Section
+    whatClientsSay: 'Ce que nos clients disent',
+    discoverTestimonials: 'Découvrez les témoignages de nos clients satisfaits',
+    joinSatisfiedClients: 'Rejoignez nos clients satisfaits',
+    why10000ClientsTrust: 'Découvrez pourquoi plus de 10,000 clients nous font confiance pour leurs filtres automobiles',
+    startNow: 'Commencer maintenant',
+    
+    // Alt texts and placeholders
+    automotiveFiltersAlt: 'Filtres automobiles',
+    researchTeamAlt: 'Équipe de recherche et développement',
+    
+    // Footer content
+    backgroundLogoAlt: 'Logo de fond',
+    companyDescription: 'Alsafa Filters vous garantit des filtres de haute qualité pour tous types de véhicules, avec un service client exceptionnel et une expertise technique reconnue dans toute l\'Algérie.',
+    downloadCatalogPdf: 'Télécharger le catalogue PDF',
+    navigation: 'Navigation',
+    services: 'Services',
+    searchByVehicle: 'Recherche par véhicule',
+    searchByReference: 'Recherche par référence',
+    searchByDimensions: 'Recherche par dimensions',
+    correspondences: 'Correspondances',
+    contact: 'Contact',
+    allRightsReserved: '© 2025 By Elitifak filters. Tous droits réservés.',
+    termsOfUse: 'Conditions d\'utilisation',
+    privacyPolicy: 'Politique de confidentialité',
+    qualityPolicy: 'Politique de qualité',
+    siteMap: 'Plan du site',
+    
+    // Filter pages content
+    searchByDimensions: 'Recherche par Dimensions',
+    searchByVehicle: 'Recherche par Véhicule',
+    searchByReference: 'Recherche par Référence',
+    searchByCorrespondence: 'Recherche par Correspondance',
+    searchByReferencePlaceholder: 'Rechercher par référence (ALSAFA, SAFI, SARL_F, FLEETG, ASAS, MECA_F, REF_ORG, MANN, UFI, HIFI, WIX)...',
+    preparingCorrespondenceSearch: 'Préparation de la recherche par correspondance',
+    
+    // Search form elements
+    searchButton: 'Rechercher',
+    selectBrand: 'Sélectionner une marque',
+    selectModel: 'Sélectionner un modèle',
+    externalDiameter: 'Diamètre Externe (mm)',
+    internalDiameter: 'Diamètre Interne (mm)',
+    height: 'Hauteur (mm)',
+    externalDiameterPlaceholder: 'Ex: 65',
+    internalDiameterPlaceholder: 'Ex: 30',
+    heightPlaceholder: 'Ex: 85',
+    referencePlaceholder: 'Ex: OBB-128A, AF-2547, HU-925/4X...',
+    correspondencePlaceholder: 'Ex: MANN-FILTER HU7008Z, UFI 23.155.00...',
+    searchReferenceButton: 'Rechercher la Référence',
+    clearFilters: 'Effacer',
+    brand: 'Marque',
+    model: 'Modèle',
+    filterReference: 'Référence du filtre',
+    competitorReference: 'Référence du concurrent',
+    
+    // Advanced filters and search states
+    advancedFilters: 'Filtres avancés',
+    noFiltersFound: 'Aucun filtre trouvé',
+    tryDifferentCriteria: 'Essayez avec d\'autres critères de véhicule.',
+    tryAdjustingDimensions: 'Essayez d\'ajuster vos dimensions ou d\'utiliser des valeurs moins précises.',
+    selectBrandModelDescription: 'Sélectionnez la marque et le modèle de votre véhicule pour trouver les filtres compatibles.',
+    enterExactDimensionsDescription: 'Entrez les dimensions exactes du filtre recherché. Notre système utilise une correspondance partielle pour trouver les filtres compatibles.',
+    findEquivalentFiltersDescription: 'Trouvez les filtres équivalents à partir d\'une référence concurrente',
+    enterCompetitorReferenceDescription: 'Entrez la référence du filtre concurrent pour trouver les équivalents Al Safa.',
+    enterAtLeastOneDimensionDescription: 'Entrez au moins une dimension pour effectuer la recherche. La recherche utilise une correspondance partielle.',
+    enterCompleteOrPartialReferenceDescription: 'Entrez la référence complète ou partielle du filtre recherché',
+    enterExactOrPartialReferenceDescription: 'Entrez la référence exacte ou partielle du filtre que vous recherchez. Notre système recherchera dans toutes les références disponibles.',
+    
+    // Loading and results text
+    searchingInProgress: 'Recherche en cours...',
+    referencesFound: 'références trouvées',
+    filtersFound: 'filtres trouvés',
+    correspondencesFound: 'correspondances trouvées',
+    
+    // Pagination
+    pageOf: 'Page {current} sur {total}',
+    
+    // About page content
+    aboutUs: 'À propos',
+    aboutAlsafaFilters: 'À propos de Alsafa Filters',
+    companyDescription: 'SARL ELITIFAK, fabricant de la marque Alsafa Filters, fondée en 1994 à Aïn M\'lila – Algérie. Le plus grand fabricant de filtres (air, huile, carburant) du pays.',
+    since1994: 'Depuis 1994',
+    thirtyYearsExcellence: 'De l\'importation à la fabrication : 30 ans d\'excellence en filtration automobile',
+    foundation1994: '1994 - Fondation',
+    foundationDescription: 'SARL ELITIFAK a été fondée à Aïn M\'lila – Algérie. Elle était à l\'époque la plus grande entreprise d\'importation de pièces de rechange automobiles en Algérie.',
+    transition2002: '2002 - Transition',
+    transitionDescription: 'ELITIFAK s\'est imposée comme le plus grand fabricant de filtres (air, huile, carburant) dans le pays, en offrant des produits conformes aux standards internationaux.',
+    nationalLeader: 'Leader National',
+    since2002: 'Depuis 2002',
+    ourTeamResearch: 'Notre Équipe & Recherche',
+    expertTeamDescription: 'Une équipe d\'experts dédiée au développement de solutions de filtration innovantes',
+    innovationExcellence: 'Innovation & Excellence',
+    teamDescription: 'Notre équipe d\'ingénieurs spécialisés œuvre en continu au développement et à l\'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l\'objet de tests rigoureux afin d\'assurer des performances optimales.',
+    certifiedQuality: 'Qualité Certifiée',
+    iso9001: 'ISO 9001',
+    ourFactoryProduction: 'Notre Usine & Production',
+    modernProduction: 'Production Moderne',
+    factoryDescription: 'Notre usine moderne, implantée en Algérie, utilise des technologies de pointe pour la production de filtres automobiles. Nous maintenons des standards de qualité élevés tout en optimisant notre capacité de production afin de répondre efficacement à la demande croissante.',
+    filtersInProduction: 'Filtres en production',
+    automatedProduction: 'Production automatisée',
+    ourProduction: 'Notre Production',
+    productionCapacityDescription: 'Capacité de production et caractéristiques de nos filtres',
+    oilFilters: 'Filtres à Huile',
+    dieselFilters: 'Filtres Gas-oil',
+    airFilters: 'Filtres à Air',
+    integrationRate: 'Taux d\'intégration',
+    filtersPerYear: 'Filtres/an',
+    completeRange: 'Gamme Complète',
+    completeRangeDescription: 'Une gamme complète de filtres automobiles pour répondre à tous vos besoins',
+    differentFilterTypes: 'Différents types de filtres',
+    filterCatalog: 'Catalogue de filtres',
+    researchDevelopmentTeam: 'Équipe de recherche et développement Alsafa Filters',
+    ourCommitment: 'Notre Engagement',
+    commitmentDescription: 'SARL ELITIFAK s\'engage à respecter toutes les réglementations en vigueur et à maintenir la plus haute transparence dans ses activités commerciales. Notre entreprise est légalement constituée, fiscalement conforme et statistiquement enregistrée, garantissant ainsi la confiance et la sécurité de nos partenaires et clients.',
+    
+    // Additional About page content
+    ourHistory: 'Notre Histoire',
+    ourJourney: 'Notre Parcours',
+    today: 'Aujourd\'hui',
+    todayDescription: 'Elle demeure un acteur de référence sur le marché algérien et ambitionne d\'élargir sa présence sur les marchés africains et internationaux.',
+    ourProducts: 'Nos Produits',
+    references: 'Références',
+    piecesPerYear: 'Pièces/An',
+    availableReferences: 'Références disponibles',
+    jobsCreated: 'Emplois créés',
+    qualityControl: 'Contrôle qualité',
+    compliantTransparentCompany: 'Entreprise Conforme & Transparente',
+    alsafaFiltersFactory: 'Usine Alsafa Filters',
+    modernInfrastructure: 'Une infrastructure moderne pour une production de qualité supérieure',
+    superiorQualityProduction: 'Une infrastructure moderne pour une production de qualité supérieure',
+    alsafaFiltersFactoryHistory: 'Usine Alsafa Filters - Histoire de l\'entreprise',
+    yearsOfExperience: 'Années d\'expérience',
+    completeTraceability: 'Traçabilité complète',
+    
+    // Hero button and additional sections
+    discoverOurHistory: 'Découvrir notre histoire',
+    trustedBrands: 'Marques qui nous font confiance',
+    trustedPartnersDescription: 'Des partenaires de confiance qui font appel à notre expertise en filtration',
+    ourCertifications: 'Nos Certifications',
+    qualityStandardsDescription: 'Des standards de qualité reconnus internationalement pour votre tranquillité d\'esprit',
+    complianceTransparency: 'Conformité & Transparence',
+    compliantTransparentActivities: 'SARL ELITIFAK - Une entreprise conforme et transparente dans toutes ses activités',
+    contactIdentity: 'Contact & Identité',
+    trustedPartnerDescription: 'SARL ELITIFAK - Votre partenaire de confiance en filtration automobile',
+    legalStatus: 'Statut Légal',
+    transparency: 'Transparence',
+    transparentBusinessPractices: 'Pratiques commerciales transparentes',
+    
+    // Social media links
+    followUs: 'Suivez-nous',
+    socialMedia: 'Réseaux sociaux',
+    
+    // RTL specific
+    direction: 'ltr',
+    textAlign: 'left',
+    marginStart: 'ml-',
+    marginEnd: 'mr-',
+    paddingStart: 'pl-',
+    paddingEnd: 'pr-',
+  },
+  
+  ar: {
+    // Brand and Company
+    brandName: 'مرشحات الصفا',
+    tagline: 'حلول تصفية السيارات',
+    taglineShort: 'مرشحات السيارات',
+    
+    // Navigation
+    home: 'الرئيسية',
+    catalog: 'الكتالوج',
+    catalogMain: 'الكتالوج الرئيسي',
+    about: 'حولنا',
+    search: 'بحث',
+    searchShort: 'بحث',
+    back: 'رجوع',
+    menu: 'القائمة',
+    navigation: 'التنقل',
+    
+    // Filter Types
+    specializedFilters: 'المرشحات المتخصصة',
+    byVehicle: 'حسب المركبة',
+    byDimensions: 'حسب الأبعاد',
+    byReference: 'حسب المرجع',
+    byCorrespondence: 'حسب المراسلة',
+    
+    // Actions
+    downloadPdf: 'كتالوج PDF',
+    downloadPdfShort: 'PDF',
+    downloadCatalog: 'تحميل كتالوج PDF',
+    searchFilter: 'البحث عن مرشح',
+    
+    // Contact
+    phone: 'الهاتف',
+    email: 'البريد الإلكتروني',
+    phoneNumber: '+213 555 046 890',
+    emailAddress: 'contact@elitifakfilters.com',
+    
+    // Homepage Content
+    heroTitle: 'اعثر على المرشح المثالي',
+    heroSubtitle: 'ابحث في مجموعتنا الواسعة من المرشحات عالية الجودة',
+    findPerfectFilter: 'اعثر على المرشح المثالي',
+    searchVastCollection: 'ابحث في مجموعتنا الواسعة من المرشحات عالية الجودة',
+    
+    // Features
+    qualityGuaranteed: 'الجودة مضمونة',
+    qualityDescription: 'مرشحات معتمدة وفقاً للمعايير الدولية',
+    technicalExpertise: 'الخبرة التقنية',
+    expertiseDescription: 'أكثر من 20 عاماً من الخبرة في المجال',
+    customerSupport: 'دعم العملاء',
+    supportDescription: 'مساعدة تقنية 7 أيام في الأسبوع',
+    
+    // Testimonials
+    testimonialsTitle: 'آراء العملاء',
+    testimonial1Text: 'منذ أن أستخدم مرشحات الصفا، لاحظت أداءً أفضل لسيارتي واستهلاكاً أقل.',
+    testimonial1Name: 'كريم ب.',
+    testimonial1Location: 'الجزائر',
+    testimonial2Text: 'وجدت بالضبط المرشحات التي أحتاجها بسعر معقول جداً. شكراً لمرشحات الصفا!',
+    testimonial2Name: 'حسيم ت.',
+    testimonial2Location: 'وهران',
+    testimonial3Text: 'أنا راضٍ جداً عن تجربة التسوق. بسيطة وسريعة جداً، مع جودة منتج ممتازة. أنصح بشدة.',
+    testimonial3Name: 'مهدي ل.',
+    testimonial3Location: 'سيدي بلعباس',
+    
+    // Car Brands
+    carBrands: ['أودي', 'تويوتا', 'فولكس فاجن', 'فورد', 'مرسيدس'],
+    
+    // Filter Options
+    filterType: 'نوع المرشح',
+    vehicle: 'المركبة',
+    dimensions: 'الأبعاد',
+    correspondence: 'المراسلة',
+    reference: 'المرجع',
+    
+    // Search and Filter
+    searchTerm: 'مصطلح البحث',
+    searchPlaceholder: 'البحث بالاسم، الأصل، أو المواصفات...',
+    searchBy: 'البحث حسب',
+    externalDimensions: 'الأبعاد الخارجية',
+    internalDimensions: 'الأبعاد الداخلية',
+    height: 'الارتفاع',
+    correspondenceRef: 'مرجع المراسلة',
+    vehicleBrand: 'ماركة المركبة',
+    vehicleModel: 'موديل المركبة',
+    
+    // Catalog
+    catalogTitle: 'كتالوج المنتجات',
+    catalogDescription: 'تصفح مجموعتنا الكاملة من مرشحات السيارات',
+    itemsPerPage: 12,
+    totalItems: 'إجمالي العناصر',
+    showingResults: 'عرض النتائج',
+    noResults: 'لم يتم العثور على نتائج',
+    clearFilters: 'مسح المرشحات',
+    
+    // Product Details
+    productDetails: 'تفاصيل المنتج',
+    specifications: 'المواصفات',
+    origin: 'الأصل',
+    brand: 'العلامة التجارية',
+    model: 'الموديل',
+    price: 'السعر',
+    availability: 'التوفر',
+    inStock: 'متوفر',
+    outOfStock: 'غير متوفر',
+    
+    // Common
+    loading: 'جاري التحميل...',
+    error: 'خطأ',
+    success: 'نجح',
+    cancel: 'إلغاء',
+    save: 'حفظ',
+    edit: 'تعديل',
+    delete: 'حذف',
+    confirm: 'تأكيد',
+    
+    // Admin
+    adminDashboard: 'لوحة تحكم الإدارة',
+    adminLogin: 'تسجيل دخول الإدارة',
+    adminSetup: 'إعداد الإدارة',
+    resetPassword: 'إعادة تعيين كلمة المرور',
+    
+    // Analytics
+    analytics: 'التحليلات',
+    setupAnalytics: 'إعداد التحليلات',
+    
+    // Form Labels
+    username: 'اسم المستخدم',
+    password: 'كلمة المرور',
+    email: 'البريد الإلكتروني',
+    confirmPassword: 'تأكيد كلمة المرور',
+    rememberMe: 'تذكرني',
+    forgotPassword: 'نسيت كلمة المرور',
+    
+    // Messages
+    welcomeMessage: 'مرحباً بك في مرشحات الصفا',
+    loginSuccess: 'تم تسجيل الدخول بنجاح',
+    logoutSuccess: 'تم تسجيل الخروج بنجاح',
+    errorOccurred: 'حدث خطأ',
+    tryAgain: 'حاول مرة أخرى',
+    
+    // Numbers and Formats
+    currency: 'دج',
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: 'HH:mm',
+    
+    // Homepage specific content
+    certifiedQuality: 'جودة معتمدة',
+    highQualityFilters: 'مرشحات عالية الجودة',
+    superiorQuality: 'جودة فائقة',
+    findPerfectFilterForVehicle: 'اعثر على المرشح المثالي لمركبتك بتقنية البحث المتقدمة',
+    startSearch: 'ابدأ البحث',
+    viewCatalog: 'عرض الكتالوج',
+    modelsCount: '1000+',
+    brandsCount: '50+',
+    models: 'الموديلات',
+    brands: 'العلامات التجارية',
+    
+    // Team & Innovation Section
+    ourTeamInnovation: 'فريقنا والابتكار',
+    expertTeamDescription: 'فريق من الخبراء مكرس لتطوير حلول التصفية المبتكرة',
+    innovationExcellence: 'الابتكار والتميز',
+    engineeringDescription: 'يعمل فريق المهندسين المتخصصين لدينا باستمرار على تطوير وتحسين مرشحاتنا. بفضل مختبرنا المتطور، يخضع كل منتج لاختبارات صارمة لضمان الأداء الأمثل.',
+    engineers: 'مهندسون',
+    testsPerMonth: 'اختبار شهرياً',
+    certifiedLab: 'مختبر معتمد',
+    qualityTests: 'اختبارات الجودة',
+    discoverOurStory: 'اكتشف قصتنا',
+    
+    // Certifications Section
+    certificationsQuality: 'الشهادات والجودة',
+    qualityStandardsDescription: 'معايير جودة معترف بها دولياً لراحة بالك',
+    environmentalManagement: 'الإدارة البيئية',
+    qualityManagement: 'إدارة الجودة',
+    healthSafetyWork: 'الصحة والسلامة في العمل',
+    authentication: 'المصادقة',
+    qrProductVerification: 'التحقق من المنتجات بواسطة QR',
+    certified: 'معتمد',
+    verifiable: 'قابل للتحقق',
+    learnMoreCertifications: 'اعرف المزيد عن شهاداتنا',
+    
+    // Search Section
+    findYourFilter: 'اعثر على مرشحك',
+    chooseSearchMethod: 'اختر طريقة البحث المفضلة لديك للعثور على المرشح المثالي',
+    enterFilterReference: 'أدخل مرجع المرشح...',
+    externalDiameter: 'القطر الخارجي (مم)',
+    internalDiameter: 'القطر الداخلي (مم)',
+    height: 'الارتفاع (مم)',
+    competitorReference: 'مرجع المنافس...',
+    find: 'العثور على',
+    searchNow: 'ابحث الآن',
+    
+    // Car Brands Section
+    supportedCarBrands: 'العلامات التجارية المدعومة للسيارات',
+    compatibleFiltersDescription: 'مرشحات متوافقة مع جميع العلامات التجارية الرئيسية للسيارات',
+    seeAllFilters: 'عرض جميع المرشحات',
+    
+    // Testimonials Section
+    whatClientsSay: 'ما يقوله عملاؤنا',
+    discoverTestimonials: 'اكتشف شهادات عملائنا الراضين',
+    joinSatisfiedClients: 'انضم إلى عملائنا الراضين',
+    why10000ClientsTrust: 'اكتشف لماذا يثق أكثر من 10,000 عميل بنا لمرشحات سياراتهم',
+    startNow: 'ابدأ الآن',
+    
+    // Alt texts and placeholders
+    automotiveFiltersAlt: 'مرشحات السيارات',
+    researchTeamAlt: 'فريق البحث والتطوير',
+    
+    // Footer content
+    backgroundLogoAlt: 'شعار الخلفية',
+    companyDescription: 'مرشحات الصفا تضمن لك مرشحات عالية الجودة لجميع أنواع المركبات، مع خدمة عملاء استثنائية وخبرة تقنية معترف بها في جميع أنحاء الجزائر.',
+    downloadCatalogPdf: 'تحميل كتالوج PDF',
+    navigation: 'التنقل',
+    services: 'الخدمات',
+    searchByVehicle: 'البحث بالمركبة',
+    searchByReference: 'البحث بالمرجع',
+    searchByDimensions: 'البحث بالأبعاد',
+    correspondences: 'المراسلات',
+    contact: 'الاتصال',
+    allRightsReserved: '© 2025 بواسطة مرشحات إليتيفاك. جميع الحقوق محفوظة.',
+    termsOfUse: 'شروط الاستخدام',
+    privacyPolicy: 'سياسة الخصوصية',
+    qualityPolicy: 'سياسة الجودة',
+    siteMap: 'خريطة الموقع',
+    
+    // Filter pages content
+    searchByDimensions: 'البحث بالأبعاد',
+    searchByVehicle: 'البحث بالمركبة',
+    searchByReference: 'البحث بالمرجع',
+    searchByCorrespondence: 'البحث بالمراسلة',
+    searchByReferencePlaceholder: 'البحث بالمرجع (ALSAFA، SAFI، SARL_F، FLEETG، ASAS، MECA_F، REF_ORG، MANN، UFI، HIFI، WIX)...',
+    preparingCorrespondenceSearch: 'إعداد البحث بالمراسلة',
+    
+    // Search form elements
+    searchButton: 'بحث',
+    selectBrand: 'اختر الماركة',
+    selectModel: 'اختر الطراز',
+    externalDiameter: 'القطر الخارجي (مم)',
+    internalDiameter: 'القطر الداخلي (مم)',
+    height: 'الارتفاع (مم)',
+    externalDiameterPlaceholder: 'مثال: 65',
+    internalDiameterPlaceholder: 'مثال: 30',
+    heightPlaceholder: 'مثال: 85',
+    referencePlaceholder: 'مثال: OBB-128A، AF-2547، HU-925/4X...',
+    correspondencePlaceholder: 'مثال: MANN-FILTER HU7008Z، UFI 23.155.00...',
+    searchReferenceButton: 'البحث عن المرجع',
+    clearFilters: 'مسح',
+    brand: 'الماركة',
+    model: 'الطراز',
+    filterReference: 'مرجع الفلتر',
+    competitorReference: 'مرجع المنافس',
+    
+    // Advanced filters and search states
+    advancedFilters: 'مرشحات متقدمة',
+    noFiltersFound: 'لم يتم العثور على مرشحات',
+    tryDifferentCriteria: 'جرب معايير مركبة مختلفة.',
+    tryAdjustingDimensions: 'جرب تعديل الأبعاد أو استخدام قيم أقل دقة.',
+    selectBrandModelDescription: 'اختر الماركة والطراز لمركبتك للعثور على المرشحات المتوافقة.',
+    enterExactDimensionsDescription: 'أدخل الأبعاد الدقيقة للمرشح الذي تبحث عنه. نظامنا يستخدم المطابقة الجزئية للعثور على المرشحات المتوافقة.',
+    findEquivalentFiltersDescription: 'ابحث عن المرشحات المكافئة من مرجع منافس',
+    enterCompetitorReferenceDescription: 'أدخل مرجع مرشح المنافس للعثور على ما يعادله من الصفا.',
+    enterAtLeastOneDimensionDescription: 'أدخل بُعد واحد على الأقل لإجراء البحث. يستخدم البحث المطابقة الجزئية.',
+    enterCompleteOrPartialReferenceDescription: 'أدخل المرجع الكامل أو الجزئي للمرشح الذي تبحث عنه',
+    enterExactOrPartialReferenceDescription: 'أدخل المرجع الدقيق أو الجزئي للمرشح الذي تبحث عنه. سيبحث نظامنا في جميع المراجع المتاحة.',
+    
+    // Loading and results text
+    searchingInProgress: 'البحث جاري...',
+    referencesFound: 'مرجع موجود',
+    filtersFound: 'مرشح موجود',
+    correspondencesFound: 'مراسلة موجودة',
+    
+    // Pagination
+    pageOf: 'صفحة {current} من {total}',
+    
+    // About page content
+    aboutUs: 'من نحن',
+    aboutAlsafaFilters: 'حول مرشحات الصفا',
+    companyDescription: 'شركة الإليتيفاك، مصنع علامة مرشحات الصفا التجارية، تأسست في عام 1994 في عين مليلة - الجزائر. أكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد.',
+    since1994: 'منذ 1994',
+    thirtyYearsExcellence: 'من الاستيراد إلى التصنيع: 30 عامًا من التميز في ترشيح السيارات',
+    foundation1994: '1994 - التأسيس',
+    foundationDescription: 'تم تأسيس شركة الإليتيفاك في عين مليلة - الجزائر. كانت في ذلك الوقت أكبر شركة استيراد قطع غيار السيارات في الجزائر.',
+    transition2002: '2002 - التحول',
+    transitionDescription: 'أثبتت الإليتيفاك نفسها كأكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد، مع تقديم منتجات تتوافق مع المعايير الدولية.',
+    nationalLeader: 'الرائد الوطني',
+    since2002: 'منذ 2002',
+    ourTeamResearch: 'فريقنا والبحث',
+    expertTeamDescription: 'فريق من الخبراء مخصص لتطوير حلول ترشيح مبتكرة',
+    innovationExcellence: 'الابتكار والتميز',
+    teamDescription: 'يعمل فريق المهندسين المتخصصين لدينا باستمرار على تطوير وتحسين مرشحاتنا. بفضل مختبرنا المتطور، يخضع كل منتج لاختبارات صارمة لضمان الأداء الأمثل.',
+    certifiedQuality: 'الجودة المعتمدة',
+    iso9001: 'ISO 9001',
+    ourFactoryProduction: 'مصنعنا والإنتاج',
+    modernProduction: 'الإنتاج الحديث',
+    factoryDescription: 'مصنعنا الحديث، الموجود في الجزائر، يستخدم تقنيات متطورة لإنتاج مرشحات السيارات. نحافظ على معايير جودة عالية مع تحسين قدرة الإنتاج لدينا للاستجابة بكفاءة للطلب المتزايد.',
+    filtersInProduction: 'المرشحات في الإنتاج',
+    automatedProduction: 'الإنتاج الآلي',
+    ourProduction: 'إنتاجنا',
+    productionCapacityDescription: 'قدرة الإنتاج وخصائص مرشحاتنا',
+    oilFilters: 'مرشحات الزيت',
+    dieselFilters: 'مرشحات الديزل',
+    airFilters: 'مرشحات الهواء',
+    integrationRate: 'معدل التكامل',
+    filtersPerYear: 'مرشح/سنة',
+    completeRange: 'المجموعة الكاملة',
+    completeRangeDescription: 'مجموعة كاملة من مرشحات السيارات لتلبية جميع احتياجاتك',
+    differentFilterTypes: 'أنواع مختلفة من المرشحات',
+    filterCatalog: 'كتالوج المرشحات',
+    researchDevelopmentTeam: 'فريق البحث والتطوير مرشحات الصفا',
+    ourCommitment: 'التزامنا',
+    commitmentDescription: 'تلتزم شركة الإليتيفاك باحترام جميع اللوائح المعمول بها والحفاظ على أعلى مستوى من الشفافية في أنشطتها التجارية. شركتنا قانونية، متوافقة ضريبياً ومسجلة إحصائياً، مما يضمن ثقة وأمان شركائنا وعملائنا.',
+    
+    // Additional About page content
+    ourHistory: 'تاريخنا',
+    ourJourney: 'رحلتنا',
+    today: 'اليوم',
+    todayDescription: 'تبقى لاعباً مرجعياً في السوق الجزائري وتهدف إلى توسيع وجودها في الأسواق الأفريقية والدولية.',
+    ourProducts: 'منتجاتنا',
+    references: 'المراجع',
+    piecesPerYear: 'قطعة/سنة',
+    availableReferences: 'المراجع المتاحة',
+    jobsCreated: 'الوظائف المخلقة',
+    qualityControl: 'مراقبة الجودة',
+    compliantTransparentCompany: 'شركة متوافقة وشفافة',
+    alsafaFiltersFactory: 'مصنع مرشحات الصفا',
+    modernInfrastructure: 'بنية تحتية حديثة للإنتاج عالي الجودة',
+    superiorQualityProduction: 'بنية تحتية حديثة للإنتاج عالي الجودة',
+    alsafaFiltersFactoryHistory: 'مصنع مرشحات الصفا - تاريخ الشركة',
+    yearsOfExperience: 'سنوات من الخبرة',
+    completeTraceability: 'التتبع الكامل',
+    
+    // Hero button and additional sections
+    discoverOurHistory: 'اكتشف تاريخنا',
+    trustedBrands: 'العلامات التجارية التي تثق بنا',
+    trustedPartnersDescription: 'شركاء موثوقون يعتمدون على خبرتنا في الترشيح',
+    ourCertifications: 'شهاداتنا',
+    qualityStandardsDescription: 'معايير الجودة المعترف بها دولياً لراحة بالك',
+    complianceTransparency: 'الامتثال والشفافية',
+    compliantTransparentActivities: 'شركة الإليتيفاك - شركة متوافقة وشفافة في جميع أنشطتها',
+    contactIdentity: 'الاتصال والهوية',
+    trustedPartnerDescription: 'شركة الإليتيفاك - شريكك الموثوق في ترشيح السيارات',
+    legalStatus: 'الحالة القانونية',
+    transparency: 'الشفافية',
+    transparentBusinessPractices: 'ممارسات تجارية شفافة',
+    
+    // Social media links
+    followUs: 'تابعونا',
+    socialMedia: 'وسائل التواصل الاجتماعي',
+    
+    // RTL specific
+    direction: 'rtl',
+    textAlign: 'right',
+    marginStart: 'mr-',
+    marginEnd: 'ml-',
+    paddingStart: 'pr-',
+    paddingEnd: 'pl-',
+  },
+}
+
+export function getTranslation(lang: SupportedLanguage, key: keyof Translations): string | number {
+  return translations[lang][key]
+}
+
+export function getTranslations(lang: SupportedLanguage): Translations {
+  return translations[lang]
+}

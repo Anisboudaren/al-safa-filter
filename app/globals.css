@@ -32,6 +32,7 @@
     
     /* Font family */
     --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-cairo: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   .dark {
@@ -77,6 +78,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
+/* Arabic font for Arabic language */
+.font-cairo {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Debug: Add a subtle border to see if Cairo class is applied */
+.font-cairo {
+  /* border: 2px solid red; */ /* Uncomment for debugging */
+}
+  
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-inter);
     font-weight: 600;
@@ -84,9 +95,57 @@
     line-height: 1.2;
   }
   
+  /* Arabic headings and all text elements - more comprehensive */
+  .font-cairo,
+  .font-cairo h1, 
+  .font-cairo h2, 
+  .font-cairo h3, 
+  .font-cairo h4, 
+  .font-cairo h5, 
+  .font-cairo h6,
+  .font-cairo p,
+  .font-cairo span,
+  .font-cairo div,
+  .font-cairo button,
+  .font-cairo input,
+  .font-cairo textarea,
+  .font-cairo label,
+  .font-cairo a,
+  .font-cairo strong,
+  .font-cairo em,
+  .font-cairo b,
+  .font-cairo i,
+  .font-cairo small,
+  .font-cairo blockquote,
+  .font-cairo li,
+  .font-cairo td,
+  .font-cairo th,
+  .font-cairo caption,
+  .font-cairo code,
+  .font-cairo pre,
+  .font-cairo mark,
+  .font-cairo del,
+  .font-cairo ins,
+  .font-cairo sub,
+  .font-cairo sup {
+    font-family: var(--font-cairo) !important;
+    letter-spacing: 0 !important;
+  }
+  
   p {
     line-height: 1.6;
   }
+  
+  /* RTL adjustments when html[dir="rtl"] is set */
+  html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+  }
+  html[dir="rtl"] .ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+  html[dir="rtl"] .mr-2 { margin-right: 0.5rem; margin-left: 0 !important; }
+  html[dir="rtl"] .pl-10 { padding-right: 2.5rem; padding-left: 0 !important; }
+  html[dir="rtl"] .text-left { text-align: right; }
+  html[dir="rtl"] .text-right { text-align: left; }
 }
 
 /* Custom orange theme utilities */
@@ -130,4 +189,78 @@
   font-family: var(--font-inter);
   font-weight: 400;
   line-height: 1.6;
+}
+
+/* Arabic font utilities */
+.font-cairo .font-display {
+  font-family: var(--font-cairo) !important;
+  letter-spacing: 0;
+}
+
+.font-cairo .font-body {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Ensure Cairo font is applied to all elements when Arabic is selected */
+.font-cairo *,
+.font-cairo *::before,
+.font-cairo *::after {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Override any specific font classes for Arabic */
+.font-cairo .font-inter,
+.font-cairo [class*="font-"],
+.font-cairo [class*="text-"] {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Force Cairo font on all nested elements */
+.font-cairo * * {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Override Tailwind font utilities */
+.font-cairo .font-sans,
+.font-cairo .font-serif,
+.font-cairo .font-mono {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Additional comprehensive overrides */
+.font-cairo [class*="text-"] {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Force override on any element with inline styles */
+.font-cairo [style*="font-family"] {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Handle React components and dynamic content */
+.font-cairo > *,
+.font-cairo > * > *,
+.font-cairo > * > * > * {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Specific overrides for common UI components */
+.font-cairo .btn,
+.font-cairo .button,
+.font-cairo .card,
+.font-cairo .modal,
+.font-cairo .dropdown,
+.font-cairo .tooltip {
+  font-family: var(--font-cairo) !important;
+}
+
+/* Maximum specificity override - this should catch everything */
+.font-cairo {
+  font-family: var(--font-cairo) !important;
+}
+
+.font-cairo,
+.font-cairo *,
+.font-cairo *:not(script):not(style):not(meta):not(link):not(title):not(head):not(html):not(body) {
+  font-family: var(--font-cairo) !important;
 }

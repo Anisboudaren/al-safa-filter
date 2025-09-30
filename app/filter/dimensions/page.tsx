@@ -14,11 +14,13 @@ import { supabase, type Product } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { useTranslation } from "@/components/language-provider"
 
 const ITEMS_PER_PAGE = 12
 
 export default function DimensionsCatalogPage() {
   const searchParams = useSearchParams()
+  const t = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [external, setExternal] = useState("")
@@ -112,9 +114,9 @@ export default function DimensionsCatalogPage() {
     if (!searchTerm) return null
     
     const dimensionFields = [
-      { key: 'Ext', value: product.Ext, label: 'Diamètre Externe' },
-      { key: 'Int', value: product.Int, label: 'Diamètre Interne' },
-      { key: 'H', value: product.H, label: 'Hauteur' },
+      { key: 'Ext', value: product.Ext, label: t.externalDiameter },
+      { key: 'Int', value: product.Int, label: t.internalDiameter },
+      { key: 'H', value: product.H, label: t.height },
     ]
 
     for (const field of dimensionFields) {
@@ -153,10 +155,10 @@ export default function DimensionsCatalogPage() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Recherche par Dimensions
+              {t.searchByDimensions}
             </h2>
             <p className="text-xl text-green-100 max-w-2xl mx-auto">
-              Trouvez le filtre parfait en utilisant les dimensions exactes
+              {t.findPerfectFilterForVehicle}
             </p>
           </motion.div>
 
@@ -171,9 +173,9 @@ export default function DimensionsCatalogPage() {
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Diamètre externe (mm)</label>
+                    <label className="text-sm font-medium text-gray-700">{t.externalDiameter}</label>
                     <Input
-                      placeholder="Ex: 65"
+                      placeholder={t.externalDiameterPlaceholder}
                       value={external}
                       onChange={(e) => setExternal(e.target.value)}
                       className="h-12 text-lg rounded-xl border-2 focus:border-green-500 focus:ring-green-500"
@@ -182,9 +184,9 @@ export default function DimensionsCatalogPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Diamètre interne (mm)</label>
+                    <label className="text-sm font-medium text-gray-700">{t.internalDiameter}</label>
                     <Input
-                      placeholder="Ex: 30"
+                      placeholder={t.internalDiameterPlaceholder}
                       value={internal}
                       onChange={(e) => setInternal(e.target.value)}
                       className="h-12 text-lg rounded-xl border-2 focus:border-green-500 focus:ring-green-500"
@@ -193,9 +195,9 @@ export default function DimensionsCatalogPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Hauteur (mm)</label>
+                    <label className="text-sm font-medium text-gray-700">{t.height}</label>
                     <Input
-                      placeholder="Ex: 85"
+                      placeholder={t.heightPlaceholder}
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                       className="h-12 text-lg rounded-xl border-2 focus:border-green-500 focus:ring-green-500"
@@ -232,7 +234,7 @@ export default function DimensionsCatalogPage() {
                       ) : (
                         <>
                           <Search className="h-5 w-5 mr-2" />
-                          Rechercher
+                          {t.searchButton}
                         </>
                       )}
                     </Button>
@@ -240,10 +242,10 @@ export default function DimensionsCatalogPage() {
                 </div>
 
                 <p className="text-sm text-gray-500 text-center mt-4">
-                  Entrez au moins une dimension pour effectuer la recherche. La recherche utilise une correspondance partielle.
+                  {t.enterAtLeastOneDimensionDescription}
                 </p>
 
-                {/* Advanced Filters */}
+                {/* {t.advancedFilters} */}
                 <AnimatePresence>
                   {showFilters && (
                     <motion.div
@@ -260,7 +262,7 @@ export default function DimensionsCatalogPage() {
                           className="rounded-xl border-2 border-gray-300 hover:border-gray-400"
                         >
                           <X className="h-4 w-4 mr-2" />
-                          Effacer les filtres
+                          {t.clearFilters}
                         </Button>
                       </div>
                     </motion.div>
@@ -289,10 +291,9 @@ export default function DimensionsCatalogPage() {
             >
               <Ruler className="h-12 w-12 text-green-600" />
             </motion.div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Recherche par Dimensions</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.searchByDimensions}</h3>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Entrez les dimensions exactes du filtre recherché. Notre système utilise une correspondance partielle
-              pour trouver les filtres compatibles.
+              {t.enterExactDimensionsDescription}
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -321,12 +322,12 @@ export default function DimensionsCatalogPage() {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
                   <p className="text-lg font-medium text-gray-900">
-                    {loading ? "Recherche en cours..." : `${totalCount} filtres trouvés`}
+                    {loading ? t.searchingInProgress : `${totalCount} ${t.filtersFound}`}
                   </p>
                 </div>
                 {totalPages > 1 && (
                   <Badge variant="outline" className="text-sm">
-                    Page {currentPage} sur {totalPages}
+                    {t.pageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
                   </Badge>
                 )}
               </div>
@@ -391,9 +392,9 @@ export default function DimensionsCatalogPage() {
                 >
                   <Ruler className="h-10 w-10 text-gray-400" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucun filtre trouvé</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">{t.noFiltersFound}</h3>
                 <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Essayez d'ajuster vos dimensions ou d'utiliser des valeurs moins précises.
+                  {t.tryAdjustingDimensions}
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.05 }}

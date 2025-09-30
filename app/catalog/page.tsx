@@ -14,11 +14,13 @@ import { supabase, type Product } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { useTranslation } from "@/components/language-provider"
 
 const ITEMS_PER_PAGE = 12
 
 export default function CatalogPage() {
   const searchParams = useSearchParams()
+  const t = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
@@ -248,7 +250,7 @@ export default function CatalogPage() {
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <Input
-                      placeholder="Rechercher par référence (ALSAFA, SAFI, SARL_F, FLEETG, ASAS, MECA_F, REF_ORG, MANN, UFI, HIFI, WIX)..."
+                      placeholder={t.searchByReferencePlaceholder}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-12 h-12 text-lg rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"

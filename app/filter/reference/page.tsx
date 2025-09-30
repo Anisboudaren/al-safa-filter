@@ -13,10 +13,12 @@ import MobileHeader from "@/components/mobile-header"
 import { Share } from "next/font/google"
 import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { useTranslation } from "@/components/language-provider"
 
 const ITEMS_PER_PAGE = 12
 
 export default function ReferenceFilterPage() {
+  const t = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [reference, setReference] = useState("")
@@ -81,7 +83,7 @@ export default function ReferenceFilterPage() {
       <MobileHeader />
       <SharedHeader
         icon={<Search className="h-6 w-6 text-orange-600" />}
-        title="Recherche par Référence"
+        title={t.searchByReference}
         description="Trouvez un filtre par sa référence exacte"
       />
 
@@ -92,26 +94,26 @@ export default function ReferenceFilterPage() {
             <CardContent className="p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Référence du filtre</label>
+                  <label className="text-sm font-medium text-gray-700">{t.filterReference}</label>
                   <div className="flex gap-4">
                     <Input
-                      placeholder="Ex: OBB-128A, AF-2547, HU-925/4X..."
+                      placeholder={t.referencePlaceholder}
                       value={reference}
                       onChange={(e) => setReference(e.target.value)}
                       className="h-12 "
                       onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                     />
                   </div>
-                  <p className="text-sm text-gray-500">Entrez la référence complète ou partielle du filtre recherché</p>
+                  <p className="text-sm text-gray-500">{t.enterCompleteOrPartialReferenceDescription}</p>
                 </div>
 
                 <div className="flex flex-col justify-center gap-4">
                   <Button onClick={handleSearch} size="lg" className="bg-primary/90 hover:bg-primary/60 px-8">
                     <Search className="h-5 w-5 mr-2" />
-                    Rechercher la Référence
+                    {t.searchReferenceButton}
                   </Button>
                   <Button onClick={clearFilters} variant="outline" size="lg" className="px-8 bg-transparent">
-                    Effacer
+                    {t.clearFilters}
                   </Button>
                 </div>
               </div>
@@ -121,19 +123,18 @@ export default function ReferenceFilterPage() {
         {!hasSearched ? (
           <div className="text-center py-20">
             <Search className="h-16 w-16 text-gray-400 mx-auto mb-6" />
-            <h3 className="text-2xl font-medium text-gray-900 mb-4">Recherche par Référence</h3>
+            <h3 className="text-2xl font-medium text-gray-900 mb-4">{t.searchByReference}</h3>
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Entrez la référence exacte ou partielle du filtre que vous recherchez. Notre système recherchera dans
-              toutes les références disponibles.
+              {t.enterExactOrPartialReferenceDescription}
             </p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-600">{loading ? "Recherche en cours..." : `${totalCount} références trouvées`}</p>
+              <p className="text-gray-600">{loading ? t.searchingInProgress : `${totalCount} ${t.referencesFound}`}</p>
               {totalPages > 1 && (
                 <p className="text-sm text-gray-500">
-                  Page {currentPage} sur {totalPages}
+                  {t.pageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
                 </p>
               )}
             </div>

@@ -8,9 +8,11 @@ import { Badge } from "@/components/ui/badge"
 import { Building2, Users, Factory, Package, Award, Phone, Mail, MapPin, CheckCircle, QrCode, Shield, ArrowRight } from "lucide-react"
 import MobileHeader from "@/components/mobile-header"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
+import { useTranslation } from "@/components/language-provider"
 
 export default function AProposPage() {
   const { scrollYProgress } = useScroll()
+  const t = useTranslation()
 
   return (
     <div className="min-h-screen bg-white">
@@ -62,7 +64,7 @@ export default function AProposPage() {
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium"
               >
                 <CheckCircle className="h-4 w-4 text-green-400" />
-                Depuis 1994
+                {t.since1994}
               </motion.div>
 
               <motion.h1
@@ -71,10 +73,10 @@ export default function AProposPage() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="text-5xl md:text-7xl font-bold leading-tight"
               >
-                À propos de
+                {t.aboutAlsafaFilters.split(' ').slice(0, -2).join(' ')}
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-                  Alsafa Filters
+                  {t.aboutAlsafaFilters.split(' ').slice(-2).join(' ')}
                 </span>
               </motion.h1>
 
@@ -84,7 +86,7 @@ export default function AProposPage() {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
               >
-                SARL ELITIFAK, fabricant de la marque Alsafa Filters, fondée en 1994 à Aïn M'lila – Algérie. Le plus grand fabricant de filtres (air, huile, carburant) du pays.
+                {t.companyDescription}
               </motion.p>
 
               <motion.div
@@ -99,7 +101,7 @@ export default function AProposPage() {
                   className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 flex items-center gap-2"
                   onClick={() => document.getElementById('about-content')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Découvrir notre histoire
+                  {t.discoverOurHistory}
                   <ArrowRight className="h-5 w-5" />
                 </motion.button>
               </motion.div>
@@ -113,15 +115,15 @@ export default function AProposPage() {
               >
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400">30+</div>
-                  <div className="text-sm text-gray-400">Années d'expérience</div>
+                  <div className="text-sm text-gray-400">{t.yearsOfExperience}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400">1,179</div>
-                  <div className="text-sm text-gray-400">Références</div>
+                  <div className="text-sm text-gray-400">{t.references}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400">2M+</div>
-                  <div className="text-sm text-gray-400">Filtres/an</div>
+                  <div className="text-sm text-gray-400">{t.filtersPerYear}</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -136,7 +138,7 @@ export default function AProposPage() {
               <div className="relative z-10">
                 <img
                   src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
-                  alt="Équipe de recherche et développement Alsafa Filters"
+                  alt={t.researchDevelopmentTeam}
                   className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
                 />
                 <motion.div
@@ -150,8 +152,8 @@ export default function AProposPage() {
                       <CheckCircle className="h-6 w-6 text-green-600" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Qualité Certifiée</div>
-                      <div className="text-sm text-gray-600">ISO 9001</div>
+                      <div className="font-semibold text-gray-900">{t.certifiedQuality}</div>
+                      <div className="text-sm text-gray-600">{t.iso9001}</div>
                     </div>
                   </div>
                 </motion.div>
@@ -172,9 +174,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Histoire</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourHistory}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                De l'importation à la fabrication : 30 ans d'excellence en filtration automobile
+                {t.thirtyYearsExcellence}
               </p>
             </motion.div>
 
@@ -189,20 +191,20 @@ export default function AProposPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                     <Building2 className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900">Notre Parcours</h3>
+                  <h3 className="text-3xl font-bold text-gray-900">{t.ourJourney}</h3>
                 </div>
                 <div className="space-y-6">
                   <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl">
-                    <h4 className="text-xl font-bold text-orange-600 mb-2">1994 - Fondation</h4>
-                    <p className="text-gray-700">SARL ELITIFAK a été fondée à Aïn M'lila – Algérie. Elle était à l'époque la plus grande entreprise d'importation de pièces de rechange automobiles en Algérie.</p>
+                    <h4 className="text-xl font-bold text-orange-600 mb-2">{t.foundation1994}</h4>
+                    <p className="text-gray-700">{t.foundationDescription}</p>
                   </div>
                   <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl">
-                    <h4 className="text-xl font-bold text-blue-600 mb-2">2002 - Transition</h4>
-                    <p className="text-gray-700">ELITIFAK s'est imposée comme le plus grand fabricant de filtres (air, huile, carburant) dans le pays, en offrant des produits conformes aux standards internationaux.</p>
+                    <h4 className="text-xl font-bold text-blue-600 mb-2">{t.transition2002}</h4>
+                    <p className="text-gray-700">{t.transitionDescription}</p>
                   </div>
                   <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl">
-                    <h4 className="text-xl font-bold text-green-600 mb-2">Aujourd'hui</h4>
-                    <p className="text-gray-700">Elle demeure un acteur de référence sur le marché algérien et ambitionne d'élargir sa présence sur les marchés africains et internationaux.</p>
+                    <h4 className="text-xl font-bold text-green-600 mb-2">{t.today}</h4>
+                    <p className="text-gray-700">{t.todayDescription}</p>
                   </div>
                 </div>
               </motion.div>
@@ -215,7 +217,7 @@ export default function AProposPage() {
               >
                 <img
                   src="https://devlly.net/alsafa/resources/photo%20of%20a%20man%20in%20the%20USINE%20ALSAFA%20FILTRES.jpg"
-                  alt="Usine Alsafa Filters - Histoire de l'entreprise"
+                  alt={t.alsafaFiltersFactoryHistory}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
                 <motion.div
@@ -227,8 +229,8 @@ export default function AProposPage() {
                       <Award className="h-6 w-6 text-orange-600" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Leader National</div>
-                      <div className="text-sm text-gray-600">Depuis 2002</div>
+                      <div className="font-semibold text-gray-900">{t.nationalLeader}</div>
+                      <div className="text-sm text-gray-600">{t.since2002}</div>
                     </div>
                   </div>
                 </motion.div>
@@ -247,9 +249,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Équipe & Recherche</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourTeamResearch}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Une équipe d'experts dédiée au développement de solutions de filtration innovantes
+                {t.expertTeamDescription}
               </p>
             </motion.div>
 
@@ -264,10 +266,10 @@ export default function AProposPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                     <Users className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900">Innovation & Excellence</h3>
+                  <h3 className="text-3xl font-bold text-gray-900">{t.innovationExcellence}</h3>
                 </div>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Notre équipe d'ingénieurs spécialisés œuvre en continu au développement et à l'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l'objet de tests rigoureux afin d'assurer des performances optimales.
+                  {t.teamDescription}
                 </p>
                 <div className="grid grid-cols-2 gap-6">
                   <motion.div
@@ -295,7 +297,7 @@ export default function AProposPage() {
               >
                 <img
                   src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
-                  alt="Équipe de recherche et développement"
+                  alt={t.researchDevelopmentTeam}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
                 <motion.div
@@ -327,9 +329,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Usine & Production</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourFactoryProduction}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Une infrastructure moderne pour une production de qualité supérieure
+                {t.modernInfrastructure}
               </p>
             </motion.div>
 
@@ -343,12 +345,12 @@ export default function AProposPage() {
               >
                 <img
                   src="https://devlly.net/alsafa/resources/photo%20of%20a%20man%20in%20the%20USINE%20ALSAFA%20FILTRES.jpg"
-                  alt="Usine Alsafa Filters"
+                  alt={t.alsafaFiltersFactory}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
                 <img
                   src="https://devlly.net/alsafa/resources/photo%20or%20some%20filters%20in%20productions.jpg"
-                  alt="Filtres en production"
+                  alt={t.filtersInProduction}
                   className="w-full h-64 object-cover rounded-2xl shadow-2xl"
                 />
               </motion.div>
@@ -362,10 +364,10 @@ export default function AProposPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                     <Factory className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900">Production Moderne</h3>
+                  <h3 className="text-3xl font-bold text-gray-900">{t.modernProduction}</h3>
                 </div>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Notre usine moderne, implantée en Algérie, utilise des technologies de pointe pour la production de filtres automobiles. Nous maintenons des standards de qualité élevés tout en optimisant notre capacité de production afin de répondre efficacement à la demande croissante.
+                  {t.factoryDescription}
                 </p>
                 <div className="grid grid-cols-2 gap-6 mb-8">
                   <motion.div
@@ -373,25 +375,25 @@ export default function AProposPage() {
                     className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                   >
                     <div className="text-3xl font-bold text-orange-600 mb-2">2M+</div>
-                    <div className="text-gray-600 font-medium">Filtres/an</div>
+                    <div className="text-gray-600 font-medium">{t.filtersPerYear}</div>
                   </motion.div>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl"
                   >
                     <div className="text-3xl font-bold text-orange-600 mb-2">90%</div>
-                    <div className="text-gray-600 font-medium">Taux d'intégration</div>
+                    <div className="text-gray-600 font-medium">{t.integrationRate}</div>
                   </motion.div>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Badge variant="outline" className="text-sm px-4 py-2 bg-white border-orange-200 text-orange-700 hover:bg-orange-50">
-                    Production automatisée
+                    {t.automatedProduction}
                   </Badge>
                   <Badge variant="outline" className="text-sm px-4 py-2 bg-white border-orange-200 text-orange-700 hover:bg-orange-50">
-                    Contrôle qualité
+                    {t.qualityControl}
                   </Badge>
                   <Badge variant="outline" className="text-sm px-4 py-2 bg-white border-orange-200 text-orange-700 hover:bg-orange-50">
-                    Traçabilité complète
+                    {t.completeTraceability}
                   </Badge>
                 </div>
               </motion.div>
@@ -409,9 +411,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre Production</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourProduction}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Capacité de production et caractéristiques de nos filtres
+                {t.productionCapacityDescription}
               </p>
             </motion.div>
 
@@ -428,11 +430,11 @@ export default function AProposPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                       <Package className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres à Huile</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.oilFilters}</h3>
                     <div className="text-4xl font-bold text-orange-600 mb-2">140</div>
-                    <div className="text-gray-600 font-medium mb-4">Références</div>
-                    <div className="text-3xl font-bold text-orange-600 mb-2">600,000</div>
-                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                    <div className="text-gray-600 font-medium mb-4">{t.references}</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">1,200,000</div>
+                    <div className="text-gray-600 font-medium">{t.piecesPerYear}</div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -449,11 +451,11 @@ export default function AProposPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                       <Package className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres Gas-oil</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.dieselFilters}</h3>
                     <div className="text-4xl font-bold text-blue-600 mb-2">78</div>
-                    <div className="text-gray-600 font-medium mb-4">Références</div>
-                    <div className="text-3xl font-bold text-blue-600 mb-2">500,000</div>
-                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                    <div className="text-gray-600 font-medium mb-4">{t.references}</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">700,000</div>
+                    <div className="text-gray-600 font-medium">{t.piecesPerYear}</div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -470,11 +472,11 @@ export default function AProposPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                       <Package className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Filtres à Air</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.airFilters}</h3>
                     <div className="text-4xl font-bold text-green-600 mb-2">961</div>
-                    <div className="text-gray-600 font-medium mb-4">Références</div>
-                    <div className="text-3xl font-bold text-green-600 mb-2">500,000</div>
-                    <div className="text-gray-600 font-medium">Pièces/An</div>
+                    <div className="text-gray-600 font-medium mb-4">{t.references}</div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">600,000</div>
+                    <div className="text-gray-600 font-medium">{t.piecesPerYear}</div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -505,9 +507,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Nos Produits</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourProducts}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Une gamme complète de filtres automobiles pour répondre à tous vos besoins
+                {t.completeRangeDescription}
               </p>
             </motion.div>
 
@@ -521,7 +523,7 @@ export default function AProposPage() {
               >
                 <img
                   src="https://devlly.net/alsafa/resources/photo%20of%20some%20filters%20with%20differnet%20sizes.jpg"
-                  alt="Différents types de filtres"
+                  alt={t.differentFilterTypes}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
               </motion.div>
@@ -534,7 +536,7 @@ export default function AProposPage() {
               >
                 <img
                   src="https://devlly.net/alsafa/resources/aboutus%20filters.avif"
-                  alt="Catalogue de filtres"
+                  alt={t.filterCatalog}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
               </motion.div>
@@ -542,10 +544,10 @@ export default function AProposPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { number: "1,179", label: "Références disponibles" },
-                { number: "300", label: "Emplois créés" },
-                { number: "90%", label: "Taux d'intégration" },
-                { number: "2M+", label: "Filtres/an" }
+                { number: "1,179", label: t.availableReferences },
+                { number: "300", label: t.jobsCreated },
+                { number: "90%", label: t.integrationRate },
+                { number: "2M+", label: t.filtersPerYear }
               ].map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -577,9 +579,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Marques qui nous font confiance</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.trustedBrands}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Des partenaires de confiance qui font appel à notre expertise en filtration
+                {t.trustedPartnersDescription}
               </p>
             </motion.div>
 
@@ -617,9 +619,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Nos Certifications</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.ourCertifications}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Des standards de qualité reconnus internationalement pour votre tranquillité d'esprit
+                {t.qualityStandardsDescription}
               </p>
             </motion.div>
 
@@ -726,9 +728,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Conformité & Transparence</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.complianceTransparency}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                SARL ELITIFAK - Une entreprise conforme et transparente dans toutes ses activités
+                {t.compliantTransparentActivities}
               </p>
             </motion.div>
 
@@ -746,7 +748,7 @@ export default function AProposPage() {
                       <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
                         <Building2 className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Statut Légal</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">{t.legalStatus}</h3>
                     </div>
                     <div className="space-y-4">
                       <div>
@@ -791,8 +793,8 @@ export default function AProposPage() {
                         <p className="text-gray-600">Enregistrement statistique national</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Transparence</h4>
-                        <p className="text-gray-600">Pratiques commerciales transparentes</p>
+                        <h4 className="font-semibold text-gray-900 mb-1">{t.transparency}</h4>
+                        <p className="text-gray-600">{t.transparentBusinessPractices}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -808,16 +810,13 @@ export default function AProposPage() {
               className="mt-12 text-center"
             >
               <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Notre Engagement</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.ourCommitment}</h3>
                 <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
-                  SARL ELITIFAK s'engage à respecter toutes les réglementations en vigueur et à maintenir 
-                  la plus haute transparence dans ses activités commerciales. Notre entreprise est 
-                  légalement constituée, fiscalement conforme et statistiquement enregistrée, 
-                  garantissant ainsi la confiance et la sécurité de nos partenaires et clients.
+                  {t.commitmentDescription}
                 </p>
                 <div className="flex items-center justify-center gap-2 mt-6">
                   <CheckCircle className="h-6 w-6 text-green-600" />
-                  <span className="text-green-700 font-semibold">Entreprise Conforme & Transparente</span>
+                  <span className="text-green-700 font-semibold">{t.compliantTransparentCompany}</span>
                 </div>
               </div>
             </motion.div>
@@ -834,9 +833,9 @@ export default function AProposPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Contact & Identité</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.contactIdentity}</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                SARL ELITIFAK - Votre partenaire de confiance en filtration automobile
+                {t.trustedPartnerDescription}
               </p>
             </motion.div>
 

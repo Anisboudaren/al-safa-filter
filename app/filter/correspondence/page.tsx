@@ -13,11 +13,13 @@ import { supabase, type Product } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { useTranslation } from "@/components/language-provider"
 
 const ITEMS_PER_PAGE = 12
 
 function CorrespondenceFilterContent() {
   const searchParams = useSearchParams()
+  const t = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [competitorRef, setCompetitorRef] = useState("")
@@ -108,10 +110,10 @@ function CorrespondenceFilterContent() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Recherche par Correspondance
+              {t.searchByCorrespondence}
             </h2>
             <p className="text-xl text-orange-100 max-w-2xl mx-auto">
-              Trouvez les filtres équivalents à partir d'une référence concurrente
+              {t.findEquivalentFiltersDescription}
             </p>
           </motion.div>
 
@@ -126,9 +128,9 @@ function CorrespondenceFilterContent() {
               <CardContent className="p-6">
                 <div className="space-y-4 mb-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Référence du concurrent</label>
+                    <label className="text-sm font-medium text-gray-700">{t.competitorReference}</label>
                     <Input
-                      placeholder="Ex: MANN-FILTER HU7008Z, UFI 23.155.00..."
+                      placeholder={t.correspondencePlaceholder}
                       value={competitorRef}
                       onChange={(e) => setCompetitorRef(e.target.value)}
                       className="h-12 text-lg rounded-xl border-2 focus:border-orange-500 focus:ring-orange-500"
@@ -165,7 +167,7 @@ function CorrespondenceFilterContent() {
                       ) : (
                         <>
                           <Search className="h-5 w-5 mr-2" />
-                          Rechercher
+                          {t.searchButton}
                         </>
                       )}
                     </Button>
@@ -173,10 +175,10 @@ function CorrespondenceFilterContent() {
                 </div>
 
                 <p className="text-sm text-gray-500 text-center mt-4">
-                  Entrez la référence du filtre concurrent pour trouver les équivalents Al Safa.
+                  {t.enterCompetitorReferenceDescription}
                 </p>
 
-                {/* Advanced Filters */}
+                {/* {t.advancedFilters} */}
                 <AnimatePresence>
                   {showFilters && (
                     <motion.div
@@ -193,7 +195,7 @@ function CorrespondenceFilterContent() {
                           className="rounded-xl border-2 border-gray-300 hover:border-gray-400"
                         >
                           <X className="h-4 w-4 mr-2" />
-                          Effacer les filtres
+                          {t.clearFilters}
                         </Button>
                       </div>
                     </motion.div>
@@ -222,9 +224,9 @@ function CorrespondenceFilterContent() {
             >
               <RefreshCw className="h-12 w-12 text-orange-600" />
             </motion.div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Recherche par Correspondance</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.searchByCorrespondence}</h3>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Entrez la référence d'une marque concurrente pour trouver l'équivalent dans notre gamme Alsafa.
+              {t.enterCompetitorReferenceDescription}
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -253,12 +255,12 @@ function CorrespondenceFilterContent() {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-orange-500" />
                   <p className="text-lg font-medium text-gray-900">
-                    {loading ? "Recherche en cours..." : `${totalCount} correspondances trouvées`}
+                    {loading ? t.searchingInProgress : `${totalCount} ${t.correspondencesFound}`}
                   </p>
                 </div>
                 {totalPages > 1 && (
                   <Badge variant="outline" className="text-sm">
-                    Page {currentPage} sur {totalPages}
+                    {t.pageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
                   </Badge>
                 )}
               </div>
@@ -537,6 +539,8 @@ function CorrespondenceFilterContent() {
 }
 
 export default function CorrespondenceFilterPage() {
+  const t = useTranslation()
+  
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
@@ -547,7 +551,7 @@ export default function CorrespondenceFilterPage() {
               <RefreshCw className="h-12 w-12 text-orange-600 animate-spin" />
             </div>
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Chargement...</h3>
-            <p className="text-lg text-gray-600">Préparation de la recherche par correspondance</p>
+            <p className="text-lg text-gray-600">{t.preparingCorrespondenceSearch}</p>
           </div>
         </div>
         <SharedFooter />

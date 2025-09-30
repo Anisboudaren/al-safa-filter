@@ -1,9 +1,11 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info, Car, Ruler, ChevronDown } from "lucide-react"
+import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info, Car, Ruler, ChevronDown, Facebook, Instagram, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
+import { useTranslation } from "@/components/language-provider"
 
 interface MobileHeaderProps {
   forceSolid?: boolean
@@ -13,6 +15,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isCatalogDropdownOpen, setIsCatalogDropdownOpen] = useState(false)
+  const t = useTranslation()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,15 +103,15 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                             ? 'text-gray-900 group-hover:text-orange-600'
                             : 'text-white group-hover:text-orange-300'
                         }`}>
-                    Alsafa Filters
+                    {t.brandName}
                   </h1>
                   <p className={`text-xs sm:text-sm transition-colors duration-300 ${
                     forceSolid || isScrolled 
                       ? 'text-gray-600 group-hover:text-orange-600' 
                       : 'text-gray-200 group-hover:text-orange-300'
                   }`}>
-                    <span className="hidden sm:inline">Solutions de filtration automobile</span>
-                    <span className="sm:hidden">Filtres auto</span>
+                    <span className="hidden sm:inline">{t.tagline}</span>
+                    <span className="sm:hidden">{t.taglineShort}</span>
                   </p>
                 </div>
               </motion.div>
@@ -125,7 +128,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                           ? 'text-gray-700 hover:text-orange-600'
                           : 'text-white hover:text-orange-300'
                       }`}>
-                  Accueil
+                  {t.home}
                 </Link>
               </motion.div>
               {/* Catalog Dropdown */}
@@ -142,7 +145,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                         : 'text-white hover:text-orange-300'
                     }`}
                   >
-                    Catalogue
+                    {t.catalog}
                     <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
                       isCatalogDropdownOpen ? 'rotate-180' : ''
                     }`} />
@@ -165,19 +168,19 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                           onClick={closeCatalogDropdown}
                           className="block px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium"
                         >
-                          📋 Catalogue Principal
+                          📋 {t.catalogMain}
                         </Link>
                         <div className="border-t border-gray-100 my-2"></div>
                         <div className="px-3 py-2">
                           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                            Filtres Spécialisés
+                            {t.specializedFilters}
                           </p>
                         </div>
                         {[
-                          { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "text-blue-600" },
-                          { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "text-green-600" },
-                          { href: "/catalog", label: "Par Référence", icon: Search, color: "text-purple-600" },
-                          { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "text-orange-600" }
+                          { href: "/filter/vehicle", label: t.byVehicle, icon: Car, color: "text-blue-600" },
+                          { href: "/filter/dimensions", label: t.byDimensions, icon: Ruler, color: "text-green-600" },
+                          { href: "/catalog", label: t.byReference, icon: Search, color: "text-purple-600" },
+                          { href: "/filter/correspondence", label: t.byCorrespondence, icon: ArrowRight, color: "text-orange-600" }
                         ].map((filter, index) => (
                           <motion.div
                             key={filter.href}
@@ -209,7 +212,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                           ? 'text-gray-700 hover:text-orange-600'
                           : 'text-white hover:text-orange-300'
                       }`}>
-                  À propos
+                  {t.about}
                 </Link>
               </motion.div>
               
@@ -226,8 +229,8 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                         }`}
                 >
                   <Search className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">Rechercher</span>
-                  <span className="sm:hidden">Recherche</span>
+                  <span className="hidden sm:inline">{t.search}</span>
+                  <span className="sm:hidden">{t.searchShort}</span>
                 </Button>
               </motion.div>
 
@@ -246,11 +249,15 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                         }`}
                 >
                   <Download className="h-4 w-4" />
-                  <span className="hidden sm:inline">Catalogue PDF</span>
-                  <span className="sm:hidden">PDF</span>
+                  <span className="hidden sm:inline">{t.downloadPdf}</span>
+                  <span className="sm:hidden">{t.downloadPdfShort}</span>
                 </a>
               </motion.div>
             </nav>
+
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher />
+            </div>
 
             {/* Mobile Menu Button */}
             <motion.div
@@ -298,46 +305,50 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 md:hidden border-l border-gray-200"
           >
-            <div className="p-6 h-full flex flex-col bg-white">
-              {/* Close Button */}
-              <motion.div 
-                className="flex justify-between items-center mb-8"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <div className="flex items-center gap-3">
-                  <motion.div
-                    whileHover={{ rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <img
-                      src="https://devlly.net/alsafa/resources/ALSAFA%20LOGO.png"
-                      alt="Alsafa Filters"
-                      className="h-10 w-auto"
-                    />
-                  </motion.div>
-                  <div>
-                    <span className="font-bold text-lg text-gray-900">Menu</span>
-                    <p className="text-xs text-orange-600 font-medium">Navigation</p>
-                  </div>
-                </div>
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+            <div className="h-full flex flex-col bg-white">
+              {/* Header - Fixed */}
+              <div className="p-6 pb-4 border-b border-gray-100">
+                <motion.div 
+                  className="flex justify-between items-center"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
                 >
-                  <Button variant="ghost" size="sm" onClick={closeMenu} className="rounded-full">
-                    <X className="h-6 w-6" />
-                  </Button>
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      whileHover={{ rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <img
+                        src="https://devlly.net/alsafa/resources/ALSAFA%20LOGO.png"
+                        alt="Alsafa Filters"
+                        className="h-10 w-auto"
+                      />
+                    </motion.div>
+                    <div>
+                      <span className="font-bold text-lg text-gray-900">{t.menu}</span>
+                      <p className="text-xs text-orange-600 font-medium">{t.navigation}</p>
+                    </div>
+                  </div>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Button variant="ghost" size="sm" onClick={closeMenu} className="rounded-full">
+                      <X className="h-6 w-6" />
+                    </Button>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              </div>
 
-              {/* Navigation Links */}
-              <nav className="space-y-2 mb-8 flex-1">
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto px-6 py-4">
+                {/* Navigation Links */}
+                <nav className="space-y-2 mb-8">
                 {[
-                  { href: "/home", label: "Accueil", icon: Home },
-                  { href: "/catalog", label: "Catalogue Principal", icon: FileText },
-                  { href: "/a-propos", label: "À propos", icon: Info },
+                  { href: "/home", label: t.home, icon: Home },
+                  { href: "/catalog", label: t.catalogMain, icon: FileText },
+                  { href: "/a-propos", label: t.about, icon: Info },
                 ].map((item, index) => (
                   <motion.div
                     key={item.href}
@@ -369,13 +380,13 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   className="border-t border-gray-200 pt-4 mt-4"
                 >
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-4">
-                    Filtres Spécialisés
+                    {t.specializedFilters}
                   </p>
                   {[
-                    { href: "/filter/vehicle", label: "Par Véhicule", icon: Car, color: "bg-blue-100 text-blue-600" },
-                    { href: "/filter/dimensions", label: "Par Dimensions", icon: Ruler, color: "bg-green-100 text-green-600" },
-                    { href: "/catalog", label: "Par Référence", icon: Search, color: "bg-purple-100 text-purple-600" },
-                    { href: "/filter/correspondence", label: "Par Correspondance", icon: ArrowRight, color: "bg-orange-100 text-orange-600" }
+                    { href: "/filter/vehicle", label: t.byVehicle, icon: Car, color: "bg-blue-100 text-blue-600" },
+                    { href: "/filter/dimensions", label: t.byDimensions, icon: Ruler, color: "bg-green-100 text-green-600" },
+                    { href: "/catalog", label: t.byReference, icon: Search, color: "bg-purple-100 text-purple-600" },
+                    { href: "/filter/correspondence", label: t.byCorrespondence, icon: ArrowRight, color: "bg-orange-100 text-orange-600" }
                   ].map((filter, index) => (
                     <motion.div
                       key={filter.href}
@@ -413,12 +424,12 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                     className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3"
                   >
                     <Search className="h-5 w-5" />
-                    Rechercher un filtre
+                    {t.searchFilter}
                   </Button>
                 </motion.div>
-              </nav>
+                </nav>
 
-              {/* Contact Info & Actions */}
+                {/* Contact Info & Actions */}
               <motion.div 
                 className="border-t border-gray-200 pt-6 space-y-4"
                 initial={{ opacity: 0, y: 20 }}
@@ -437,7 +448,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                     className="block w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3"
                   >
                     <Download className="h-5 w-5" />
-                    Télécharger le catalogue PDF
+                    {t.downloadCatalog}
                   </a>
                 </motion.div>
                 
@@ -451,8 +462,8 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                       <Phone className="h-5 w-5 text-orange-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Téléphone</p>
-                      <p className="text-sm">+213 555 046 890</p>
+                      <p className="font-medium text-gray-900">{t.phone}</p>
+                      <p className="text-sm">{t.phoneNumber}</p>
                     </div>
                   </motion.div>
                   
@@ -464,12 +475,66 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                       <Mail className="h-5 w-5 text-orange-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Email</p>
-                      <p className="text-sm">contact@elitifakfilters.com</p>
+                      <p className="font-medium text-gray-900">{t.email}</p>
+                      <p className="text-sm">{t.emailAddress}</p>
                     </div>
                   </motion.div>
                 </div>
+
+                {/* Social Media Links */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t.socialMedia}</h3>
+                  
+                  <motion.a 
+                    href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-gray-600 p-3 rounded-lg hover:bg-blue-50 transition-colors duration-300 group"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-300">
+                      <Facebook className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Facebook</p>
+                      <p className="text-sm text-blue-600">{t.followUs}</p>
+                    </div>
+                  </motion.a>
+                  
+                  <motion.a 
+                    href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-gray-600 p-3 rounded-lg hover:bg-pink-50 transition-colors duration-300 group"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center group-hover:bg-pink-200 transition-colors duration-300">
+                      <Instagram className="h-5 w-5 text-pink-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Instagram</p>
+                      <p className="text-sm text-pink-600">{t.followUs}</p>
+                    </div>
+                  </motion.a>
+                  
+                  <motion.a 
+                    href="https://www.tiktok.com/@alsafa_filtres?_t=ZS-90A09xcdHNf&_r=1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-gray-600 p-3 rounded-lg hover:bg-black/5 transition-colors duration-300 group"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
+                      <Globe className="h-5 w-5 text-gray-700" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">TikTok</p>
+                      <p className="text-sm text-gray-600">{t.followUs}</p>
+                    </div>
+                  </motion.a>
+                </div>
               </motion.div>
+              </div>
             </div>
           </motion.div>
         )}

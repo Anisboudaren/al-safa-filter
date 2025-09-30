@@ -2,9 +2,11 @@
 
 import type React from "react"
 import Link from "next/link"
-import { ArrowLeft, Home, Search, Download, CheckCircle } from "lucide-react"
+import { ArrowLeft, Home, Search, Download, CheckCircle, Facebook, Instagram, Globe } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
+import { useTranslation } from "@/components/language-provider"
 
 interface SharedHeaderProps {
   title: string
@@ -21,6 +23,7 @@ export function SharedHeader({
   showBackButton = true, 
   showHomeButton = true 
 }: SharedHeaderProps) {
+  const t = useTranslation()
   return (
     <motion.header 
       className="bg-white border-b border-gray-200 shadow-lg sticky top-0 z-50"
@@ -81,7 +84,7 @@ export function SharedHeader({
                     onClick={() => window.history.back()}
                   >
                     <ArrowLeft className="h-4 w-4" />
-                    <span className="hidden sm:inline">Retour</span>
+                    <span className="hidden sm:inline">{t.back}</span>
                   </Button>
                 </motion.div>
               )}
@@ -98,12 +101,14 @@ export function SharedHeader({
                       className="flex items-center gap-2 text-gray-600 hover:text-orange-600 hover:border-orange-300 transition-all duration-300 rounded-xl"
                     >
                       <Home className="h-4 w-4" />
-                      <span className="hidden sm:inline">Accueil</span>
+                      <span className="hidden sm:inline">{t.home}</span>
                     </Button>
                   </Link>
                 </motion.div>
               )}
             </div>
+
+            <LanguageSwitcher />
 
             {/* Search Button */}
             <motion.div
@@ -115,8 +120,8 @@ export function SharedHeader({
                 className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Search className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Rechercher</span>
-                <span className="sm:hidden">Recherche</span>
+                <span className="hidden sm:inline">{t.search}</span>
+                <span className="sm:hidden">{t.searchShort}</span>
               </Button>
             </motion.div>
 
@@ -132,10 +137,49 @@ export function SharedHeader({
                 className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
               >
                 <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Catalogue PDF</span>
-                <span className="sm:hidden">PDF</span>
+                <span className="hidden sm:inline">{t.downloadPdf}</span>
+                <span className="sm:hidden">{t.downloadPdfShort}</span>
               </a>
             </motion.div>
+
+            {/* Social Media Links */}
+            <div className="flex items-center gap-2">
+              <motion.a
+                href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-colors duration-300"
+                title="Facebook"
+              >
+                <Facebook className="h-4 w-4 text-white" />
+              </motion.a>
+              
+              <motion.a
+                href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-8 h-8 bg-pink-600 hover:bg-pink-700 rounded-lg flex items-center justify-center transition-colors duration-300"
+                title="Instagram"
+              >
+                <Instagram className="h-4 w-4 text-white" />
+              </motion.a>
+              
+              <motion.a
+                href="https://www.tiktok.com/@alsafa_filtres?_t=ZS-90A09xcdHNf&_r=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-8 h-8 bg-gray-800 hover:bg-gray-900 rounded-lg flex items-center justify-center transition-colors duration-300"
+                title="TikTok"
+              >
+                <Globe className="h-4 w-4 text-white" />
+              </motion.a>
+            </div>
           </div>
         </div>
       </div>

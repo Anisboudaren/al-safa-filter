@@ -1,13 +1,21 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Cairo } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
+import { LanguageProvider } from '@/components/language-provider'
 import { FacebookPageViewTracker } from '@/components/FacebookPageView.tsx'
+import { FontWrapper } from '@/components/font-wrapper'
 
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter'
+})
+
+const cairo = Cairo({ 
+  subsets: ['arabic', 'latin'],
+  display: 'swap',
+  variable: '--font-cairo'
 })
 
 export const metadata: Metadata = {
@@ -22,8 +30,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${cairo.variable}`}>
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/ALSAFA LOGO.png" type="image/png" />
+        <link rel="shortcut icon" href="/ALSAFA LOGO.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/ALSAFA LOGO.png" />
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1QE9KCQR5N"
@@ -54,7 +66,7 @@ export default function RootLayout({
         </Script>
         {/* End Meta Pixel Code */}
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${cairo.className}`}>
         <noscript>
           <img
             height="1"
@@ -63,8 +75,15 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=3167277163431706&ev=PageView&noscript=1"
           />
         </noscript>
-        <FacebookPageViewTracker />
-        {children}
+        <LanguageProvider>
+          <FontWrapper 
+            interClass={inter.className} 
+            cairoClass={cairo.className}
+          >
+            <FacebookPageViewTracker />
+            {children}
+          </FontWrapper>
+        </LanguageProvider>
       </body>
     </html>
   )
