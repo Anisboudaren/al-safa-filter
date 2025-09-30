@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
+import { FacebookPageViewTracker } from '@/components/FacebookPageView.tsx'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -62,6 +63,7 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=3167277163431706&ev=PageView&noscript=1"
           />
         </noscript>
+        <FacebookPageViewTracker />
         {children}
       </body>
     </html>
