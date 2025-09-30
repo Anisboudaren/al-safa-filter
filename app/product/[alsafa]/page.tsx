@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { supabase, type Product } from "@/lib/supabase"
+import { trackFacebookEvent } from "@/lib/pixel"
 import { generateProductPDF } from "@/lib/pdf-generator"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
@@ -51,6 +52,17 @@ export default function ProductDetailPage() {
       setLoading(false)
     }
   }, [alsafa])
+
+  // Track product view as InitiateCheckout-like intent
+  useEffect(() => {
+    if (product) {
+      trackFacebookEvent('InitiateCheckout', {
+        content_name: product.ALSAFA,
+        content_ids: [product.ALSAFA].filter(Boolean),
+        content_type: 'product',
+      })
+    }
+  }, [product])
 
 
   const handleGeneratePDF = async () => {
@@ -332,7 +344,13 @@ export default function ProductDetailPage() {
                 className="flex-1"
               >
                 <Button
-                  onClick={() => setShowContactPopup(true)}
+                  onClick={() => {
+                    trackFacebookEvent('Contact', {
+                      content_name: product?.ALSAFA,
+                      content_type: 'product'
+                    })
+                    setShowContactPopup(true)
+                  }}
                   className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Phone className="h-5 w-5 mr-2" />

@@ -2,6 +2,7 @@
 
 import { Phone, Mail, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { trackFacebookEvent } from "@/lib/pixel"
 
 export function SharedFooter() {
   return (
@@ -39,13 +40,25 @@ export function SharedFooter() {
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
                     <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
                   </div>
-                  <span className="text-base sm:text-lg">+213 555046890</span>
+                  <a
+                    href="tel:+213555046890"
+                    onClick={() => trackFacebookEvent('Contact')}
+                    className="text-base sm:text-lg hover:underline"
+                  >
+                    +213 555046890
+                  </a>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
                     <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
                   </div>
-                  <span className="text-base sm:text-lg">contact@elitifakfilters.com</span>
+                  <a
+                    href="mailto:contact@elitifakfilters.com"
+                    onClick={() => trackFacebookEvent('Contact')}
+                    className="text-base sm:text-lg hover:underline"
+                  >
+                    contact@elitifakfilters.com
+                  </a>
                 </div>
                  <div className="flex items-center gap-4">
                    <a
