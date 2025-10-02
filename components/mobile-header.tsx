@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info, Car, Ruler, ChevronDown, Facebook, Instagram, Globe } from "lucide-react"
+import { Menu, X, Phone, Mail, Search, Download, ArrowRight, CheckCircle, Home, FileText, Info, Car, Ruler, ChevronDown, Facebook, Instagram } from "lucide-react"
+import { TikTokIcon } from "@/components/ui/tiktok-icon"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -253,6 +254,57 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   <span className="sm:hidden">{t.downloadPdfShort}</span>
                 </a>
               </motion.div>
+
+              {/* Social Media Icons - Desktop */}
+              <div className="flex items-center gap-2">
+                <motion.a
+                  href="https://www.facebook.com/share/1GPUHSKrps/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-300 ${
+                    forceSolid || isScrolled
+                      ? 'bg-blue-600 hover:bg-blue-700'
+                      : 'bg-white/20 backdrop-blur-sm hover:bg-white/30'
+                  }`}
+                  title="Facebook"
+                >
+                  <Facebook className={`h-4 w-4 ${forceSolid || isScrolled ? 'text-white' : 'text-white'}`} />
+                </motion.a>
+                
+                <motion.a
+                  href="https://www.instagram.com/alsafa_filters?igsh=YWRpMXhmZWw5a2p1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-300 ${
+                    forceSolid || isScrolled
+                      ? 'bg-pink-600 hover:bg-pink-700'
+                      : 'bg-white/20 backdrop-blur-sm hover:bg-white/30'
+                  }`}
+                  title="Instagram"
+                >
+                  <Instagram className={`h-4 w-4 ${forceSolid || isScrolled ? 'text-white' : 'text-white'}`} />
+                </motion.a>
+                
+                <motion.a
+                  href="https://www.tiktok.com/@alsafa_filtres?_t=ZS-90A09xcdHNf&_r=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-300 ${
+                    forceSolid || isScrolled
+                      ? 'bg-gray-800 hover:bg-gray-900'
+                      : 'bg-white/20 backdrop-blur-sm hover:bg-white/30'
+                  }`}
+                  title="TikTok"
+                >
+                  <TikTokIcon className={`h-4 w-4 ${forceSolid || isScrolled ? 'text-white' : 'text-white'}`} />
+                </motion.a>
+              </div>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -486,7 +538,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">{t.socialMedia}</h3>
                   
                   <motion.a 
-                    href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                    href="https://www.facebook.com/share/1GPUHSKrps/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-gray-600 p-3 rounded-lg hover:bg-blue-50 transition-colors duration-300 group"
@@ -502,7 +554,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   </motion.a>
                   
                   <motion.a 
-                    href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                    href="https://www.instagram.com/alsafa_filters?igsh=YWRpMXhmZWw5a2p1"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-gray-600 p-3 rounded-lg hover:bg-pink-50 transition-colors duration-300 group"
@@ -525,7 +577,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                     whileHover={{ x: 5 }}
                   >
                     <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
-                      <Globe className="h-5 w-5 text-gray-700" />
+                      <TikTokIcon className="h-5 w-5 text-gray-700" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">TikTok</p>

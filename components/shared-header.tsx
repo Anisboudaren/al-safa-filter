@@ -2,7 +2,8 @@
 
 import type React from "react"
 import Link from "next/link"
-import { ArrowLeft, Home, Search, Download, CheckCircle, Facebook, Instagram, Globe } from "lucide-react"
+import { ArrowLeft, Home, Search, Download, CheckCircle, Facebook, Instagram } from "lucide-react"
+import { TikTokIcon } from "@/components/ui/tiktok-icon"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
@@ -145,7 +146,7 @@ export function SharedHeader({
             {/* Social Media Links */}
             <div className="flex items-center gap-2">
               <motion.a
-                href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                href="https://www.facebook.com/share/1GPUHSKrps/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -157,7 +158,7 @@ export function SharedHeader({
               </motion.a>
               
               <motion.a
-                href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                href="https://www.instagram.com/alsafa_filters?igsh=YWRpMXhmZWw5a2p1"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -177,7 +178,7 @@ export function SharedHeader({
                 className="w-8 h-8 bg-gray-800 hover:bg-gray-900 rounded-lg flex items-center justify-center transition-colors duration-300"
                 title="TikTok"
               >
-                <Globe className="h-4 w-4 text-white" />
+                <TikTokIcon className="h-4 w-4 text-white" />
               </motion.a>
             </div>
           </div>

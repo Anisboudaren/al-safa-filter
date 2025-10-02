@@ -1,6 +1,7 @@
 "use client"
 
-import { Phone, Mail, ArrowRight, Facebook, Instagram, Globe } from "lucide-react"
+import { Phone, Mail, ArrowRight, Facebook, Instagram } from "lucide-react"
+import { TikTokIcon } from "@/components/ui/tiktok-icon"
 import Link from "next/link"
 import { trackFacebookEvent } from "@/lib/pixel"
 import { useTranslation } from "@/components/language-provider"
@@ -167,7 +168,7 @@ export function SharedFooter() {
               </p>
               <div className="flex gap-3">
                 <a
-                  href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                  href="https://www.facebook.com/share/1GPUHSKrps/?mibextid=wwXIfr"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -177,7 +178,7 @@ export function SharedFooter() {
                 </a>
                 
                 <a
-                  href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                  href="https://www.instagram.com/alsafa_filters?igsh=YWRpMXhmZWw5a2p1"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-pink-600 hover:bg-pink-700 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -193,7 +194,7 @@ export function SharedFooter() {
                   className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
                   title="TikTok"
                 >
-                  <Globe className="h-5 w-5 text-white" />
+                  <TikTokIcon className="h-5 w-5 text-white" />
                 </a>
               </div>
             </div>
@@ -208,7 +209,7 @@ export function SharedFooter() {
               {/* Social Media Icons - Mobile */}
               <div className="flex gap-3 sm:hidden">
                 <a
-                  href="https://www.facebook.com/share/1Un2RrRJHS/?mibextid=wwXIfr"
+                  href="https://www.facebook.com/share/1GPUHSKrps/?mibextid=wwXIfr"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -218,7 +219,7 @@ export function SharedFooter() {
                 </a>
                 
                 <a
-                  href="https://www.instagram.com/alsafa_filters?igsh=MmdnNHg3aDV1MnRo"
+                  href="https://www.instagram.com/alsafa_filters?igsh=YWRpMXhmZWw5a2p1"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-pink-600 hover:bg-pink-700 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -234,7 +235,7 @@ export function SharedFooter() {
                   className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
                   title="TikTok"
                 >
-                  <Globe className="h-4 w-4 text-white" />
+                  <TikTokIcon className="h-4 w-4 text-white" />
                 </a>
               </div>
               

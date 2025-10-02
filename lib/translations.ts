@@ -1068,7 +1068,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
   
   ar: {
     // Brand and Company
-    brandName: 'مرشحات الصفا',
+    brandName: 'مرشحات الصفاء',
     tagline: 'حلول تصفية السيارات',
     taglineShort: 'مرشحات السيارات',
     
@@ -1121,7 +1121,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     testimonial1Text: 'منذ أن أستخدم مرشحات الصفا، لاحظت أداءً أفضل لسيارتي واستهلاكاً أقل.',
     testimonial1Name: 'كريم ب.',
     testimonial1Location: 'الجزائر',
-    testimonial2Text: 'وجدت بالضبط المرشحات التي أحتاجها بسعر معقول جداً. شكراً لمرشحات الصفا!',
+    testimonial2Text: 'وجدت بالضبط المرشحات التي أحتاجها بسعر معقول جداً. شكراً لمرشحات الصفاء!',
     testimonial2Name: 'حسيم ت.',
     testimonial2Location: 'وهران',
     testimonial3Text: 'أنا راضٍ جداً عن تجربة التسوق. بسيطة وسريعة جداً، مع جودة منتج ممتازة. أنصح بشدة.',
@@ -1198,7 +1198,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     forgotPassword: 'نسيت كلمة المرور',
     
     // Messages
-    welcomeMessage: 'مرحباً بك في مرشحات الصفا',
+    welcomeMessage: 'مرحباً بك في مرشحات الصفاء',
     loginSuccess: 'تم تسجيل الدخول بنجاح',
     logoutSuccess: 'تم تسجيل الخروج بنجاح',
     errorOccurred: 'حدث خطأ',
@@ -1273,7 +1273,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     
     // Footer content
     backgroundLogoAlt: 'شعار الخلفية',
-    companyDescription: 'مرشحات الصفا تضمن لك مرشحات عالية الجودة لجميع أنواع المركبات، مع خدمة عملاء استثنائية وخبرة تقنية معترف بها في جميع أنحاء الجزائر.',
+    companyDescription: 'مرشحات الصفاء تضمن لك مرشحات عالية الجودة لجميع أنواع المركبات، مع خدمة عملاء استثنائية وخبرة تقنية معترف بها في جميع أنحاء الجزائر.',
     downloadCatalogPdf: 'تحميل كتالوج PDF',
     navigation: 'التنقل',
     services: 'الخدمات',
@@ -1323,7 +1323,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     selectBrandModelDescription: 'اختر الماركة والطراز لمركبتك للعثور على المرشحات المتوافقة.',
     enterExactDimensionsDescription: 'أدخل الأبعاد الدقيقة للمرشح الذي تبحث عنه. نظامنا يستخدم المطابقة الجزئية للعثور على المرشحات المتوافقة.',
     findEquivalentFiltersDescription: 'ابحث عن المرشحات المكافئة من مرجع منافس',
-    enterCompetitorReferenceDescription: 'أدخل مرجع مرشح المنافس للعثور على ما يعادله من الصفا.',
+    enterCompetitorReferenceDescription: 'أدخل مرجع مرشح المنافس للعثور على ما يعادله من الصفاء.',
     enterAtLeastOneDimensionDescription: 'أدخل بُعد واحد على الأقل لإجراء البحث. يستخدم البحث المطابقة الجزئية.',
     enterCompleteOrPartialReferenceDescription: 'أدخل المرجع الكامل أو الجزئي للمرشح الذي تبحث عنه',
     enterExactOrPartialReferenceDescription: 'أدخل المرجع الدقيق أو الجزئي للمرشح الذي تبحث عنه. سيبحث نظامنا في جميع المراجع المتاحة.',
@@ -1339,14 +1339,14 @@ export const translations: Record<SupportedLanguage, Translations> = {
     
     // About page content
     aboutUs: 'من نحن',
-    aboutAlsafaFilters: 'حول مرشحات الصفا',
-    companyDescription: 'شركة الإليتيفاك، مصنع علامة مرشحات الصفا التجارية، تأسست في عام 1994 في عين مليلة - الجزائر. أكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد.',
+    aboutAlsafaFilters: 'حول مرشحات الصفاء',
+    companyDescription: 'شركة الاتفاق، مصنع علامة مرشحات الصفاء التجارية، تأسست في عام 1994 في عين مليلة - الجزائر. أكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد.',
     since1994: 'منذ 1994',
     thirtyYearsExcellence: 'من الاستيراد إلى التصنيع: 30 عامًا من التميز في ترشيح السيارات',
     foundation1994: '1994 - التأسيس',
-    foundationDescription: 'تم تأسيس شركة الإليتيفاك في عين مليلة - الجزائر. كانت في ذلك الوقت أكبر شركة استيراد قطع غيار السيارات في الجزائر.',
+    foundationDescription: 'تم تأسيس شركة الاتفاق في عين مليلة - الجزائر. كانت في ذلك الوقت أكبر شركة استيراد قطع غيار السيارات في الجزائر.',
     transition2002: '2002 - التحول',
-    transitionDescription: 'أثبتت الإليتيفاك نفسها كأكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد، مع تقديم منتجات تتوافق مع المعايير الدولية.',
+    transitionDescription: 'أثبتت الاتفاق نفسها كأكبر مصنع للمرشحات (الهواء، الزيت، الوقود) في البلاد، مع تقديم منتجات تتوافق مع المعايير الدولية.',
     nationalLeader: 'الرائد الوطني',
     since2002: 'منذ 2002',
     ourTeamResearch: 'فريقنا والبحث',
@@ -1371,9 +1371,9 @@ export const translations: Record<SupportedLanguage, Translations> = {
     completeRangeDescription: 'مجموعة كاملة من مرشحات السيارات لتلبية جميع احتياجاتك',
     differentFilterTypes: 'أنواع مختلفة من المرشحات',
     filterCatalog: 'كتالوج المرشحات',
-    researchDevelopmentTeam: 'فريق البحث والتطوير مرشحات الصفا',
+    researchDevelopmentTeam: 'فريق البحث والتطوير مرشحات الصفاء',
     ourCommitment: 'التزامنا',
-    commitmentDescription: 'تلتزم شركة الإليتيفاك باحترام جميع اللوائح المعمول بها والحفاظ على أعلى مستوى من الشفافية في أنشطتها التجارية. شركتنا قانونية، متوافقة ضريبياً ومسجلة إحصائياً، مما يضمن ثقة وأمان شركائنا وعملائنا.',
+    commitmentDescription: 'تلتزم شركة الاتفاق باحترام جميع اللوائح المعمول بها والحفاظ على أعلى مستوى من الشفافية في أنشطتها التجارية. شركتنا قانونية، متوافقة ضريبياً ومسجلة إحصائياً، مما يضمن ثقة وأمان شركائنا وعملائنا.',
     
     // Additional About page content
     ourHistory: 'تاريخنا',
@@ -1387,10 +1387,10 @@ export const translations: Record<SupportedLanguage, Translations> = {
     jobsCreated: 'الوظائف المخلقة',
     qualityControl: 'مراقبة الجودة',
     compliantTransparentCompany: 'شركة متوافقة وشفافة',
-    alsafaFiltersFactory: 'مصنع مرشحات الصفا',
+    alsafaFiltersFactory: 'مصنع مرشحات الصفاء',
     modernInfrastructure: 'بنية تحتية حديثة للإنتاج عالي الجودة',
     superiorQualityProduction: 'بنية تحتية حديثة للإنتاج عالي الجودة',
-    alsafaFiltersFactoryHistory: 'مصنع مرشحات الصفا - تاريخ الشركة',
+    alsafaFiltersFactoryHistory: 'مصنع مرشحات الصفاء - تاريخ الشركة',
     yearsOfExperience: 'سنوات من الخبرة',
     completeTraceability: 'التتبع الكامل',
     
@@ -1401,9 +1401,9 @@ export const translations: Record<SupportedLanguage, Translations> = {
     ourCertifications: 'شهاداتنا',
     qualityStandardsDescription: 'معايير الجودة المعترف بها دولياً لراحة بالك',
     complianceTransparency: 'الامتثال والشفافية',
-    compliantTransparentActivities: 'شركة الإليتيفاك - شركة متوافقة وشفافة في جميع أنشطتها',
+    compliantTransparentActivities: 'شركة الاتفاق - شركة متوافقة وشفافة في جميع أنشطتها',
     contactIdentity: 'الاتصال والهوية',
-    trustedPartnerDescription: 'شركة الإليتيفاك - شريكك الموثوق في ترشيح السيارات',
+    trustedPartnerDescription: 'شركة الاتفاق - شريكك الموثوق في ترشيح السيارات',
     legalStatus: 'الحالة القانونية',
     transparency: 'الشفافية',
     transparentBusinessPractices: 'ممارسات تجارية شفافة',
