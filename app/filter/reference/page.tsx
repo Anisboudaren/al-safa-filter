@@ -26,6 +26,27 @@ export default function ReferenceFilterPage() {
   const [totalCount, setTotalCount] = useState(0)
   const [hasSearched, setHasSearched] = useState(false)
 
+  const buildReferenceVariants = (value: string) => {
+    const base = value.trim()
+    if (!base) return [] as string[]
+    const noDelims = base.replace(/[\s-]+/g, "")
+    // Insert a single hyphen or space between alpha/num boundaries when missing
+    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
+    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
+    // Also include versions that swap existing hyphens/spaces
+    const swapToSpace = base.replace(/-/g, " ")
+    const swapToHyphen = base.replace(/\s+/g, "-")
+    const setVariants = new Set<string>([
+      base,
+      noDelims,
+      withHyphen,
+      withSpace,
+      swapToSpace,
+      swapToHyphen,
+    ])
+    return Array.from(setVariants).filter(Boolean)
+  }
+
   const fetchProducts = async () => {
     if (!reference.trim()) {
       return
@@ -36,10 +57,16 @@ export default function ReferenceFilterPage() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Search by reference in multiple fields
-    query = query.or(
-      `ALSAFA.ilike.%${reference}%,SAFI.ilike.%${reference}%,FLEETG.ilike.%${reference}%,ASAS.ilike.%${reference}%,SARL_F.ilike.%${reference}%,MECA_F.ilike.%${reference}%`,
-    )
+    // Search by reference in multiple fields with normalized variants
+    const fields = ["ALSAFA", "SAFI", "FLEETG", "ASAS", "SARL_F", "MECA_F"]
+    const variants = buildReferenceVariants(reference)
+    const conditions: string[] = []
+    for (const field of fields) {
+      for (const v of variants) {
+        conditions.push(`${field}.ilike.%${v}%`)
+      }
+    }
+    query = query.or(conditions.join(","))
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE
     const to = from + ITEMS_PER_PAGE - 1
@@ -182,27 +209,52 @@ export default function ReferenceFilterPage() {
                           )}
                           {reference && (
                             <>
-                              {product.SAFI && product.SAFI.toLowerCase().includes(reference.toLowerCase()) && (
+                              {(() => {
+                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
+                                const includesAny = (val?: string) =>
+                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
+                                return includesAny(product.SAFI)
+                              })() && (
                                 <Badge variant="outline" className="text-xs">
                                   SAFI: {product.SAFI}
                                 </Badge>
                               )}
-                              {product.FLEETG && product.FLEETG.toLowerCase().includes(reference.toLowerCase()) && (
+                              {(() => {
+                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
+                                const includesAny = (val?: string) =>
+                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
+                                return includesAny(product.FLEETG)
+                              })() && (
                                 <Badge variant="outline" className="text-xs">
                                   FLEETG: {product.FLEETG}
                                 </Badge>
                               )}
-                              {product.ASAS && product.ASAS.toLowerCase().includes(reference.toLowerCase()) && (
+                              {(() => {
+                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
+                                const includesAny = (val?: string) =>
+                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
+                                return includesAny(product.ASAS)
+                              })() && (
                                 <Badge variant="outline" className="text-xs">
                                   ASAS: {product.ASAS}
                                 </Badge>
                               )}
-                              {product.SARL_F && product.SARL_F.toLowerCase().includes(reference.toLowerCase()) && (
+                              {(() => {
+                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
+                                const includesAny = (val?: string) =>
+                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
+                                return includesAny(product.SARL_F)
+                              })() && (
                                 <Badge variant="outline" className="text-xs">
                                   SARL_F: {product.SARL_F}
                                 </Badge>
                               )}
-                              {product.MECA_F && product.MECA_F.toLowerCase().includes(reference.toLowerCase()) && (
+                              {(() => {
+                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
+                                const includesAny = (val?: string) =>
+                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
+                                return includesAny(product.MECA_F)
+                              })() && (
                                 <Badge variant="outline" className="text-xs">
                                   MECA_F: {product.MECA_F}
                                 </Badge>

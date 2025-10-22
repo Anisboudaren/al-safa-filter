@@ -36,6 +36,25 @@ export default function CatalogPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
+  const buildReferenceVariants = (value: string) => {
+    const base = value.trim()
+    if (!base) return [] as string[]
+    const noDelims = base.replace(/[\s-]+/g, "")
+    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
+    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
+    const swapToSpace = base.replace(/-/g, " ")
+    const swapToHyphen = base.replace(/\s+/g, "-")
+    const setVariants = new Set<string>([
+      base,
+      noDelims,
+      withHyphen,
+      withSpace,
+      swapToSpace,
+      swapToHyphen,
+    ])
+    return Array.from(setVariants).filter(Boolean)
+  }
+
   // Handle URL parameters on page load
   useEffect(() => {
     const search = searchParams.get("search")
@@ -109,11 +128,29 @@ export default function CatalogPage() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Apply search filter
+    // Apply search filter with normalized variants
     if (searchTerm) {
-      query = query.or(
-        `ALSAFA.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,SARL_F.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,ASAS.ilike.%${searchTerm}%,MECA_F.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,MANN.ilike.%${searchTerm}%,UFI.ilike.%${searchTerm}%,HIFI.ilike.%${searchTerm}%,WIX.ilike.%${searchTerm}%,filtration_system.ilike.%${searchTerm}%`,
-      )
+      const fields = [
+        "ALSAFA", "SAFI", "SARL_F", "FLEETG", "ASAS", "MECA_F", 
+        "REF_ORG", "MANN", "UFI", "HIFI", "WIX", "filtration_system"
+      ]
+      const variants = buildReferenceVariants(searchTerm)
+      console.log("Search term:", searchTerm, "Variants:", variants)
+      const conditions: string[] = []
+      for (const field of fields) {
+        for (const v of variants) {
+          conditions.push(`${field}.ilike.%${v}%`)
+        }
+      }
+      console.log("Total conditions:", conditions.length, "First few:", conditions.slice(0, 5))
+      
+      // Test with a simpler query first
+      if (conditions.length > 100) {
+        console.log("Too many conditions, using first 50")
+        query = query.or(conditions.slice(0, 50).join(","))
+      } else {
+        query = query.or(conditions.join(","))
+      }
     }
 
     // Apply filters
@@ -134,6 +171,8 @@ export default function CatalogPage() {
 
     const { data, error, count } = await query
 
+    console.log("Search results:", { data: data?.length, count, error })
+
     if (error) {
       console.error("Error fetching products:", error)
     } else {
@@ -145,6 +184,7 @@ export default function CatalogPage() {
   }
 
   const handleSearch = () => {
+    console.log("Search button clicked, searchTerm:", searchTerm)
     setCurrentPage(1)
     fetchProducts()
   }
@@ -194,8 +234,10 @@ export default function CatalogPage() {
       { key: 'WIX', value: product.WIX },
     ]
 
+    const variants = buildReferenceVariants(searchTerm).map(v => v.toLowerCase())
+    
     for (const field of referenceFields) {
-      if (field.value && field.value.toLowerCase().includes(searchTerm.toLowerCase())) {
+      if (field.value && variants.some(v => field.value!.toLowerCase().includes(v))) {
         return { field: field.key, value: field.value }
       }
     }
@@ -215,6 +257,7 @@ export default function CatalogPage() {
       fetchProducts()
     }
   }, [searchTerm])
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">

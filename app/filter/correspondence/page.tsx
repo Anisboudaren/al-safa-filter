@@ -29,6 +29,25 @@ function CorrespondenceFilterContent() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
+  const buildReferenceVariants = (value: string) => {
+    const base = value.trim()
+    if (!base) return [] as string[]
+    const noDelims = base.replace(/[\s-]+/g, "")
+    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
+    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
+    const swapToSpace = base.replace(/-/g, " ")
+    const swapToHyphen = base.replace(/\s+/g, "-")
+    const setVariants = new Set<string>([
+      base,
+      noDelims,
+      withHyphen,
+      withSpace,
+      swapToSpace,
+      swapToHyphen,
+    ])
+    return Array.from(setVariants).filter(Boolean)
+  }
+
   // Handle URL parameters on page load
   useEffect(() => {
     const correspondenceParam = searchParams.get("correspondence")
@@ -48,10 +67,28 @@ function CorrespondenceFilterContent() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Search for correspondence in various fields
-    query = query.or(
-      `ALSAFA.ilike.%${competitorRef}%,SAFI.ilike.%${competitorRef}%,SARL_F.ilike.%${competitorRef}%,FLEETG.ilike.%${competitorRef}%,ASAS.ilike.%${competitorRef}%,MECA_F.ilike.%${competitorRef}%,REF_ORG.ilike.%${competitorRef}%,MANN.ilike.%${competitorRef}%,UFI.ilike.%${competitorRef}%,HIFI.ilike.%${competitorRef}%,WIX.ilike.%${competitorRef}%`,
-    )
+    // Search for correspondence in various fields with normalized variants
+    const fields = [
+      "ALSAFA",
+      "SAFI",
+      "SARL_F",
+      "FLEETG",
+      "ASAS",
+      "MECA_F",
+      "REF_ORG",
+      "MANN",
+      "UFI",
+      "HIFI",
+      "WIX",
+    ]
+    const variants = buildReferenceVariants(competitorRef)
+    const conditions: string[] = []
+    for (const field of fields) {
+      for (const v of variants) {
+        conditions.push(`${field}.ilike.%${v}%`)
+      }
+    }
+    query = query.or(conditions.join(","))
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE
     const to = from + ITEMS_PER_PAGE - 1
@@ -422,10 +459,10 @@ function CorrespondenceFilterContent() {
                                 </div>
                               )}
 
-                              {product.divers_vehicules && (
+                              {product.description && (
                                 <div>
                                   <span className="text-gray-600 font-semibold block mb-1">Compatible:</span>
-                                  <p className="text-xs text-gray-700 line-clamp-2">{product.divers_vehicules}</p>
+                                  <p className="text-xs text-gray-700 line-clamp-2">{product.description}</p>
                                 </div>
                               )}
 
