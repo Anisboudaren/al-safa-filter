@@ -229,12 +229,12 @@ export default function CatalogPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-8"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Trouvez le filtre parfait
-            </h2>
-            <p className="text-xl text-orange-100 max-w-2xl mx-auto">
-              Recherchez parmi notre vaste collection de filtres de qualité supérieure
-            </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                {t.catalogFindPerfectFilter}
+              </h2>
+              <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+                {t.catalogSearchVastCollection}
+              </p>
           </motion.div>
 
           {/* Search Bar */}
@@ -266,7 +266,7 @@ export default function CatalogPage() {
                         className="h-12 px-6 rounded-xl border-2 border-orange-200 hover:border-orange-300"
                       >
                         <Filter className="h-5 w-5 mr-2" />
-                        Filtres
+                        {t.catalogFilters}
                       </Button>
                     </motion.div>
 
@@ -286,7 +286,7 @@ export default function CatalogPage() {
                         ) : (
                           <>
                             <Search className="h-5 w-5 mr-2" />
-                            Rechercher
+                            {t.catalogSearch}
                           </>
                         )}
                       </Button>
@@ -307,14 +307,14 @@ export default function CatalogPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Filtrer par Origine
+                            {t.catalogFilterByOrigin}
                           </label>
                           <Select value={origineFilter || "all"} onValueChange={handleOrigineFilter}>
                             <SelectTrigger className="h-12 rounded-xl border-2">
-                              <SelectValue placeholder="Toutes les Origines" />
+                              <SelectValue placeholder={t.catalogAllOrigins} />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="all">Toutes les Origines</SelectItem>
+                              <SelectItem value="all">{t.catalogAllOrigins}</SelectItem>
                               {origineOptions.map((origine) => (
                                 <SelectItem key={origine} value={origine}>
                                   {origine}
@@ -326,14 +326,14 @@ export default function CatalogPage() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Filtrer par ALSAFA
+                            {t.catalogFilterByAlsafa}
                           </label>
                           <Select value={alsafaFilter || "all"} onValueChange={handleAlsafaFilter}>
                             <SelectTrigger className="h-12 rounded-xl border-2">
-                              <SelectValue placeholder="Tous les ALSAFA" />
+                              <SelectValue placeholder={t.catalogAllAlsafa} />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="all">Tous les ALSAFA</SelectItem>
+                              <SelectItem value="all">{t.catalogAllAlsafa}</SelectItem>
                               {alsafaOptions.map((alsafa) => (
                                 <SelectItem key={alsafa} value={alsafa}>
                                   {alsafa}
@@ -345,14 +345,14 @@ export default function CatalogPage() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Filtrer par Système de Filtration
+                            {t.catalogFilterByFiltrationSystem}
                           </label>
                           <Select value={filtrationFilter || "all"} onValueChange={handleFiltrationFilter}>
                             <SelectTrigger className="h-12 rounded-xl border-2">
-                              <SelectValue placeholder="Tous les Systèmes" />
+                              <SelectValue placeholder={t.catalogAllSystems} />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="all">Tous les Systèmes</SelectItem>
+                              <SelectItem value="all">{t.catalogAllSystems}</SelectItem>
                               {filtrationOptions.map((filtration) => (
                                 <SelectItem key={filtration} value={filtration}>
                                   {filtration}
@@ -370,7 +370,7 @@ export default function CatalogPage() {
                           className="rounded-xl border-2 border-gray-300 hover:border-gray-400"
                         >
                           <X className="h-4 w-4 mr-2" />
-                          Effacer les filtres
+                          {t.catalogClearFilters}
                         </Button>
                       </div>
                     </motion.div>
@@ -399,10 +399,9 @@ export default function CatalogPage() {
             >
               <Package className="h-12 w-12 text-orange-600" />
             </motion.div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Recherche Sécurisée</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">{t.catalogSecureSearch}</h3>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Utilisez les filtres ci-dessus pour rechercher des produits spécifiques. Notre système de recherche
-              sécurisé protège notre base de données contre le scraping automatisé.
+              {t.catalogSecureSearchDescription}
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -414,7 +413,7 @@ export default function CatalogPage() {
                 className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Zap className="h-5 w-5 mr-2" />
-                Commencer la Recherche
+                {t.catalogStartSearch}
               </Button>
             </motion.div>
           </motion.div>
@@ -431,12 +430,12 @@ export default function CatalogPage() {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
                   <p className="text-lg font-medium text-gray-900">
-                    {loading ? "Recherche en cours..." : `${totalCount} produits trouvés`}
+                    {loading ? t.catalogSearchInProgress : `${totalCount} ${t.catalogProductsFound}`}
                   </p>
                 </div>
                 {totalPages > 1 && (
                   <Badge variant="outline" className="text-sm">
-                    Page {currentPage} sur {totalPages}
+                    {t.catalogPageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
                   </Badge>
                 )}
               </div>
@@ -501,9 +500,9 @@ export default function CatalogPage() {
                 >
                   <Package className="h-10 w-10 text-gray-400" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucun produit trouvé</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">{t.catalogNoProductsFound}</h3>
                 <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Essayez d'ajuster vos termes de recherche ou vos filtres pour trouver ce que vous cherchez.
+                  {t.catalogTryAdjustingSearch}
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -515,7 +514,7 @@ export default function CatalogPage() {
                     className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
                   >
                     <X className="h-4 w-4 mr-2" />
-                    Effacer tous les filtres
+                    {t.catalogClearAllFilters}
                   </Button>
                 </motion.div>
               </motion.div>
@@ -540,7 +539,7 @@ export default function CatalogPage() {
                           <Card className="h-full hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 bg-white group-hover:bg-gradient-to-br group-hover:from-orange-50 group-hover:to-orange-100 rounded-2xl overflow-hidden">
                             <CardHeader className="pb-3">
                               <CardTitle className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-orange-600 transition-colors duration-300">
-                                {product.ALSAFA || "Produit Inconnu"}
+                                {product.ALSAFA || t.catalogUnknownProduct}
                               </CardTitle>
                               {showAdditionalRefs && (
                                 <div className="flex flex-wrap gap-1 mt-2">
@@ -571,7 +570,7 @@ export default function CatalogPage() {
                               <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl mb-4 overflow-hidden group-hover:from-orange-100 group-hover:to-orange-200 transition-all duration-300">
                                 <img
                                   src={product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}
-                                  alt={product.ALSAFA || "Image produit"}
+                                  alt={product.ALSAFA || t.catalogProductImage}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement
@@ -588,7 +587,7 @@ export default function CatalogPage() {
                               <div className="space-y-3 text-sm">
                                 {(product.Ext || product.Int || product.H) && (
                                   <div>
-                                    <span className="text-gray-600 font-semibold block mb-2">Dimensions:</span>
+                                    <span className="text-gray-600 font-semibold block mb-2">{t.catalogDimensions}:</span>
                                     <div className="flex flex-wrap gap-2 text-xs">
                                       {product.Ext && (
                                         <Badge variant="outline" className="border-orange-200 text-orange-700">
@@ -609,10 +608,10 @@ export default function CatalogPage() {
                                   </div>
                                 )}
 
-                                {product.divers_vehicules && (
+                                {product.description && (
                                   <div>
-                                    <span className="text-gray-600 font-semibold block mb-1">Compatible:</span>
-                                    <p className="text-xs text-gray-700 line-clamp-2">{product.divers_vehicules}</p>
+                                    <span className="text-gray-600 font-semibold block mb-1">{t.catalogCompatible}:</span>
+                                    <p className="text-xs text-gray-700 line-clamp-2">{product.description}</p>
                                   </div>
                                 )}
                               </div>
@@ -642,7 +641,7 @@ export default function CatalogPage() {
                     className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 disabled:opacity-50"
                   >
                     <ChevronLeft className="h-4 w-4 mr-2" />
-                    Précédent
+                    {t.catalogPrevious}
                   </Button>
                 </motion.div>
 
@@ -689,7 +688,7 @@ export default function CatalogPage() {
                     disabled={currentPage === totalPages}
                     className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 disabled:opacity-50"
                   >
-                    Suivant
+                    {t.catalogNext}
                     <ChevronRight className="h-4 w-4 ml-2" />
                   </Button>
                 </motion.div>
