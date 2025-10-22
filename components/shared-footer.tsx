@@ -14,7 +14,7 @@ export function SharedFooter() {
       {/* Background Logo Overlay */}
       <div className="absolute bottom-0 right-0 opacity-5">
         <img
-          src="https://devlly.net/alsafa/resources/alsafa%20logo.png"
+          src="/ALSAFA LOGO.png"
           alt={t.backgroundLogoAlt}
           className="h-64 sm:h-96 w-auto object-contain"
         />
@@ -26,7 +26,7 @@ export function SharedFooter() {
             <div className="col-span-1 sm:col-span-2">
               <div className="flex items-center gap-4 mb-6 sm:mb-8">
                 <img
-                  src="https://devlly.net/alsafa/resources/alsafa%20logo.png"
+                  src="/ALSAFA LOGO.png"
                   alt="Alsafa Filters"
                   className="h-10 sm:h-12 w-auto"
                 />

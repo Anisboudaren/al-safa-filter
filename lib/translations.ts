@@ -359,7 +359,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
   en: {
     // Brand and Company
     brandName: 'Alsafa Filters',
-    tagline: 'Automotive filtration solutions',
+    tagline: 'Filtration solutions',
     taglineShort: 'Auto filters',
     
     // Navigation
@@ -644,7 +644,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     innovationExcellence: 'Innovation & Excellence',
     teamDescription: 'Our specialized engineering team continuously works on developing and improving our filters. Thanks to our state-of-the-art laboratory, each product undergoes rigorous testing to ensure optimal performance.',
     certifiedQuality: 'Certified Quality',
-    iso9001: 'ISO 9001',
+    iso9001: 'ISO Certified',
     ourFactoryProduction: 'Our Factory & Production',
     modernProduction: 'Modern Production',
     factoryDescription: 'Our modern factory, located in Algeria, uses cutting-edge technologies for automotive filter production. We maintain high quality standards while optimizing our production capacity to efficiently meet growing demand.',
@@ -999,7 +999,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     innovationExcellence: 'Innovation & Excellence',
     teamDescription: 'Notre équipe d\'ingénieurs spécialisés œuvre en continu au développement et à l\'amélioration de nos filtres. Grâce à notre laboratoire de pointe, chaque produit fait l\'objet de tests rigoureux afin d\'assurer des performances optimales.',
     certifiedQuality: 'Qualité Certifiée',
-    iso9001: 'ISO 9001',
+    iso9001: 'ISO Certified',
     ourFactoryProduction: 'Notre Usine & Production',
     modernProduction: 'Production Moderne',
     factoryDescription: 'Notre usine moderne, implantée en Algérie, utilise des technologies de pointe pour la production de filtres automobiles. Nous maintenons des standards de qualité élevés tout en optimisant notre capacité de production afin de répondre efficacement à la demande croissante.',
@@ -1282,7 +1282,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     searchByDimensions: 'البحث بالأبعاد',
     correspondences: 'المراسلات',
     contact: 'الاتصال',
-    allRightsReserved: '© 2025 بواسطة مرشحات إليتيفاك. جميع الحقوق محفوظة.',
+    allRightsReserved: '© 2025 شركة الاتفاق. جميع الحقوق محفوظة.',
     termsOfUse: 'شروط الاستخدام',
     privacyPolicy: 'سياسة الخصوصية',
     qualityPolicy: 'سياسة الجودة',
@@ -1354,7 +1354,7 @@ export const translations: Record<SupportedLanguage, Translations> = {
     innovationExcellence: 'الابتكار والتميز',
     teamDescription: 'يعمل فريق المهندسين المتخصصين لدينا باستمرار على تطوير وتحسين مرشحاتنا. بفضل مختبرنا المتطور، يخضع كل منتج لاختبارات صارمة لضمان الأداء الأمثل.',
     certifiedQuality: 'الجودة المعتمدة',
-    iso9001: 'ISO 9001',
+    iso9001: 'ISO Certified',
     ourFactoryProduction: 'مصنعنا والإنتاج',
     modernProduction: 'الإنتاج الحديث',
     factoryDescription: 'مصنعنا الحديث، الموجود في الجزائر، يستخدم تقنيات متطورة لإنتاج مرشحات السيارات. نحافظ على معايير جودة عالية مع تحسين قدرة الإنتاج لدينا للاستجابة بكفاءة للطلب المتزايد.',

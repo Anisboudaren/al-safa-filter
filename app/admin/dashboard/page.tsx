@@ -22,6 +22,7 @@ import {
   Settings
 } from "lucide-react"
 import { ProductEditModal } from "@/components/admin/ProductEditModal"
+import { CompatibilityManager } from "@/components/admin/CompatibilityManager"
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
 
 export default function AdminDashboard() {
@@ -34,7 +35,8 @@ export default function AdminDashboard() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
-  const [activeTab, setActiveTab] = useState<'products' | 'analytics'>('products')
+  const [activeTab, setActiveTab] = useState<'products' | 'analytics' | 'compatibility'>('products')
+  const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
   const router = useRouter()
 
   const ITEMS_PER_PAGE = 20
@@ -170,6 +172,17 @@ export default function AdminDashboard() {
             >
               <BarChart3 className="h-4 w-4 inline mr-2" />
               Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('compatibility')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'compatibility'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              }`}
+            >
+              <Settings className="h-4 w-4 inline mr-2" />
+              Compatibility
             </button>
             <button
               onClick={() => router.push('/admin/setup-analytics')}
@@ -392,8 +405,10 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
           </>
-        ) : (
+        ) : activeTab === 'analytics' ? (
           <AnalyticsDashboard />
+        ) : (
+          <CompatibilityManager />
         )}
       </main>
 

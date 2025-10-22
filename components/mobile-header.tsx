@@ -84,7 +84,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                 >
                   <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center p-1 sm:p-2">
                     <img
-                      src="https://devlly.net/alsafa/resources/alsafa logo.png"
+                      src="/ALSAFA LOGO.png"
                       alt="Alsafa Filters"
                       className="h-6 sm:h-10 w-auto"
                     />
@@ -372,7 +372,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                       transition={{ duration: 0.3 }}
                     >
                       <img
-                        src="https://devlly.net/alsafa/resources/ALSAFA%20LOGO.png"
+                        src="/ALSAFA LOGO.png"
                         alt="Alsafa Filters"
                         className="h-10 w-auto"
                       />

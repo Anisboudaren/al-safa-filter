@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { X, Save, Loader2, Upload, Image as ImageIcon } from "lucide-react"
+import { X, Save, Loader2, Upload, Image as ImageIcon, Car } from "lucide-react"
+import { CompatibilityManager } from "./CompatibilityManager"
 
 interface ProductEditModalProps {
   product: Product
@@ -24,6 +25,7 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -338,13 +340,16 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="divers_vehicules" className="text-gray-300">Divers Véhicules</Label>
-              <Input
-                id="divers_vehicules"
-                value={formData.divers_vehicules || ""}
-                onChange={(e) => handleInputChange("divers_vehicules", e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
-              />
+              <Label className="text-gray-300">Vehicle Compatibility</Label>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCompatibilityManager(true)}
+                className="w-full bg-gray-700 border-gray-600 text-white hover:bg-gray-600 hover:text-white"
+              >
+                <Car className="h-4 w-4 mr-2" />
+                Manage Vehicle Compatibility
+              </Button>
             </div>
 
             <div className="space-y-2">
@@ -421,6 +426,18 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
 
         </CardContent>
       </Card>
+
+      {/* Compatibility Manager Modal */}
+      {showCompatibilityManager && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <CompatibilityManager 
+              productId={product.id} 
+              onClose={() => setShowCompatibilityManager(false)} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

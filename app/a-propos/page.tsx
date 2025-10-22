@@ -5,7 +5,7 @@ import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Building2, Users, Factory, Package, Award, Phone, Mail, MapPin, CheckCircle, QrCode, Shield, ArrowRight } from "lucide-react"
+import { Building2, Users, Factory, Package, Award, Phone, Mail, MapPin, CheckCircle, Shield, ArrowRight } from "lucide-react"
 import MobileHeader from "@/components/mobile-header"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
 import { useTranslation } from "@/components/language-provider"
@@ -137,7 +137,7 @@ export default function AProposPage() {
             >
               <div className="relative z-10">
                 <img
-                  src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
+                  src="/resources/people in the factury.webp"
                   alt={t.researchDevelopmentTeam}
                   className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
                 />
@@ -216,7 +216,7 @@ export default function AProposPage() {
                 className="relative"
               >
                 <img
-                  src="https://devlly.net/alsafa/resources/photo%20of%20a%20man%20in%20the%20USINE%20ALSAFA%20FILTRES.jpg"
+                  src="/resources/worker in the factury.webp"
                   alt={t.alsafaFiltersFactoryHistory}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
@@ -296,7 +296,7 @@ export default function AProposPage() {
                 className="relative"
               >
                 <img
-                  src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
+                  src="/resources/people in the factury.webp"
                   alt={t.researchDevelopmentTeam}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
@@ -344,12 +344,12 @@ export default function AProposPage() {
                 className="space-y-6"
               >
                 <img
-                  src="https://devlly.net/alsafa/resources/photo%20of%20a%20man%20in%20the%20USINE%20ALSAFA%20FILTRES.jpg"
+                  src="/resources/worker in the factury.webp"
                   alt={t.alsafaFiltersFactory}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
                 <img
-                  src="https://devlly.net/alsafa/resources/photo%20or%20some%20filters%20in%20productions.jpg"
+                  src="/resources/filters iwth white bg.webp"
                   alt={t.filtersInProduction}
                   className="w-full h-64 object-cover rounded-2xl shadow-2xl"
                 />
@@ -522,7 +522,7 @@ export default function AProposPage() {
                 whileHover={{ scale: 1.02 }}
               >
                 <img
-                  src="https://devlly.net/alsafa/resources/photo%20of%20some%20filters%20with%20differnet%20sizes.jpg"
+                  src="/resources/filters with white bg.webp"
                   alt={t.differentFilterTypes}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
@@ -535,7 +535,7 @@ export default function AProposPage() {
                 whileHover={{ scale: 1.02 }}
               >
                 <img
-                  src="https://devlly.net/alsafa/resources/aboutus%20filters.avif"
+                  src="/resources/filters iwth white bg.webp"
                   alt={t.filterCatalog}
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />
@@ -628,7 +628,7 @@ export default function AProposPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 {
-                  image: "https://devlly.net/alsafa/resources/ISO%2014001.png",
+                  image: "/resources/ISO 14001.png",
                   title: "ISO 14001:2015",
                   description: "Management environnemental pour une production respectueuse de l'environnement",
                   icon: CheckCircle,
@@ -636,27 +636,20 @@ export default function AProposPage() {
                   certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%2014001-2015-ACCREDIA.pdf"
                 },
                 {
-                  image: "https://devlly.net/alsafa/resources/the%20certifcate%20of%20ISO%209001.png",
-                  title: "ISO 9001:2015",
+                  image: "/resources/ISO 9001.png",
+                  title: "ISO Certified",
                   description: "Management de la qualité garantissant l'excellence de nos processus de production",
                   icon: CheckCircle,
                   color: "green",
                   certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%209001-2015-ACCREDIA.pdf"
                 },
                 {
-                  image: "https://devlly.net/alsafa/resources/ISO%2045001.png",
+                  image: "/resources/ISO 45001.png",
                   title: "ISO 45001:2018",
                   description: "Système de management de la santé et sécurité au travail pour la protection de nos équipes et partenaires",
                   icon: CheckCircle,
                   color: "green",
                   certificateUrl: "https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/certificates/Certificate%20EL%20ITIFAK%20ISO%2045001-2018-ACCREDIA.pdf"
-                },
-                {
-                  image: "https://devlly.net/alsafa/resources/QR%20code%20%20elitifak%20filters%20black%20.png",
-                  title: "Authentification",
-                  description: "Vérification QR pour l'authentification de tous nos produits",
-                  icon: Shield,
-                  color: "blue"
                 }
               ].map((cert, index) => (
                 <motion.div
@@ -852,7 +845,7 @@ export default function AProposPage() {
                   className="inline-block"
                 >
                   <img
-                    src="https://devlly.net/alsafa/resources/carta"
+                    src="/resources/carte visite.webp"
                     alt="Carte d'identité SARL EL ITIFAK"
                     className="max-w-sm mx-auto lg:mx-0 rounded-2xl shadow-2xl"
                   />

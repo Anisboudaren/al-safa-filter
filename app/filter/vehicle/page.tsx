@@ -10,12 +10,11 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
-import { supabase, type Product } from "@/lib/supabase"
+import { supabase, type Product, type Brand, type Engine, type Vehicle, type CompatibilityData } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { useTranslation } from "@/components/language-provider"
-import vehicleData from "@/lib/vehicle-data.json"
 
 const ITEMS_PER_PAGE = 12
 
@@ -26,14 +25,23 @@ export default function VehicleFilterPage() {
   const [loading, setLoading] = useState(false)
   const [brand, setBrand] = useState("")
   const [model, setModel] = useState("")
+  const [engine, setEngine] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const [hasSearched, setHasSearched] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
-  const brands = Object.keys(vehicleData)
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [engines, setEngines] = useState<Engine[]>([])
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [availableModels, setAvailableModels] = useState<string[]>([])
+  const [availableEngines, setAvailableEngines] = useState<string[]>([])
+
+  // Fetch brands on component mount
+  useEffect(() => {
+    fetchBrands()
+  }, [])
 
   // Handle URL parameters on page load
   useEffect(() => {
@@ -48,54 +56,141 @@ export default function VehicleFilterPage() {
     }
   }, [searchParams])
 
-  // Update available models when brand changes
-  useEffect(() => {
-    if (brand && vehicleData[brand as keyof typeof vehicleData]) {
-      setAvailableModels(vehicleData[brand as keyof typeof vehicleData].models)
-      // Reset model when brand changes
-      setModel("")
-    } else {
+  const fetchBrands = async () => {
+    const { data, error } = await supabase
+      .from('brands')
+      .select('*')
+      .order('display_name')
+    
+    if (error) {
+      console.error('Error fetching brands:', error)
+      return
+    }
+    setBrands(data || [])
+  }
+
+  const fetchEngines = async (brandName: string) => {
+    if (!brandName) {
+      setEngines([])
+      setAvailableEngines([])
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('engines')
+      .select(`
+        *,
+        brands!inner(name, display_name)
+      `)
+      .eq('brands.name', brandName)
+      .order('name')
+    
+    if (error) {
+      console.error('Error fetching engines:', error)
+      return
+    }
+    
+    setEngines(data || [])
+    setAvailableEngines((data || []).map(engine => engine.name))
+  }
+
+  const fetchVehicles = async (engineName: string, brandName: string) => {
+    if (!engineName || !brandName) {
+      setVehicles([])
       setAvailableModels([])
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('vehicles')
+      .select(`
+        *,
+        engines!inner(name, brands!inner(name, display_name))
+      `)
+      .eq('engines.name', engineName)
+      .eq('engines.brands.name', brandName)
+      .order('model_name')
+    
+    if (error) {
+      console.error('Error fetching vehicles:', error)
+      return
+    }
+    
+    setVehicles(data || [])
+    setAvailableModels((data || []).map(vehicle => vehicle.model_name))
+  }
+
+  // Update available engines when brand changes
+  useEffect(() => {
+    if (brand) {
+      fetchEngines(brand)
+      setEngine("") // Reset engine when brand changes
+      setModel("") // Reset model when brand changes
+    } else {
+      setEngines([])
+      setAvailableEngines([])
+      setEngine("")
+      setModel("")
     }
   }, [brand])
 
+  // Update available vehicles when engine changes
+  useEffect(() => {
+    if (engine && brand) {
+      fetchVehicles(engine, brand)
+      setModel("") // Reset model when engine changes
+    } else {
+      setVehicles([])
+      setAvailableModels([])
+      setModel("")
+    }
+  }, [engine, brand])
+
   const fetchProducts = async () => {
-    if (!brand && !model) {
+    if (!brand || !model) {
       return
     }
 
     setLoading(true)
     setHasSearched(true)
 
-    let query = supabase.from("products").select("*", { count: "exact" })
+    // Find the vehicle ID based on brand, engine, and model
+    const selectedVehicle = vehicles.find(v => 
+      v.model_name === model && 
+      v.engines?.brands?.name === brand &&
+      (engine ? v.engines?.name === engine : true)
+    )
 
-    // Build search query based on vehicle info - check if brand and model are in divers_vehicules
-    if (brand && model) {
-      // Both brand and model must be present in divers_vehicules
-      query = query.ilike('divers_vehicules', `%${brand}%`).ilike('divers_vehicules', `%${model}%`)
-    } else if (brand) {
-      // Only brand search
-      query = query.ilike('divers_vehicules', `%${brand}%`)
-    } else if (model) {
-      // Only model search
-      query = query.ilike('divers_vehicules', `%${model}%`)
+    if (!selectedVehicle) {
+      setProducts([])
+      setTotalCount(0)
+      setLoading(false)
+      return
     }
 
-    const from = (currentPage - 1) * ITEMS_PER_PAGE
-    const to = from + ITEMS_PER_PAGE - 1
-    query = query.range(from, to)
-
-    const { data, error, count } = await query
-
-    console.log("Vehicle search query:", { brand, model })
-    console.log("Found products:", data?.length || 0, "out of", count || 0)
+    // Get products that are compatible with this vehicle
+    const { data, error, count } = await supabase
+      .from('product_compatibilities')
+      .select(`
+        products!inner(*),
+        vehicles!inner(id)
+      `, { count: 'exact' })
+      .eq('vehicle_id', selectedVehicle.id)
+      .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1)
 
     if (error) {
-      console.error("Error fetching products:", error)
+      console.error('Error fetching products:', error)
+      setProducts([])
+      setTotalCount(0)
     } else {
-      setProducts(data || [])
+      const productData = (data || []).map(item => item.products).filter(Boolean)
+      setProducts(productData)
       setTotalCount(count || 0)
     }
+
+    console.log("Vehicle search query:", { brand, engine, model })
+    console.log("Selected vehicle:", selectedVehicle)
+    console.log("Found products:", products?.length || 0, "out of", count || 0)
 
     setLoading(false)
   }
@@ -158,7 +253,7 @@ export default function VehicleFilterPage() {
           >
             <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">{t.brand}</label>
                     <Select value={brand} onValueChange={setBrand}>
@@ -167,8 +262,24 @@ export default function VehicleFilterPage() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brandOption) => (
-                          <SelectItem key={brandOption} value={brandOption}>
-                            {brandOption}
+                          <SelectItem key={brandOption.name} value={brandOption.name}>
+                            {brandOption.display_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Engine</label>
+                    <Select value={engine} onValueChange={setEngine}>
+                      <SelectTrigger className="h-12 text-lg rounded-xl border-2 focus:border-blue-500 focus:ring-blue-500">
+                        <SelectValue placeholder="Select Engine" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableEngines.map((engineOption) => (
+                          <SelectItem key={engineOption} value={engineOption}>
+                            {engineOption}
                           </SelectItem>
                         ))}
                       </SelectContent>

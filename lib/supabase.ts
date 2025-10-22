@@ -20,7 +20,6 @@ export type Product = {
   ASAS: string | null
   MECA_F: string | null
   REF_ORG: string | null
-  divers_vehicules: string | null
   filtration_system: string
   Ptte: string | null
   MANN: string | null
@@ -29,4 +28,51 @@ export type Product = {
   WIX: string | null
   created_at?: string
   updated_at?: string
+}
+
+export type Brand = {
+  id?: number
+  name: string
+  display_name: string
+  logo_url?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+export type Engine = {
+  id?: number
+  brand_id: number
+  name: string
+  displacement?: string | null
+  fuel_type?: string | null
+  technology?: string | null
+  power_output?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+export type Vehicle = {
+  id?: number
+  engine_id: number
+  model_name: string
+  body_style?: string | null
+  variant?: string | null
+  drive_type?: string | null
+  year_from?: number | null
+  year_to?: number | null
+  created_at?: string
+  updated_at?: string
+}
+
+export type ProductCompatibility = {
+  id?: number
+  product_id: number
+  vehicle_id: number
+  created_at?: string
+}
+
+export type CompatibilityData = {
+  brand: Brand
+  engine: Engine
+  vehicle: Vehicle
 }

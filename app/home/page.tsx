@@ -255,7 +255,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <div className="font-semibold text-gray-900">{t.certifiedQuality}</div>
-                      <div className="text-sm text-gray-600">ISO 9001</div>
+                      <div className="text-sm text-gray-600">ISO Certified</div>
                     </div>
                   </div>
                 </motion.div>
@@ -322,7 +322,7 @@ export default function HomePage() {
               className="relative"
             >
               <img
-                src="https://devlly.net/alsafa/resources/men%20in%20the%20lab%20working%20on%20testing%20and%20devlping%20filters.jpg"
+                src="/resources/people in the factury.webp"
                 alt={t.researchTeamAlt}
                 className="w-full h-80 object-cover rounded-2xl shadow-2xl"
               />
@@ -381,32 +381,25 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                image: "https://devlly.net/alsafa/resources/ISO%2014001.png",
+                image: "/resources/ISO 14001.png",
                 title: "ISO 14001",
                 description: t.environmentalManagement,
                 icon: CheckCircle,
                 color: "green"
               },
               {
-                image: "https://devlly.net/alsafa/resources/the%20certifcate%20of%20ISO%209001.png",
-                title: "ISO 9001",
+                image: "/resources/ISO 9001.png",
+                title: "ISO Certified",
                 description: t.qualityManagement,
                 icon: CheckCircle,
                 color: "green"
               },
               {
-                image: "https://devlly.net/alsafa/resources/ISO%2045001.png",
+                image: "/resources/ISO 45001.png",
                 title: "ISO 45001",
                 description: t.healthSafetyWork,
                 icon: CheckCircle,
                 color: "green"
-              },
-              {
-                image: "https://devlly.net/alsafa/resources/QR%20code%20%20elitifak%20filters%20black%20.png",
-                title: t.authentication,
-                description: t.qrProductVerification,
-                icon: Shield,
-                color: "blue"
               }
             ].map((cert, index) => (
               <motion.div
