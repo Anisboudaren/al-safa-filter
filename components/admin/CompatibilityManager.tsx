@@ -23,6 +23,10 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [productCompatibilities, setProductCompatibilities] = useState<ProductCompatibility[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingBrands, setLoadingBrands] = useState(false)
+  const [loadingEngines, setLoadingEngines] = useState(false)
+  const [loadingVehicles, setLoadingVehicles] = useState(false)
+  const [loadingCompatibilities, setLoadingCompatibilities] = useState(false)
   const [viewMode, setViewMode] = useState<'add' | 'browse'>('add')
   
   // Form states
@@ -67,21 +71,28 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   }
 
   const fetchBrands = async () => {
+    setLoadingBrands(true)
     try {
       const response = await fetch('/api/compatibility/brands')
       const result = await response.json()
       
       if (!response.ok) {
-        showError('Error fetching brands')
+        console.error('Error fetching brands:', result.error || 'Unknown error')
+        showError(`Error fetching brands: ${result.error || 'Unknown error'}`)
         return
       }
       setBrands(result.data || [])
     } catch (error) {
-      showError('Error fetching brands')
+      console.error('Error fetching brands:', error)
+      showError(`Error fetching brands: ${error instanceof Error ? error.message : 'Network error'}`)
+    } finally {
+      setLoadingBrands(false)
     }
   }
 
   const fetchAllBrandsAndEngines = async () => {
+    setLoadingBrands(true)
+    setLoadingEngines(true)
     try {
       const [brandsRes, enginesRes] = await Promise.all([
         fetch('/api/compatibility/brands'),
@@ -93,27 +104,43 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
       
       if (brandsRes.ok) {
         setAllBrands(brandsResult.data || [])
+      } else {
+        console.error('Error fetching brands:', brandsResult.error || 'Unknown error')
+        showError(`Error fetching brands: ${brandsResult.error || 'Unknown error'}`)
       }
+      
       if (enginesRes.ok) {
         setAllEngines(enginesResult.data || [])
+      } else {
+        console.error('Error fetching engines:', enginesResult.error || 'Unknown error')
+        showError(`Error fetching engines: ${enginesResult.error || 'Unknown error'}`)
       }
     } catch (error) {
-      showError('Error fetching data')
+      console.error('Error fetching data:', error)
+      showError(`Error fetching data: ${error instanceof Error ? error.message : 'Network error'}`)
+    } finally {
+      setLoadingBrands(false)
+      setLoadingEngines(false)
     }
   }
 
   const fetchEngines = async (brandId: number) => {
+    setLoadingEngines(true)
     try {
       const response = await fetch(`/api/compatibility/engines?brand_id=${brandId}`)
       const result = await response.json()
       
       if (!response.ok) {
-        showError('Error fetching engines')
+        console.error('Error fetching engines:', result.error || 'Unknown error')
+        showError(`Error fetching engines: ${result.error || 'Unknown error'}`)
         return
       }
       setEngines(result.data || [])
     } catch (error) {
-      showError('Error fetching engines')
+      console.error('Error fetching engines:', error)
+      showError(`Error fetching engines: ${error instanceof Error ? error.message : 'Network error'}`)
+    } finally {
+      setLoadingEngines(false)
     }
   }
 
@@ -123,34 +150,47 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
       return
     }
 
+    setLoadingVehicles(true)
     try {
       const response = await fetch(`/api/compatibility/vehicles?engine_ids=${engineIds.join(',')}`)
       const result = await response.json()
       
       if (!response.ok) {
-        showError('Error fetching vehicles')
+        console.error('Error fetching vehicles:', result.error || 'Unknown error')
+        showError(`Error fetching vehicles: ${result.error || 'Unknown error'}`)
         return
       }
       setVehicles(result.data || [])
     } catch (error) {
-      showError('Error fetching vehicles')
+      console.error('Error fetching vehicles:', error)
+      showError(`Error fetching vehicles: ${error instanceof Error ? error.message : 'Network error'}`)
+    } finally {
+      setLoadingVehicles(false)
     }
   }
 
   const fetchProductCompatibilities = async () => {
-    if (!productId) return
+    if (!productId) {
+      setProductCompatibilities([])
+      return
+    }
     
+    setLoadingCompatibilities(true)
     try {
       const response = await fetch(`/api/compatibility?product_id=${productId}`)
       const result = await response.json()
       
       if (!response.ok) {
-        showError('Error fetching compatibilities')
+        console.error('Error fetching compatibilities:', result.error || 'Unknown error')
+        showError(`Error fetching compatibilities: ${result.error || 'Unknown error'}`)
         return
       }
       setProductCompatibilities(result.data || [])
     } catch (error) {
-      showError('Error fetching compatibilities')
+      console.error('Error fetching compatibilities:', error)
+      showError(`Error fetching compatibilities: ${error instanceof Error ? error.message : 'Network error'}`)
+    } finally {
+      setLoadingCompatibilities(false)
     }
   }
 
@@ -189,7 +229,10 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   }
 
   const addCompatibilities = async () => {
-    if (!productId || selectedVehicles.length === 0) return
+    if (!productId || selectedVehicles.length === 0) {
+      showError('No product selected for compatibility management')
+      return
+    }
     
     setLoading(true)
     
@@ -206,14 +249,16 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
       const result = await response.json()
       
       if (!response.ok) {
-        showError(result.error || 'Error adding compatibilities')
+        console.error('Error adding compatibilities:', result.error || 'Unknown error')
+        showError(`Error adding compatibilities: ${result.error || 'Unknown error'}`)
       } else {
         showSuccess(result.message || 'Compatibilities added successfully')
         fetchProductCompatibilities()
         setSelectedVehicles([])
       }
     } catch (error) {
-      showError('Error adding compatibilities')
+      console.error('Error adding compatibilities:', error)
+      showError(`Error adding compatibilities: ${error instanceof Error ? error.message : 'Network error'}`)
     }
     
     setLoading(false)
@@ -499,7 +544,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
       ) : (
         <div className="space-y-6">
           {/* Current Compatibilities */}
-          {productId && (
+          {productId ? (
             <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
               <CardHeader className="pb-4">
                 <CardTitle className="text-white flex items-center gap-3 text-xl">
@@ -511,7 +556,12 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                {productCompatibilities.length === 0 ? (
+                {loadingCompatibilities ? (
+                  <div className="text-center py-12">
+                    <Loader2 className="h-12 w-12 text-orange-500 mx-auto mb-3 animate-spin" />
+                    <p className="text-gray-400">Loading compatibilities...</p>
+                  </div>
+                ) : productCompatibilities.length === 0 ? (
                   <div className="text-center py-12">
                     <Car className="h-12 w-12 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400">No compatibilities added yet</p>
@@ -554,10 +604,10 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                 )}
               </CardContent>
             </Card>
-          )}
+          ) : null}
 
           {/* Add New Compatibility */}
-          {productId && (
+          {productId ? (
             <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
               <CardHeader className="pb-4">
                 <CardTitle className="text-white text-xl flex items-center gap-3">
@@ -573,26 +623,39 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                     Select Brand
                   </Label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
-                    {brands.map((brand) => (
-                      <Button
-                        key={brand.id}
-                        variant={selectedBrand?.id === brand.id ? "default" : "outline"}
-                        size="lg"
-                        onClick={() => handleBrandSelect(brand)}
-                        disabled={loading}
-                        className={selectedBrand?.id === brand.id 
-                          ? "bg-orange-500 hover:bg-orange-600 text-white shadow-lg border-2 border-orange-500" 
-                          : "border-2 border-gray-600 text-gray-300 hover:text-white hover:border-orange-500 hover:bg-gray-700/50"
-                        }
-                      >
-                        {brand.display_name}
-                      </Button>
-                    ))}
+                    {loadingBrands ? (
+                      <div className="col-span-full flex items-center justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-orange-500 mr-2" />
+                        <span className="text-gray-400">Loading brands...</span>
+                      </div>
+                    ) : brands.length === 0 ? (
+                      <div className="col-span-full text-center py-8">
+                        <Building2 className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+                        <p className="text-gray-400">No brands available</p>
+                        <p className="text-gray-500 text-sm">Add brands using the form below</p>
+                      </div>
+                    ) : (
+                      brands.map((brand) => (
+                        <Button
+                          key={brand.id}
+                          variant={selectedBrand?.id === brand.id ? "default" : "outline"}
+                          size="lg"
+                          onClick={() => handleBrandSelect(brand)}
+                          disabled={loading || loadingBrands}
+                          className={selectedBrand?.id === brand.id 
+                            ? "bg-orange-500 hover:bg-orange-600 text-white shadow-lg border-2 border-orange-500" 
+                            : "border-2 border-gray-600 text-gray-300 hover:text-white hover:border-orange-500 hover:bg-gray-700/50"
+                          }
+                        >
+                          {brand.display_name}
+                        </Button>
+                      ))
+                    )}
                   </div>
                 </div>
 
                 {/* Engine Multi-Selection */}
-                {selectedBrand && engines.length > 0 && (
+                {selectedBrand && (
                   <div className="space-y-3">
                     <Label className="text-gray-300 text-base font-semibold flex items-center gap-2">
                       <span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500 text-white text-sm">2</span>
@@ -604,44 +667,57 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                       )}
                     </Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 max-h-[280px] overflow-y-auto pr-2">
-                      {engines.map((engine) => {
-                        const isSelected = selectedEngines.some(e => e.id === engine.id)
-                        return (
-                          <div
-                            key={engine.id}
-                            onClick={() => !loading && handleEngineToggle(engine)}
-                            className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                              isSelected 
-                                ? 'bg-orange-500/20 border-orange-500 shadow-lg' 
-                                : 'bg-gray-900 border-gray-600 hover:border-orange-400 hover:bg-gray-800/50'
-                            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
-                            {isSelected ? (
-                              <CheckSquare className="h-5 w-5 text-orange-500 flex-shrink-0" />
-                            ) : (
-                              <Square className="h-5 w-5 text-gray-500 flex-shrink-0" />
-                            )}
-                            <div className="flex-1">
-                              <div className={`font-medium ${isSelected ? 'text-white' : 'text-gray-300'}`}>
-                                {engine.name}
-                              </div>
-                              {(engine.displacement || engine.fuel_type) && (
-                                <div className="text-sm text-gray-400 mt-1">
-                                  {engine.displacement && `${engine.displacement}L`}
-                                  {engine.displacement && engine.fuel_type && ' • '}
-                                  {engine.fuel_type}
-                                </div>
+                      {loadingEngines ? (
+                        <div className="col-span-full flex items-center justify-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-orange-500 mr-2" />
+                          <span className="text-gray-400">Loading engines...</span>
+                        </div>
+                      ) : engines.length === 0 ? (
+                        <div className="col-span-full text-center py-8">
+                          <Cpu className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+                          <p className="text-gray-400">No engines available for this brand</p>
+                          <p className="text-gray-500 text-sm">Add engines using the form below</p>
+                        </div>
+                      ) : (
+                        engines.map((engine) => {
+                          const isSelected = selectedEngines.some(e => e.id === engine.id)
+                          return (
+                            <div
+                              key={engine.id}
+                              onClick={() => !loading && !loadingEngines && handleEngineToggle(engine)}
+                              className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                isSelected 
+                                  ? 'bg-orange-500/20 border-orange-500 shadow-lg' 
+                                  : 'bg-gray-900 border-gray-600 hover:border-orange-400 hover:bg-gray-800/50'
+                              } ${loading || loadingEngines ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                              {isSelected ? (
+                                <CheckSquare className="h-5 w-5 text-orange-500 flex-shrink-0" />
+                              ) : (
+                                <Square className="h-5 w-5 text-gray-500 flex-shrink-0" />
                               )}
+                              <div className="flex-1">
+                                <div className={`font-medium ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+                                  {engine.name}
+                                </div>
+                                {(engine.displacement || engine.fuel_type) && (
+                                  <div className="text-sm text-gray-400 mt-1">
+                                    {engine.displacement && `${engine.displacement}L`}
+                                    {engine.displacement && engine.fuel_type && ' • '}
+                                    {engine.fuel_type}
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        )
-                      })}
+                          )
+                        })
+                      )}
                     </div>
                   </div>
                 )}
 
                 {/* Vehicle Multi-Selection */}
-                {selectedEngines.length > 0 && vehicles.length > 0 && (
+                {selectedEngines.length > 0 && (
                   <div className="space-y-3">
                     <Label className="text-gray-300 text-base font-semibold flex items-center gap-2">
                       <span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500 text-white text-sm">3</span>
@@ -653,36 +729,49 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                       )}
                     </Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 max-h-[350px] overflow-y-auto pr-2">
-                      {vehicles.map((vehicle) => {
-                        const isSelected = selectedVehicles.some(v => v.id === vehicle.id)
-                        return (
-                          <div
-                            key={vehicle.id}
-                            onClick={() => !loading && handleVehicleToggle(vehicle)}
-                            className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                              isSelected 
-                                ? 'bg-orange-500/20 border-orange-500 shadow-lg' 
-                                : 'bg-gray-900 border-gray-600 hover:border-orange-400 hover:bg-gray-800/50'
-                            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
-                            {isSelected ? (
-                              <CheckSquare className="h-5 w-5 text-orange-500 flex-shrink-0" />
-                            ) : (
-                              <Square className="h-5 w-5 text-gray-500 flex-shrink-0" />
-                            )}
-                            <div className="flex-1">
-                              <div className={`font-medium ${isSelected ? 'text-white' : 'text-gray-300'}`}>
-                                {vehicle.model_name}
-                              </div>
-                              {(vehicle.variant || vehicle.body_style) && (
-                                <div className="text-sm text-gray-400 mt-1">
-                                  {vehicle.variant} {vehicle.body_style}
-                                </div>
+                      {loadingVehicles ? (
+                        <div className="col-span-full flex items-center justify-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-orange-500 mr-2" />
+                          <span className="text-gray-400">Loading vehicles...</span>
+                        </div>
+                      ) : vehicles.length === 0 ? (
+                        <div className="col-span-full text-center py-8">
+                          <Car className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+                          <p className="text-gray-400">No vehicles available for selected engines</p>
+                          <p className="text-gray-500 text-sm">Add vehicles using the form below</p>
+                        </div>
+                      ) : (
+                        vehicles.map((vehicle) => {
+                          const isSelected = selectedVehicles.some(v => v.id === vehicle.id)
+                          return (
+                            <div
+                              key={vehicle.id}
+                              onClick={() => !loading && !loadingVehicles && handleVehicleToggle(vehicle)}
+                              className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                isSelected 
+                                  ? 'bg-orange-500/20 border-orange-500 shadow-lg' 
+                                  : 'bg-gray-900 border-gray-600 hover:border-orange-400 hover:bg-gray-800/50'
+                              } ${loading || loadingVehicles ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                              {isSelected ? (
+                                <CheckSquare className="h-5 w-5 text-orange-500 flex-shrink-0" />
+                              ) : (
+                                <Square className="h-5 w-5 text-gray-500 flex-shrink-0" />
                               )}
+                              <div className="flex-1">
+                                <div className={`font-medium ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+                                  {vehicle.model_name}
+                                </div>
+                                {(vehicle.variant || vehicle.body_style) && (
+                                  <div className="text-sm text-gray-400 mt-1">
+                                    {vehicle.variant} {vehicle.body_style}
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        )
-                      })}
+                          )
+                        })
+                      )}
                     </div>
                   </div>
                 )}
@@ -710,6 +799,19 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                     </Button>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
+              <CardContent className="p-8 text-center">
+                <Car className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">Product Compatibility Management</h3>
+                <p className="text-gray-400 mb-4">
+                  To manage product compatibilities, please select a product from the Products tab first.
+                </p>
+                <p className="text-gray-500 text-sm">
+                  This section allows you to add vehicle compatibility data for specific products.
+                </p>
               </CardContent>
             </Card>
           )}

@@ -16,6 +16,7 @@ import { trackFacebookEvent } from "@/lib/pixel"
 import { generateProductPDF } from "@/lib/pdf-generator"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
+import { ProductCompatibilityDisplay } from "@/components/ProductCompatibilityDisplay"
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -221,7 +222,6 @@ export default function ProductDetailPage() {
     { label: "External", value: product.Ext },
     { label: "Internal", value: product.Int },
     { label: "Height", value: product.H },
-    { label: "Diverse Vehicles", value: product.divers_vehicules },
   ]
 
   return (
@@ -478,17 +478,10 @@ export default function ProductDetailPage() {
                   )}
 
                   {/* Vehicle Compatibility */}
-                  {product.divers_vehicules && (
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-orange-500" />
-                        Compatibilité véhicules
-                      </h3>
-                      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl">
-                        <p className="text-gray-700 leading-relaxed text-lg">{product.divers_vehicules}</p>
-                      </div>
-                    </div>
-                  )}
+                  <ProductCompatibilityDisplay 
+                    productId={product.id!} 
+                    productAlsaFa={product.ALSAFA || undefined}
+                  />
                 </CardContent>
               </Card>
             </motion.div>
