@@ -109,12 +109,12 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
     return (
       <Card className="shadow-xl border-0 bg-white">
         <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
-          <CardTitle className="flex items-center gap-3 text-xl text-red-800">
-            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-white" />
-            </div>
-            Compatibilité véhicules
-          </CardTitle>
+        <CardTitle className="flex items-center gap-3 text-xl text-red-800">
+          <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+            <Car className="h-5 w-5 text-white" />
+          </div>
+          Compatibilité véhicules
+        </CardTitle>
         </CardHeader>
         <CardContent className="p-8">
           <div className="text-center py-8">
@@ -133,12 +133,12 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
     return (
       <Card className="shadow-xl border-0 bg-white">
         <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100">
-          <CardTitle className="flex items-center gap-3 text-xl text-gray-700">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-white" />
-            </div>
-            Compatibilité véhicules
-          </CardTitle>
+        <CardTitle className="flex items-center gap-3 text-xl text-gray-700">
+          <div className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center">
+            <Car className="h-5 w-5 text-white" />
+          </div>
+          Compatibilité véhicules
+        </CardTitle>
         </CardHeader>
         <CardContent className="p-8">
           <div className="text-center py-8">
@@ -160,7 +160,7 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
       <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
         <CardTitle className="flex items-center gap-3 text-xl">
           <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-            <CheckCircle className="h-5 w-5 text-white" />
+            <Car className="h-5 w-5 text-white" />
           </div>
           Compatibilité véhicules
           <Badge variant="secondary" className="ml-auto bg-orange-500/20 text-orange-600 border-orange-500">
