@@ -275,11 +275,11 @@ export default function ProductDetailPage() {
           >
             <Card className="overflow-hidden shadow-2xl border-0 bg-white">
               <CardContent className="p-0">
-                <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden group">
+                <div className="aspect-square bg-white relative overflow-hidden group">
                   <img
                     src={product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}
                     alt={product.ALSAFA || "Product image"}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = "none"
@@ -287,7 +287,7 @@ export default function ProductDetailPage() {
                       if (fallback) fallback.style.display = "flex"
                     }}
                   />
-                  <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 hidden items-center justify-center">
+                  <div className="w-full h-full bg-white hidden items-center justify-center">
                     <div className="text-center">
                       <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-500">Image non disponible</p>
@@ -398,7 +398,7 @@ export default function ProductDetailPage() {
                     Spécifications du produit
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+                <CardContent className="p-8 space-y-8">
                   {/* Primary Information */}
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -473,20 +473,28 @@ export default function ProductDetailPage() {
                   {product.filtration_system && (
                     <Separator className="bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
                   )}
-
-                  {/* Vehicle Compatibility */}
-                  <div className="lg:col-span-2">
-                    <ProductCompatibilityDisplay 
-                      productId={product.id!} 
-                      productAlsaFa={product.ALSAFA || undefined}
-                    />
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>
           </motion.div>
+
         </div>
       </div>
+
+      {/* Vehicle Compatibility - Full Width */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+        className="w-full bg-gradient-to-br from-slate-50 to-gray-100 py-12"
+      >
+        <div className="max-w-none px-4 sm:px-6 lg:px-8">
+          <ProductCompatibilityDisplay 
+            productId={product.id!} 
+            productAlsaFa={product.ALSAFA || undefined}
+          />
+        </div>
+      </motion.div>
 
       <AnimatePresence>
         {showContactPopup && (
