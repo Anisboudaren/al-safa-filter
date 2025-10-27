@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Car, Cpu, Building2, CheckCircle, Loader2 } from "lucide-react"
+import { Car, Cpu, Building2, CheckCircle, Loader2, ChevronDown, ChevronRight } from "lucide-react"
 
 interface CompatibilityData {
   id: number
@@ -43,6 +43,7 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
   const [compatibilities, setCompatibilities] = useState<CompatibilityData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [expandedBrands, setExpandedBrands] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetchCompatibilities()
@@ -79,28 +80,40 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
     return acc
   }, {} as Record<string, CompatibilityData[]>)
 
+  const toggleBrand = (brandName: string) => {
+    setExpandedBrands(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(brandName)) {
+        newSet.delete(brandName)
+      } else {
+        newSet.add(brandName)
+      }
+      return newSet
+    })
+  }
+
   if (loading) {
     return (
       <Card className="shadow-xl border-0 bg-white">
         <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
           <CardTitle className="flex items-center gap-3 text-xl">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-white" />
-            </div>
+            
             Compatibilité véhicules
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-8">
-          <div className="space-y-4">
-            <Skeleton className="h-6 w-48" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-            </div>
+      <CardContent className="p-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-48" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
           </div>
-        </CardContent>
+        </div>
+      </CardContent>
       </Card>
     )
   }
@@ -110,19 +123,17 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
       <Card className="shadow-xl border-0 bg-white">
         <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
         <CardTitle className="flex items-center gap-3 text-xl text-red-800">
-          <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-            <Car className="h-5 w-5 text-white" />
-          </div>
+          
           Compatibilité véhicules
         </CardTitle>
         </CardHeader>
-        <CardContent className="p-8">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-red-600" />
+        <CardContent className="p-4">
+          <div className="text-center py-4">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <CheckCircle className="h-6 w-6 text-red-600" />
             </div>
-            <p className="text-red-600 font-medium">Erreur lors du chargement des compatibilités</p>
-            <p className="text-red-500 text-sm mt-2">{error}</p>
+            <p className="text-red-600 font-medium text-sm">Erreur lors du chargement des compatibilités</p>
+            <p className="text-red-500 text-xs mt-1">{error}</p>
           </div>
         </CardContent>
       </Card>
@@ -140,13 +151,13 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
           Compatibilité véhicules
         </CardTitle>
         </CardHeader>
-        <CardContent className="p-8">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Car className="h-8 w-8 text-gray-600" />
+        <CardContent className="p-4">
+          <div className="text-center py-4">
+            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Car className="h-6 w-6 text-gray-600" />
             </div>
-            <p className="text-gray-600 font-medium">Aucune compatibilité disponible</p>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-gray-600 font-medium text-sm">Aucune compatibilité disponible</p>
+            <p className="text-gray-500 text-xs mt-1">
               Les compatibilités pour ce produit n'ont pas encore été définies.
             </p>
           </div>
@@ -156,109 +167,124 @@ export function ProductCompatibilityDisplay({ productId, productAlsaFa }: Produc
   }
 
   return (
-    <Card className="shadow-xl border-0 bg-white">
-      <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
-        <CardTitle className="flex items-center gap-3 text-xl">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-            <Car className="h-5 w-5 text-white" />
-          </div>
-          Compatibilité véhicules
-          <Badge variant="secondary" className="ml-auto bg-orange-500/20 text-orange-600 border-orange-500">
-            {compatibilities.length} véhicule{compatibilities.length > 1 ? 's' : ''}
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-8">
-        <div className="space-y-8">
-          {Object.entries(groupedCompatibilities).map(([brandName, brandCompatibilities]) => (
-            <div key={brandName} className="space-y-4">
-              {/* Brand Title */}
-              <div className="flex items-center gap-3 pb-2 border-b-2 border-orange-200">
-                <Building2 className="h-6 w-6 text-orange-600" />
-                <h3 className="text-xl font-bold text-gray-900">{brandName}</h3>
-                <Badge variant="outline" className="border-orange-300 text-orange-700">
-                  {brandCompatibilities.length} véhicule{brandCompatibilities.length > 1 ? 's' : ''}
-                </Badge>
-              </div>
-
-              {/* Vehicles and Engines */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {brandCompatibilities.map((comp) => (
-                  <div
-                    key={comp.id}
-                    className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200 hover:border-orange-300 transition-colors"
+    <div className="w-full">
+      <Card className="shadow-xl border-0 bg-white">
+        <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
+          <CardTitle className="flex items-center gap-3 text-xl">
+            
+            Compatibilité véhicules
+            <Badge variant="secondary" className="ml-auto bg-orange-500/20 text-orange-900 border-orange-500 font-semibold">
+              {compatibilities.length} véhicule{compatibilities.length > 1 ? 's' : ''}
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="space-y-2">
+            {Object.entries(groupedCompatibilities).map(([brandName, brandCompatibilities]) => {
+              const isExpanded = expandedBrands.has(brandName)
+              return (
+                <div key={brandName} className="border border-gray-200 rounded-lg overflow-hidden">
+                  {/* Brand Header - Clickable */}
+                  <div 
+                    className="flex items-center gap-2 p-3 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 cursor-pointer transition-colors"
+                    onClick={() => toggleBrand(brandName)}
                   >
-                    <div className="space-y-3">
-                      {/* Vehicle Info */}
-                      <div className="flex items-center gap-2">
-                        <Car className="h-5 w-5 text-orange-600" />
-                        <span className="font-bold text-gray-900 text-lg">
-                          {comp.vehicles.model_name}
-                        </span>
-                        {comp.vehicles.variant && (
-                          <Badge variant="secondary" className="bg-orange-100 text-orange-700 text-xs">
-                            {comp.vehicles.variant}
-                          </Badge>
-                        )}
-                      </div>
+                    <Building2 className="h-4 w-4 text-orange-600" />
+                    <h3 className="text-sm font-bold text-gray-900 flex-1">{brandName}</h3>
+                    <Badge variant="outline" className="border-orange-300 text-orange-900 text-xs font-semibold px-1 py-0">
+                      {brandCompatibilities.length}
+                    </Badge>
+                    {isExpanded ? (
+                      <ChevronDown className="h-4 w-4 text-gray-600" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-gray-600" />
+                    )}
+                  </div>
 
-                      {/* Engine Info */}
-                      <div className="flex items-center gap-2">
-                        <Cpu className="h-4 w-4 text-blue-600" />
-                        <span className="text-gray-700 font-medium">
-                          {comp.vehicles.engines.name}
-                        </span>
-                        {comp.vehicles.engines.displacement && (
-                          <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">
-                            {comp.vehicles.engines.displacement}L
-                          </Badge>
-                        )}
-                        {comp.vehicles.engines.fuel_type && (
-                          <Badge variant="outline" className="border-green-300 text-green-700 text-xs">
-                            {comp.vehicles.engines.fuel_type}
-                          </Badge>
-                        )}
-                      </div>
+                  {/* Collapsible Content */}
+                  {isExpanded && (
+                    <div className="p-3 bg-white">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                        {brandCompatibilities.map((comp) => (
+                          <div
+                            key={comp.id}
+                            className="bg-gradient-to-br from-gray-50 to-gray-100 p-2 rounded-lg border border-gray-200 hover:border-orange-300 transition-colors"
+                          >
+                            <div className="space-y-1">
+                              {/* Vehicle Info */}
+                              <div className="flex items-center gap-1">
+                                <Car className="h-3 w-3 text-orange-600 flex-shrink-0" />
+                                <span className="font-bold text-gray-900 text-xs truncate">
+                                  {comp.vehicles.model_name}
+                                </span>
+                                {comp.vehicles.variant && (
+                                  <Badge variant="secondary" className="bg-orange-100 text-orange-900 text-xs font-semibold px-1 py-0">
+                                    {comp.vehicles.variant}
+                                  </Badge>
+                                )}
+                              </div>
 
-                      {/* Additional Details */}
-                      <div className="flex flex-wrap gap-2 text-sm text-gray-600">
-                        {comp.vehicles.body_style && (
-                          <span className="bg-gray-200 px-2 py-1 rounded text-xs">
-                            {comp.vehicles.body_style}
-                          </span>
-                        )}
-                        {comp.vehicles.drive_type && (
-                          <span className="bg-gray-200 px-2 py-1 rounded text-xs">
-                            {comp.vehicles.drive_type}
-                          </span>
-                        )}
-                        {(comp.vehicles.year_from || comp.vehicles.year_to) && (
-                          <span className="bg-gray-200 px-2 py-1 rounded text-xs">
-                            {comp.vehicles.year_from && comp.vehicles.year_to 
-                              ? `${comp.vehicles.year_from}-${comp.vehicles.year_to}`
-                              : comp.vehicles.year_from || comp.vehicles.year_to
-                            }
-                          </span>
-                        )}
-                        {comp.vehicles.engines.technology && (
-                          <span className="bg-gray-200 px-2 py-1 rounded text-xs">
-                            {comp.vehicles.engines.technology}
-                          </span>
-                        )}
-                        {comp.vehicles.engines.power_output && (
-                          <span className="bg-gray-200 px-2 py-1 rounded text-xs">
-                            {comp.vehicles.engines.power_output} HP
-                          </span>
-                        )}
+                              {/* Engine Info */}
+                              <div className="flex items-center gap-1">
+                                <Cpu className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                                <span className="text-gray-700 font-medium text-xs truncate">
+                                  {comp.vehicles.engines.name}
+                                </span>
+                                {comp.vehicles.engines.displacement && (
+                                  <Badge variant="outline" className="border-blue-300 text-blue-900 text-xs font-semibold px-1 py-0">
+                                    {comp.vehicles.engines.displacement}L
+                                  </Badge>
+                                )}
+                                {comp.vehicles.engines.fuel_type && (
+                                  <Badge variant="outline" className="border-green-300 text-green-900 text-xs font-semibold px-1 py-0">
+                                    {comp.vehicles.engines.fuel_type}
+                                  </Badge>
+                                )}
+                              </div>
+
+                              {/* Additional Details */}
+                              <div className="flex flex-wrap gap-1 text-xs text-gray-600">
+                                {comp.vehicles.body_style && (
+                                  <span className="bg-gray-200 px-1 py-0.5 rounded text-xs text-gray-800 font-medium">
+                                    {comp.vehicles.body_style}
+                                  </span>
+                                )}
+                                {comp.vehicles.drive_type && (
+                                  <span className="bg-gray-200 px-1 py-0.5 rounded text-xs text-gray-800 font-medium">
+                                    {comp.vehicles.drive_type}
+                                  </span>
+                                )}
+                                {(comp.vehicles.year_from || comp.vehicles.year_to) && (
+                                  <span className="bg-gray-200 px-1 py-0.5 rounded text-xs text-gray-800 font-medium">
+                                    {comp.vehicles.year_from && comp.vehicles.year_to 
+                                      ? `${comp.vehicles.year_from}-${comp.vehicles.year_to}`
+                                      : comp.vehicles.year_from || comp.vehicles.year_to
+                                    }
+                                  </span>
+                                )}
+                                {comp.vehicles.engines.technology && (
+                                  <span className="bg-gray-200 px-1 py-0.5 rounded text-xs text-gray-800 font-medium">
+                                    {comp.vehicles.engines.technology}
+                                  </span>
+                                )}
+                                {comp.vehicles.engines.power_output && (
+                                  <span className="bg-gray-200 px-1 py-0.5 rounded text-xs text-gray-800 font-medium">
+                                    {comp.vehicles.engines.power_output} HP
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

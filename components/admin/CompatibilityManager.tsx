@@ -419,7 +419,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     <div className="space-y-6 p-6 min-h-screen" style={{backgroundColor: '#111827'}}>
       {/* Header with Mode Toggle */}
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold" style={{color: '#ffffff'}}>Vehicle Compatibility Manager</h2>
+        <h2 className="text-3xl font-bold text-white drop-shadow-lg">Vehicle Compatibility Manager</h2>
         <div className="flex gap-3">
           <Button 
             variant={viewMode === 'add' ? "default" : "outline"} 
@@ -427,8 +427,8 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
             disabled={loading}
             style={viewMode === 'add' 
               ? {backgroundColor: '#f97316', color: '#ffffff', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'} 
-              : {borderColor: '#4b5563', color: '#d1d5db'}}
-            className={viewMode === 'add' ? '' : 'hover:text-white'}
+              : {backgroundColor: '#374151', borderColor: '#4b5563', color: '#ffffff'}}
+            className={viewMode === 'add' ? '' : 'hover:bg-gray-600'}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Data
@@ -439,8 +439,8 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
             disabled={loading}
             style={viewMode === 'browse' 
               ? {backgroundColor: '#f97316', color: '#ffffff', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'} 
-              : {borderColor: '#4b5563', color: '#d1d5db'}}
-            className={viewMode === 'browse' ? '' : 'hover:text-white'}
+              : {backgroundColor: '#374151', borderColor: '#4b5563', color: '#ffffff'}}
+            className={viewMode === 'browse' ? '' : 'hover:bg-gray-600'}
           >
             <Eye className="h-4 w-4 mr-2" />
             Browse Data
@@ -450,8 +450,8 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
               variant="outline" 
               onClick={onClose} 
               disabled={loading}
-              style={{borderColor: '#4b5563', color: '#d1d5db'}}
-              className="hover:text-white"
+              style={{backgroundColor: '#374151', borderColor: '#4b5563', color: '#ffffff'}}
+              className="hover:bg-gray-600"
             >
               <X className="h-4 w-4 mr-2" />
               Close
@@ -644,7 +644,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                           disabled={loading || loadingBrands}
                           className={selectedBrand?.id === brand.id 
                             ? "bg-orange-500 hover:bg-orange-600 text-white shadow-lg border-2 border-orange-500" 
-                            : "border-2 border-gray-600 text-gray-300 hover:text-white hover:border-orange-500 hover:bg-gray-700/50"
+                            : "border-2 border-gray-600 text-white bg-gray-800 hover:text-white hover:border-orange-500 hover:bg-gray-700"
                           }
                         >
                           {brand.display_name}

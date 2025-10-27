@@ -395,13 +395,10 @@ export default function ProductDetailPage() {
               <Card className="shadow-xl border-0 bg-white">
                 <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-                      <Info className="h-5 w-5 text-white" />
-                    </div>
                     Spécifications du produit
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8">
+                <CardContent className="p-8 space-y-8 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
                   {/* Primary Information */}
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -478,10 +475,12 @@ export default function ProductDetailPage() {
                   )}
 
                   {/* Vehicle Compatibility */}
-                  <ProductCompatibilityDisplay 
-                    productId={product.id!} 
-                    productAlsaFa={product.ALSAFA || undefined}
-                  />
+                  <div className="lg:col-span-2">
+                    <ProductCompatibilityDisplay 
+                      productId={product.id!} 
+                      productAlsaFa={product.ALSAFA || undefined}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
