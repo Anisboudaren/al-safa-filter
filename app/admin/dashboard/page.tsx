@@ -15,6 +15,7 @@ import {
   LogOut, 
   Package, 
   Plus,
+  Trash,
   ChevronLeft,
   ChevronRight,
   Filter,
@@ -22,6 +23,7 @@ import {
   Settings
 } from "lucide-react"
 import { ProductEditModal } from "@/components/admin/ProductEditModal"
+import { ProductCreateModal } from "@/components/admin/ProductCreateModal"
 import { CompatibilityManager } from "@/components/admin/CompatibilityManager"
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
 
@@ -34,6 +36,7 @@ export default function AdminDashboard() {
   const [totalCount, setTotalCount] = useState(0)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [activeTab, setActiveTab] = useState<'products' | 'analytics' | 'compatibility'>('products')
   const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
@@ -105,6 +108,26 @@ export default function AdminDashboard() {
     fetchProducts()
     setIsEditModalOpen(false)
     setSelectedProduct(null)
+  }
+
+  const handleDeleteProduct = async (product: Product) => {
+    if (!product.id) return
+    const confirmed = typeof window !== 'undefined' ? window.confirm(`Delete product "${product.name || product.ALSAFA || product.id}"? This action cannot be undone.`) : false
+    if (!confirmed) return
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", product.id)
+      if (error) {
+        console.error('Error deleting product:', error)
+        return
+      }
+      // Refresh list
+      fetchProducts()
+    } catch (e) {
+      console.error('Unexpected delete error:', e)
+    }
   }
 
   const handleLogout = async () => {
@@ -235,6 +258,13 @@ export default function AdminDashboard() {
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>
+              <Button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Product
+              </Button>
             </div>
           </div>
 
@@ -358,14 +388,25 @@ export default function AdminDashboard() {
                           }
                         </td>
                         <td className="py-3 px-4">
-                          <Button
-                            onClick={() => handleEditProduct(product)}
-                            size="sm"
-                            className="bg-orange-500 hover:bg-orange-600 text-white"
-                          >
-                            <Edit className="h-4 w-4 mr-1" />
-                            Edit
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              onClick={() => handleEditProduct(product)}
+                              size="sm"
+                              className="bg-orange-500 hover:bg-orange-600 text-white"
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDeleteProduct(product)}
+                              size="sm"
+                              variant="outline"
+                              className="border-red-600 text-red-500 hover:bg-red-600 hover:text-white"
+                            >
+                              <Trash className="h-4 w-4 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -422,6 +463,18 @@ export default function AdminDashboard() {
             setSelectedProduct(null)
           }}
           onSave={handleProductUpdated}
+        />
+      )}
+
+      {/* Create Modal */}
+      {isCreateModalOpen && (
+        <ProductCreateModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSave={() => {
+            setIsCreateModalOpen(false)
+            fetchProducts()
+          }}
         />
       )}
     </div>

@@ -1,40 +1,48 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { supabase, type Product } from "@/lib/supabase"
-import { getProductImageUrlWithFallback } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { X, Save, Loader2, Upload, Image as ImageIcon, Car } from "lucide-react"
-import { CompatibilityManager } from "./CompatibilityManager"
+import { X, Save, Loader2, Image as ImageIcon } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface ProductEditModalProps {
-  product: Product
+interface ProductCreateModalProps {
   isOpen: boolean
   onClose: () => void
   onSave: () => void
 }
 
-export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEditModalProps) {
-  const [formData, setFormData] = useState<Product>(product)
+const defaultFormData: Product = {
+  name: "",
+  description: null,
+  image_url: null,
+  ALSAFA: "",
+  Ext: "",
+  Int: "",
+  H: "",
+  SAFI: "",
+  SARL_F: "",
+  FLEETG: "",
+  ASAS: "",
+  MECA_F: "",
+  REF_ORG: "",
+  filtration_system: "huile",
+  Ptte: "",
+  MANN: "",
+  UFI: "",
+  HIFI: "",
+  WIX: "",
+}
+
+export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateModalProps) {
+  const [formData, setFormData] = useState<Product>(defaultFormData)
   const [loading, setLoading] = useState(false)
-  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
-  const [uploadSuccess, setUploadSuccess] = useState(false)
-  const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    setFormData(product)
-    setError("")
-    setSuccess(false)
-    setUploadSuccess(false)
-  }, [product])
 
   const handleInputChange = (field: keyof Product, value: string) => {
     setFormData(prev => ({
@@ -43,62 +51,37 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
     }))
   }
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file || !product.id) return
-
-    setUploading(true)
-    setError("")
-    setUploadSuccess(false)
-
-    try {
-      const formData = new FormData()
-      formData.append('image', file)
-      formData.append('productId', product.id.toString())
-
-      const response = await fetch('/api/upload-image', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Upload failed')
-      }
-
-      // Update form data with new image URL
-      setFormData(prev => ({
-        ...prev,
-        image_url: result.imageUrl
-      }))
-
-      setUploadSuccess(true)
-      setTimeout(() => setUploadSuccess(false), 3000)
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed')
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handleSave = async () => {
+  const handleCreate = async () => {
     setLoading(true)
     setError("")
     setSuccess(false)
 
     try {
-      // Since we don't have a unique ID, we'll need to find the product by its unique combination
-      // For now, let's assume we can identify it by ALSAFA and ORIGINE combination
+      const payload: Partial<Product> = {
+        ...formData,
+        // Normalize empty strings to null where appropriate
+        description: formData.description || null,
+        image_url: formData.image_url || null,
+        ALSAFA: formData.ALSAFA || null,
+        Ext: formData.Ext || null,
+        Int: formData.Int || null,
+        H: formData.H || null,
+        SAFI: formData.SAFI || null,
+        SARL_F: formData.SARL_F || null,
+        FLEETG: formData.FLEETG || null,
+        ASAS: formData.ASAS || null,
+        MECA_F: formData.MECA_F || null,
+        REF_ORG: formData.REF_ORG || null,
+        Ptte: formData.Ptte || null,
+        MANN: formData.MANN || null,
+        UFI: formData.UFI || null,
+        HIFI: formData.HIFI || null,
+        WIX: formData.WIX || null,
+      }
+
       const { error } = await supabase
         .from("products")
-        .update(formData)
-        .eq("id", product.id)
+        .insert(payload as Product)
 
       if (error) {
         setError(error.message)
@@ -106,7 +89,8 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
         setSuccess(true)
         setTimeout(() => {
           onSave()
-        }, 1500)
+          setFormData(defaultFormData)
+        }, 800)
       }
     } catch (err) {
       setError("An unexpected error occurred")
@@ -121,7 +105,7 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-800 border-gray-700">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-white">Edit Product</CardTitle>
+          <CardTitle className="text-white">Create Product</CardTitle>
           <div className="flex items-center space-x-2">
             <Button
               onClick={onClose}
@@ -131,19 +115,19 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
               Cancel
             </Button>
             <Button
-              onClick={handleSave}
+              onClick={handleCreate}
               disabled={loading}
               className="bg-orange-500 hover:bg-orange-600 text-white"
             >
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
+                  Creating...
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  Save Changes
+                  Create
                 </>
               )}
             </Button>
@@ -166,86 +150,67 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
 
           {success && (
             <Alert className="bg-green-900/20 border-green-800 text-green-200">
-              <AlertDescription>Product updated successfully!</AlertDescription>
+              <AlertDescription>Product created successfully!</AlertDescription>
             </Alert>
           )}
 
-          {uploadSuccess && (
-            <Alert className="bg-green-900/20 border-green-800 text-green-200">
-              <AlertDescription>Image uploaded successfully!</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Image Upload Section */}
+          {/* Image Section (disabled until after creation) */}
           <div className="space-y-4 p-4 bg-gray-700/50 rounded-lg">
             <Label className="text-gray-300 text-sm font-medium">Product Image</Label>
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 bg-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
-                {(() => {
-                  const imageUrl = getProductImageUrlWithFallback(
-                    formData.ALSAFA, 
-                    formData.filtration_system, 
-                    formData.image_url
-                  );
-                  return imageUrl ? (
-                    <img 
-                      src={imageUrl} 
-                      alt={formData.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden')
-                      }}
-                    />
-                  ) : null;
-                })()}
-                <div className={`w-full h-full flex items-center justify-center text-gray-400 ${getProductImageUrlWithFallback(formData.ALSAFA, formData.filtration_system, formData.image_url) ? 'hidden' : ''}`}>
-                  <ImageIcon className="h-8 w-8" />
-                </div>
+                <ImageIcon className="h-8 w-8 text-gray-300" />
               </div>
-              <div className="flex-1">
-                <Button
-                  type="button"
-                  onClick={triggerFileInput}
-                  disabled={uploading}
-                  className="bg-orange-500 hover:bg-orange-600 text-white"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Image
-                    </>
-                  )}
-                </Button>
-                <p className="text-xs text-gray-400 mt-1">
-                  Supports JPG, PNG, WebP. Will be converted to AVIF/WebP for optimal performance.
-                </p>
-                <p className="text-xs text-blue-400 mt-1">
-                  💡 Automatic images are loaded from /public/images/ based on ALSAFA code and filter type.
-                </p>
+              <div className="flex-1 text-sm text-gray-300">
+                Image upload is available after the product is created.
               </div>
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-gray-300">Name</Label>
+              <Input
+                id="name"
+                value={formData.name || ""}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="filtration_system" className="text-gray-300">Filtration System</Label>
+              <Select
+                value={formData.filtration_system || ""}
+                onValueChange={(v) => handleInputChange("filtration_system", v)}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectValue placeholder="Select filtration system" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="huile">Oil (huile)</SelectItem>
+                  <SelectItem value="gasoil">Diesel (gasoil)</SelectItem>
+                  <SelectItem value="air">Air (air)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="alsafa" className="text-gray-300">ALSAFA</Label>
               <Input
                 id="alsafa"
                 value={formData.ALSAFA || ""}
                 onChange={(e) => handleInputChange("ALSAFA", e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ref_org" className="text-gray-300">REF_ORG</Label>
+              <Input
+                id="ref_org"
+                value={formData.REF_ORG || ""}
+                onChange={(e) => handleInputChange("REF_ORG", e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
               />
             </div>
@@ -331,56 +296,6 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ref_org" className="text-gray-300">REF_ORG</Label>
-              <Input
-                id="ref_org"
-                value={formData.REF_ORG || ""}
-                onChange={(e) => handleInputChange("REF_ORG", e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-300">Vehicle Compatibility</Label>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowCompatibilityManager(true)}
-                className="w-full bg-gray-700 border-gray-600 text-white hover:bg-gray-600 hover:text-white"
-              >
-                <Car className="h-4 w-4 mr-2" />
-                Manage Vehicle Compatibility
-              </Button>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-300">Name</Label>
-              <Input
-                id="name"
-                value={formData.name || ""}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="filtration_system" className="text-gray-300">Filtration System</Label>
-              <Select
-                value={formData.filtration_system || ""}
-                onValueChange={(v) => handleInputChange("filtration_system", v)}
-              >
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue placeholder="Select filtration system" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="huile">Oil (huile)</SelectItem>
-                  <SelectItem value="gasoil">Diesel (gasoil)</SelectItem>
-                  <SelectItem value="air">Air (air)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="ptte" className="text-gray-300">Ptte</Label>
               <Input
                 id="ptte"
@@ -430,21 +345,12 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
               />
             </div>
           </div>
-
         </CardContent>
       </Card>
-
-      {/* Compatibility Manager Modal */}
-      {showCompatibilityManager && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <CompatibilityManager 
-              productId={product.id} 
-              onClose={() => setShowCompatibilityManager(false)} 
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
+
+export default ProductCreateModal
+
+
