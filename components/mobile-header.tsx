@@ -240,7 +240,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                 whileTap={{ scale: 0.95 }}
               >
                 <a
-                  href="https://devlly.net/alsafa/resources/CATALOGUE%202025%20%20.pdf"
+                  href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/catalogue/CATALOGUE%202025%20%20.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                         className={`font-semibold px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 ${
@@ -494,7 +494,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   whileTap={{ scale: 0.98 }}
                 >
                   <a
-                    href="https://devlly.net/alsafa/resources/CATALOGUE%202025%20%20.pdf"
+                    href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/catalogue/CATALOGUE%202025%20%20.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3"
