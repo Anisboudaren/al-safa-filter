@@ -37,7 +37,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   // New item forms
   const [newBrand, setNewBrand] = useState({ name: "", display_name: "" })
   const [newEngine, setNewEngine] = useState({ 
-    brand_id: 0, 
+    brand_id: "", 
     name: "", 
     displacement: "", 
     fuel_type: "", 
@@ -45,7 +45,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     power_output: "" 
   })
   const [newVehicle, setNewVehicle] = useState({ 
-    engine_id: 0, 
+    engine_id: "", 
     model_name: "", 
     body_style: "", 
     variant: "", 
@@ -53,6 +53,11 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     year_from: "", 
     year_to: "" 
   })
+  
+  // Form errors
+  const [brandErrors, setBrandErrors] = useState({ name: "", display_name: "" })
+  const [engineErrors, setEngineErrors] = useState({ brand_id: "", name: "" })
+  const [vehicleErrors, setVehicleErrors] = useState({ engine_id: "", model_name: "" })
 
   useEffect(() => {
     fetchBrands()
@@ -289,10 +294,25 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
 
   // Brand management
   const addBrand = async () => {
-    if (!newBrand.name || !newBrand.display_name) {
-      showError('Please fill in all required fields')
-      return
+    // Validate
+    const errors = { name: "", display_name: "" }
+    let hasErrors = false
+    
+    if (!newBrand.name.trim()) {
+      errors.name = "Brand name is required"
+      hasErrors = true
+    } else if (!/^[a-z0-9-]+$/.test(newBrand.name.trim())) {
+      errors.name = "Use lowercase letters, numbers, and hyphens only"
+      hasErrors = true
     }
+    
+    if (!newBrand.display_name.trim()) {
+      errors.display_name = "Display name is required"
+      hasErrors = true
+    }
+    
+    setBrandErrors(errors)
+    if (hasErrors) return
     
     setLoading(true)
     
@@ -300,17 +320,25 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
       const response = await fetch('/api/compatibility/brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newBrand)
+        body: JSON.stringify({
+          name: newBrand.name.trim().toLowerCase(),
+          display_name: newBrand.display_name.trim()
+        })
       })
       
       const result = await response.json()
       
       if (!response.ok) {
         showError(result.error || 'Error adding brand')
+        if (result.error?.includes('name')) {
+          setBrandErrors({ ...errors, name: result.error })
+        }
       } else {
         showSuccess(result.message || 'Brand added successfully')
         setBrands([...brands, result.data])
         setNewBrand({ name: "", display_name: "" })
+        setBrandErrors({ name: "", display_name: "" })
+        fetchBrands()
         fetchAllBrandsAndEngines()
       }
     } catch (error) {
@@ -322,10 +350,23 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
 
   // Engine management
   const addEngine = async () => {
-    if (!newEngine.name || !selectedBrand) {
-      showError('Please fill in all required fields')
-      return
+    // Validate
+    const errors = { brand_id: "", name: "" }
+    let hasErrors = false
+    
+    const brandId = newEngine.brand_id || selectedBrand?.id
+    if (!brandId) {
+      errors.brand_id = "Please select a brand"
+      hasErrors = true
     }
+    
+    if (!newEngine.name.trim()) {
+      errors.name = "Engine name is required"
+      hasErrors = true
+    }
+    
+    setEngineErrors(errors)
+    if (hasErrors) return
     
     setLoading(true)
     
@@ -334,12 +375,12 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          brand_id: selectedBrand.id,
-          name: newEngine.name,
-          displacement: newEngine.displacement,
-          fuel_type: newEngine.fuel_type,
-          technology: newEngine.technology,
-          power_output: newEngine.power_output
+          brand_id: Number(brandId),
+          name: newEngine.name.trim(),
+          displacement: newEngine.displacement.trim() || null,
+          fuel_type: newEngine.fuel_type.trim() || null,
+          technology: newEngine.technology.trim() || null,
+          power_output: newEngine.power_output.trim() || null
         })
       })
       
@@ -351,13 +392,17 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
         showSuccess(result.message || 'Engine added successfully')
         setEngines([...engines, result.data])
         setNewEngine({ 
-          brand_id: 0, 
+          brand_id: "", 
           name: "", 
           displacement: "", 
           fuel_type: "", 
           technology: "", 
           power_output: "" 
         })
+        setEngineErrors({ brand_id: "", name: "" })
+        if (selectedBrand && Number(brandId) === selectedBrand.id) {
+          fetchEngines(selectedBrand.id!)
+        }
         fetchAllBrandsAndEngines()
       }
     } catch (error) {
@@ -369,10 +414,25 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
 
   // Vehicle management
   const addVehicle = async () => {
-    if (!newVehicle.model_name || selectedEngines.length === 0) {
-      showError('Please fill in all required fields and select at least one engine')
-      return
+    // Validate
+    const errors = { engine_id: "", model_name: "" }
+    let hasErrors = false
+    
+    const engineId = newVehicle.engine_id || (selectedEngines.length === 1 ? selectedEngines[0].id : null)
+    const engineIds = engineId ? [Number(engineId)] : selectedEngines.map(e => e.id)
+    
+    if (engineIds.length === 0) {
+      errors.engine_id = "Please select at least one engine"
+      hasErrors = true
     }
+    
+    if (!newVehicle.model_name.trim()) {
+      errors.model_name = "Model name is required"
+      hasErrors = true
+    }
+    
+    setVehicleErrors(errors)
+    if (hasErrors) return
     
     setLoading(true)
     
@@ -381,13 +441,13 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          engine_ids: selectedEngines.map(e => e.id),
-          model_name: newVehicle.model_name,
-          body_style: newVehicle.body_style,
-          variant: newVehicle.variant,
-          drive_type: newVehicle.drive_type,
-          year_from: newVehicle.year_from,
-          year_to: newVehicle.year_to
+          engine_ids: engineIds,
+          model_name: newVehicle.model_name.trim(),
+          body_style: newVehicle.body_style.trim() || null,
+          variant: newVehicle.variant.trim() || null,
+          drive_type: newVehicle.drive_type.trim() || null,
+          year_from: newVehicle.year_from.trim() || null,
+          year_to: newVehicle.year_to.trim() || null
         })
       })
       
@@ -397,9 +457,11 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
         showError(result.error || 'Error adding vehicle(s)')
       } else {
         showSuccess(result.message || 'Vehicle(s) added successfully')
-        fetchVehiclesForEngines(selectedEngines.map(e => e.id!))
+        if (selectedEngines.length > 0) {
+          fetchVehiclesForEngines(selectedEngines.map(e => e.id!))
+        }
         setNewVehicle({ 
-          engine_id: 0, 
+          engine_id: "", 
           model_name: "", 
           body_style: "", 
           variant: "", 
@@ -407,6 +469,8 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
           year_from: "", 
           year_to: "" 
         })
+        setVehicleErrors({ engine_id: "", model_name: "" })
+        fetchAllBrandsAndEngines()
       }
     } catch (error) {
       showError('Error adding vehicle(s)')
@@ -818,136 +882,227 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
 
           <Separator className="bg-gray-700 my-8" />
 
-          {/* Add New Brand */}
-          <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-white text-xl flex items-center gap-3">
-                <Building2 className="h-6 w-6 text-orange-500" />
-                Add New Brand
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5 pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <Label htmlFor="brand-name" className="text-gray-300 font-medium">
-                    Brand Name (URL friendly) *
-                  </Label>
-                  <Input
-                    id="brand-name"
-                    value={newBrand.name}
-                    onChange={(e) => setNewBrand({ ...newBrand, name: e.target.value })}
-                    placeholder="dacia"
-                    disabled={loading}
-                    className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="brand-display" className="text-gray-300 font-medium">
-                    Display Name *
-                  </Label>
-                  <Input
-                    id="brand-display"
-                    value={newBrand.display_name}
-                    onChange={(e) => setNewBrand({ ...newBrand, display_name: e.target.value })}
-                    placeholder="DACIA"
-                    disabled={loading}
-                    className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
-                  />
-                </div>
-              </div>
-              <Button 
-                onClick={addBrand} 
-                disabled={loading || !newBrand.name || !newBrand.display_name}
-                size="lg"
-                className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full md:w-auto"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    Adding...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-5 w-5 mr-2" />
-                    Add Brand
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Add Data Forms Section */}
+          <div className="space-y-8">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Add New Data</h3>
+              <p className="text-gray-400">Create brands, engines, and vehicles below</p>
+            </div>
 
-          {/* Add New Engine */}
-          {selectedBrand && (
+            {/* Add New Brand */}
             <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
               <CardHeader className="pb-4">
                 <CardTitle className="text-white text-xl flex items-center gap-3">
-                  <Cpu className="h-6 w-6 text-orange-500" />
-                  Add New Engine for <span className="text-orange-400">{selectedBrand.display_name}</span>
+                  <Building2 className="h-6 w-6 text-orange-500" />
+                  Add New Brand
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-5 pt-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="engine-name" className="text-gray-300 font-medium">Engine Name *</Label>
+                    <Label htmlFor="brand-name" className="text-gray-300 font-medium">
+                      Brand Name (URL friendly) *
+                      <span className="text-xs text-gray-500 block mt-1">Lowercase, numbers, hyphens only (e.g., "dacia")</span>
+                    </Label>
+                    <Input
+                      id="brand-name"
+                      value={newBrand.name}
+                      onChange={(e) => {
+                        setNewBrand({ ...newBrand, name: e.target.value })
+                        if (brandErrors.name) setBrandErrors({ ...brandErrors, name: "" })
+                      }}
+                      placeholder="dacia"
+                      disabled={loading}
+                      className={`h-11 ${brandErrors.name ? 'border-red-500' : ''}`}
+                      style={{backgroundColor: '#111827', borderColor: brandErrors.name ? '#ef4444' : '#4b5563', color: '#ffffff'}}
+                    />
+                    {brandErrors.name && (
+                      <p className="text-red-400 text-sm mt-1">{brandErrors.name}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="brand-display" className="text-gray-300 font-medium">
+                      Display Name *
+                      <span className="text-xs text-gray-500 block mt-1">How it appears to users (e.g., "DACIA")</span>
+                    </Label>
+                    <Input
+                      id="brand-display"
+                      value={newBrand.display_name}
+                      onChange={(e) => {
+                        setNewBrand({ ...newBrand, display_name: e.target.value })
+                        if (brandErrors.display_name) setBrandErrors({ ...brandErrors, display_name: "" })
+                      }}
+                      placeholder="DACIA"
+                      disabled={loading}
+                      className={`h-11 ${brandErrors.display_name ? 'border-red-500' : ''}`}
+                      style={{backgroundColor: '#111827', borderColor: brandErrors.display_name ? '#ef4444' : '#4b5563', color: '#ffffff'}}
+                    />
+                    {brandErrors.display_name && (
+                      <p className="text-red-400 text-sm mt-1">{brandErrors.display_name}</p>
+                    )}
+                  </div>
+                </div>
+                <Button 
+                  onClick={addBrand} 
+                  disabled={loading || !newBrand.name || !newBrand.display_name}
+                  size="lg"
+                  className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full md:w-auto"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-5 w-5 mr-2" />
+                      Add Brand
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Add New Engine */}
+            <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-white text-xl flex items-center gap-3">
+                  <Cpu className="h-6 w-6 text-orange-500" />
+                  Add New Engine
+                  {selectedBrand && (
+                    <Badge variant="secondary" className="ml-2 bg-orange-500/20 text-orange-400 border-orange-500">
+                      For {selectedBrand.display_name}
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5 pt-0">
+                <div className="space-y-2">
+                  <Label htmlFor="engine-brand-select" className="text-gray-300 font-medium">
+                    Select Brand *
+                    {selectedBrand && (
+                      <span className="text-xs text-orange-400 block mt-1">Currently selected: {selectedBrand.display_name}</span>
+                    )}
+                  </Label>
+                  <select
+                    id="engine-brand-select"
+                    value={newEngine.brand_id || selectedBrand?.id || ""}
+                    onChange={(e) => {
+                      const brandId = e.target.value
+                      setNewEngine({ ...newEngine, brand_id: brandId })
+                      if (engineErrors.brand_id) setEngineErrors({ ...engineErrors, brand_id: "" })
+                      if (brandId) {
+                        const brand = allBrands.find(b => b.id === Number(brandId))
+                        if (brand) handleBrandSelect(brand)
+                      }
+                    }}
+                    disabled={loading || loadingBrands}
+                    className={`h-11 px-3 rounded-md ${engineErrors.brand_id ? 'border-red-500' : 'border-gray-600'} bg-gray-900 text-white focus:border-orange-500 focus:outline-none`}
+                    style={{backgroundColor: '#111827', borderColor: engineErrors.brand_id ? '#ef4444' : '#4b5563', color: '#ffffff'}}
+                  >
+                    <option value="">-- Select a brand --</option>
+                    {allBrands.map((brand) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.display_name}
+                      </option>
+                    ))}
+                  </select>
+                  {engineErrors.brand_id && (
+                    <p className="text-red-400 text-sm mt-1">{engineErrors.brand_id}</p>
+                  )}
+                  {allBrands.length === 0 && (
+                    <p className="text-gray-500 text-sm mt-1">No brands available. Add a brand above first.</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="engine-name" className="text-gray-300 font-medium">
+                      Engine Name *
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "1,6 SCE 115"</span>
+                    </Label>
                     <Input
                       id="engine-name"
                       value={newEngine.name}
-                      onChange={(e) => setNewEngine({ ...newEngine, name: e.target.value })}
+                      onChange={(e) => {
+                        setNewEngine({ ...newEngine, name: e.target.value })
+                        if (engineErrors.name) setEngineErrors({ ...engineErrors, name: "" })
+                      }}
                       placeholder="1,6 SCE 115"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className={`h-11 ${engineErrors.name ? 'border-red-500' : ''}`}
+                      style={{backgroundColor: '#111827', borderColor: engineErrors.name ? '#ef4444' : '#4b5563', color: '#ffffff'}}
                     />
+                    {engineErrors.name && (
+                      <p className="text-red-400 text-sm mt-1">{engineErrors.name}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="engine-displacement" className="text-gray-300 font-medium">Displacement</Label>
+                    <Label htmlFor="engine-displacement" className="text-gray-300 font-medium">
+                      Displacement
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "1,6" (in liters)</span>
+                    </Label>
                     <Input
                       id="engine-displacement"
                       value={newEngine.displacement}
                       onChange={(e) => setNewEngine({ ...newEngine, displacement: e.target.value })}
                       placeholder="1,6"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="engine-fuel" className="text-gray-300 font-medium">Fuel Type</Label>
+                    <Label htmlFor="engine-fuel" className="text-gray-300 font-medium">
+                      Fuel Type
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "LPG", "Diesel", "Gasoline"</span>
+                    </Label>
                     <Input
                       id="engine-fuel"
                       value={newEngine.fuel_type}
                       onChange={(e) => setNewEngine({ ...newEngine, fuel_type: e.target.value })}
                       placeholder="LPG"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="engine-tech" className="text-gray-300 font-medium">Technology</Label>
+                    <Label htmlFor="engine-tech" className="text-gray-300 font-medium">
+                      Technology
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "SCE", "Turbo", "Hybrid"</span>
+                    </Label>
                     <Input
                       id="engine-tech"
                       value={newEngine.technology}
                       onChange={(e) => setNewEngine({ ...newEngine, technology: e.target.value })}
                       placeholder="SCE"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="engine-power" className="text-gray-300 font-medium">Power Output</Label>
+                    <Label htmlFor="engine-power" className="text-gray-300 font-medium">
+                      Power Output
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "115" (in HP)</span>
+                    </Label>
                     <Input
                       id="engine-power"
                       value={newEngine.power_output}
                       onChange={(e) => setNewEngine({ ...newEngine, power_output: e.target.value })}
                       placeholder="115"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                 </div>
                 <Button 
                   onClick={addEngine} 
-                  disabled={loading || !newEngine.name}
+                  disabled={loading || !newEngine.name || (!newEngine.brand_id && !selectedBrand)}
                   size="lg"
                   className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full md:w-auto"
                 >
@@ -965,70 +1120,136 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                 </Button>
               </CardContent>
             </Card>
-          )}
 
-          {/* Add New Vehicle */}
-          {selectedEngines.length > 0 && (
+            {/* Add New Vehicle */}
             <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>
               <CardHeader className="pb-4">
                 <CardTitle className="text-white text-xl flex items-center gap-3">
                   <Car className="h-6 w-6 text-orange-500" />
-                  Add New Vehicle for Selected Engines
-                  <Badge variant="secondary" className="ml-auto bg-orange-500/20 text-orange-400 border-orange-500">
-                    {selectedEngines.length} Engine{selectedEngines.length === 1 ? '' : 's'}
-                  </Badge>
+                  Add New Vehicle
+                  {selectedEngines.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 bg-orange-500/20 text-orange-400 border-orange-500">
+                      For {selectedEngines.length} Engine{selectedEngines.length === 1 ? '' : 's'}
+                    </Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-5 pt-0">
                 <div className="space-y-2">
-                  <Label htmlFor="vehicle-model" className="text-gray-300 font-medium">Model Name *</Label>
+                  <Label htmlFor="vehicle-engine-select" className="text-gray-300 font-medium">
+                    Select Engine *
+                    {selectedEngines.length > 0 && (
+                      <span className="text-xs text-orange-400 block mt-1">
+                        {selectedEngines.length} engine{selectedEngines.length === 1 ? '' : 's'} selected from compatibility flow
+                      </span>
+                    )}
+                  </Label>
+                  <select
+                    id="vehicle-engine-select"
+                    value={newVehicle.engine_id || ""}
+                    onChange={(e) => {
+                      setNewVehicle({ ...newVehicle, engine_id: e.target.value })
+                      if (vehicleErrors.engine_id) setVehicleErrors({ ...vehicleErrors, engine_id: "" })
+                    }}
+                    disabled={loading || loadingEngines}
+                    className={`h-11 px-3 rounded-md ${vehicleErrors.engine_id ? 'border-red-500' : 'border-gray-600'} bg-gray-900 text-white focus:border-orange-500 focus:outline-none`}
+                    style={{backgroundColor: '#111827', borderColor: vehicleErrors.engine_id ? '#ef4444' : '#4b5563', color: '#ffffff'}}
+                  >
+                    <option value="">-- Select an engine --</option>
+                    {allEngines.map((engine: any) => (
+                      <option key={engine.id} value={engine.id}>
+                        {engine.brands?.display_name || 'Unknown'} - {engine.name}
+                        {engine.displacement && ` (${engine.displacement}L)`}
+                      </option>
+                    ))}
+                  </select>
+                  {vehicleErrors.engine_id && (
+                    <p className="text-red-400 text-sm mt-1">{vehicleErrors.engine_id}</p>
+                  )}
+                  {allEngines.length === 0 && (
+                    <p className="text-gray-500 text-sm mt-1">No engines available. Add an engine above first.</p>
+                  )}
+                  {selectedEngines.length > 0 && (
+                    <p className="text-orange-400 text-sm mt-1">
+                      Or use the engine{selectedEngines.length === 1 ? '' : 's'} selected above in the compatibility flow
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="vehicle-model" className="text-gray-300 font-medium">
+                    Model Name *
+                    <span className="text-xs text-gray-500 block mt-1">e.g., "DUSTER II"</span>
+                  </Label>
                   <Input
                     id="vehicle-model"
                     value={newVehicle.model_name}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, model_name: e.target.value })}
+                    onChange={(e) => {
+                      setNewVehicle({ ...newVehicle, model_name: e.target.value })
+                      if (vehicleErrors.model_name) setVehicleErrors({ ...vehicleErrors, model_name: "" })
+                    }}
                     placeholder="DUSTER II"
                     disabled={loading}
-                    className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                    className={`h-11 ${vehicleErrors.model_name ? 'border-red-500' : ''}`}
+                    style={{backgroundColor: '#111827', borderColor: vehicleErrors.model_name ? '#ef4444' : '#4b5563', color: '#ffffff'}}
                   />
+                  {vehicleErrors.model_name && (
+                    <p className="text-red-400 text-sm mt-1">{vehicleErrors.model_name}</p>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="vehicle-variant" className="text-gray-300 font-medium">Variant</Label>
+                    <Label htmlFor="vehicle-variant" className="text-gray-300 font-medium">
+                      Variant
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "4X4", "Premium"</span>
+                    </Label>
                     <Input
                       id="vehicle-variant"
                       value={newVehicle.variant}
                       onChange={(e) => setNewVehicle({ ...newVehicle, variant: e.target.value })}
                       placeholder="4X4"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="vehicle-body" className="text-gray-300 font-medium">Body Style</Label>
+                    <Label htmlFor="vehicle-body" className="text-gray-300 font-medium">
+                      Body Style
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "BREAK", "SUV", "Sedan"</span>
+                    </Label>
                     <Input
                       id="vehicle-body"
                       value={newVehicle.body_style}
                       onChange={(e) => setNewVehicle({ ...newVehicle, body_style: e.target.value })}
                       placeholder="BREAK"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="vehicle-drive" className="text-gray-300 font-medium">Drive Type</Label>
+                    <Label htmlFor="vehicle-drive" className="text-gray-300 font-medium">
+                      Drive Type
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "AWD", "FWD", "RWD"</span>
+                    </Label>
                     <Input
                       id="vehicle-drive"
                       value={newVehicle.drive_type}
                       onChange={(e) => setNewVehicle({ ...newVehicle, drive_type: e.target.value })}
                       placeholder="AWD"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="vehicle-year-from" className="text-gray-300 font-medium">Year From</Label>
+                    <Label htmlFor="vehicle-year-from" className="text-gray-300 font-medium">
+                      Year From
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "2020"</span>
+                    </Label>
                     <Input
                       id="vehicle-year-from"
                       type="number"
@@ -1036,11 +1257,15 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                       onChange={(e) => setNewVehicle({ ...newVehicle, year_from: e.target.value })}
                       placeholder="2020"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="vehicle-year-to" className="text-gray-300 font-medium">Year To</Label>
+                    <Label htmlFor="vehicle-year-to" className="text-gray-300 font-medium">
+                      Year To
+                      <span className="text-xs text-gray-500 block mt-1">e.g., "2025"</span>
+                    </Label>
                     <Input
                       id="vehicle-year-to"
                       type="number"
@@ -1048,13 +1273,14 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                       onChange={(e) => setNewVehicle({ ...newVehicle, year_to: e.target.value })}
                       placeholder="2025"
                       disabled={loading}
-                      className="h-11" style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
+                      className="h-11"
+                      style={{backgroundColor: '#111827', borderColor: '#4b5563', color: '#ffffff'}}
                     />
                   </div>
                 </div>
                 <Button 
                   onClick={addVehicle} 
-                  disabled={loading || !newVehicle.model_name}
+                  disabled={loading || !newVehicle.model_name || (!newVehicle.engine_id && selectedEngines.length === 0)}
                   size="lg"
                   className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full"
                 >
@@ -1066,13 +1292,14 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
                   ) : (
                     <>
                       <Plus className="h-5 w-5 mr-2" />
-                      Add Vehicle to {selectedEngines.length} Engine{selectedEngines.length === 1 ? '' : 's'}
+                      Add Vehicle
+                      {selectedEngines.length > 0 && ` to ${selectedEngines.length} Engine${selectedEngines.length === 1 ? '' : 's'}`}
                     </>
                   )}
                 </Button>
               </CardContent>
             </Card>
-          )}
+          </div>
         </div>
       )}
     </div>

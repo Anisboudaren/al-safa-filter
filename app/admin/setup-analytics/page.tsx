@@ -37,7 +37,7 @@ export default function SetupAnalytics() {
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      router.push("/admin/login")
+      router.push("/home")
     } else {
       setUser(user)
     }

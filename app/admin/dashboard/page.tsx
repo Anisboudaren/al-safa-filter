@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Product } from "@/lib/supabase"
+import { supabase, type Product, type ProductExtraReference } from "@/lib/supabase"
+import { exportProductsToExcel } from "@/lib/excel-export"
 import { getProductImageUrlWithFallback } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,7 +21,8 @@ import {
   ChevronRight,
   Filter,
   BarChart3,
-  Settings
+  Settings,
+  Download
 } from "lucide-react"
 import { ProductEditModal } from "@/components/admin/ProductEditModal"
 import { ProductCreateModal } from "@/components/admin/ProductCreateModal"
@@ -57,7 +59,7 @@ export default function AdminDashboard() {
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      router.push("/admin/login")
+      router.push("/home")
     } else {
       setUser(user)
     }
@@ -127,6 +129,61 @@ export default function AdminDashboard() {
       fetchProducts()
     } catch (e) {
       console.error('Unexpected delete error:', e)
+    }
+  }
+
+  const handleExportToExcel = async () => {
+    try {
+      // Fetch ALL filtered products (not just current page)
+      let query = supabase.from("products").select("*")
+
+      if (searchTerm) {
+        query = query.or(
+          `ALSAFA.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`
+        )
+      }
+
+      if (filterSystem !== "all") {
+        query = query.eq("filtration_system", filterSystem)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        console.error("Error fetching products for export:", error)
+        alert("Error exporting products")
+      } else if (data && data.length > 0) {
+        // Fetch extra references for all products
+        const productIds = data.map(p => p.id).filter(Boolean) as number[]
+        const extraRefsMap: Record<number, Array<{ ref_name: string; ref_value: string | null }>> = {}
+        
+        if (productIds.length > 0) {
+          const { data: refsData, error: refsError } = await supabase
+            .from('product_extra_references')
+            .select('*')
+            .in('product_id', productIds)
+          
+          if (!refsError && refsData) {
+            // Group references by product_id
+            refsData.forEach(ref => {
+              if (!extraRefsMap[ref.product_id]) {
+                extraRefsMap[ref.product_id] = []
+              }
+              extraRefsMap[ref.product_id].push({
+                ref_name: ref.ref_name,
+                ref_value: ref.ref_value
+              })
+            })
+          }
+        }
+        
+        exportProductsToExcel(data, extraRefsMap)
+      } else {
+        alert("No products to export")
+      }
+    } catch (err) {
+      console.error("Export error:", err)
+      alert("Error exporting products")
     }
   }
 
@@ -264,6 +321,13 @@ export default function AdminDashboard() {
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Product
+              </Button>
+              <Button
+                onClick={handleExportToExcel}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export
               </Button>
             </div>
           </div>

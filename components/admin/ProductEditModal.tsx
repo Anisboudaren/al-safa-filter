@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { supabase, type Product } from "@/lib/supabase"
+import { supabase, type Product, type ProductExtraReference } from "@/lib/supabase"
 import { getProductImageUrlWithFallback } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { X, Save, Loader2, Upload, Image as ImageIcon, Car } from "lucide-react"
+import { X, Save, Loader2, Upload, Image as ImageIcon, Car, Plus, Trash } from "lucide-react"
 import { CompatibilityManager } from "./CompatibilityManager"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -28,13 +28,98 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
+  
+  // Extra references state
+  const [extraReferences, setExtraReferences] = useState<ProductExtraReference[]>([])
+  const [availableRefNames, setAvailableRefNames] = useState<string[]>([])
+  const [loadingRefs, setLoadingRefs] = useState(false)
+  
   useEffect(() => {
     setFormData(product)
     setError("")
     setSuccess(false)
     setUploadSuccess(false)
+    if (product.id) {
+      loadExtraReferences()
+    }
+    loadAvailableRefNames()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product])
+  
+  const loadExtraReferences = async () => {
+    if (!product.id) return
+    setLoadingRefs(true)
+    try {
+      const { data, error } = await supabase
+        .from('product_extra_references')
+        .select('*')
+        .eq('product_id', product.id)
+      
+      if (error) {
+        console.error('Error loading extra references:', error)
+      } else {
+        setExtraReferences(data || [])
+      }
+    } catch (err) {
+      console.error('Error loading extra references:', err)
+    } finally {
+      setLoadingRefs(false)
+    }
+  }
+  
+  const loadAvailableRefNames = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('product_extra_references')
+        .select('ref_name')
+        .order('ref_name')
+      
+      if (error) {
+        console.error('Error loading available ref names:', error)
+      } else {
+        // Get unique ref names
+        const uniqueNames = [...new Set(data?.map(r => r.ref_name) || [])]
+        setAvailableRefNames(uniqueNames)
+      }
+    } catch (err) {
+      console.error('Error loading available ref names:', err)
+    }
+  }
+  
+  const handleAddExtraReference = () => {
+    if (!product.id) return
+    setExtraReferences([
+      ...extraReferences,
+      {
+        product_id: product.id,
+        ref_name: '',
+        ref_value: ''
+      }
+    ])
+  }
+  
+  const handleRemoveExtraReference = (index: number) => {
+    setExtraReferences(extraReferences.filter((_, i) => i !== index))
+  }
+  
+  const handleExtraReferenceChange = (index: number, field: 'ref_name' | 'ref_value', value: string) => {
+    const updated = [...extraReferences]
+    updated[index] = { ...updated[index], [field]: value }
+    setExtraReferences(updated)
+    
+    // Update available ref names if this is a new name
+    if (field === 'ref_name' && value && !availableRefNames.includes(value)) {
+      setAvailableRefNames([...availableRefNames, value].sort())
+    }
+  }
+  
+  const filteredRefNames = (index: number) => {
+    const currentValue = extraReferences[index]?.ref_name || ''
+    if (!currentValue.trim()) return availableRefNames
+    return availableRefNames.filter(name => 
+      name.toLowerCase().includes(currentValue.toLowerCase())
+    )
+  }
 
   const handleInputChange = (field: keyof Product, value: string) => {
     setFormData(prev => ({
@@ -93,8 +178,7 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
     setSuccess(false)
 
     try {
-      // Since we don't have a unique ID, we'll need to find the product by its unique combination
-      // For now, let's assume we can identify it by ALSAFA and ORIGINE combination
+      // Update product
       const { error } = await supabase
         .from("products")
         .update(formData)
@@ -102,12 +186,34 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
 
       if (error) {
         setError(error.message)
-      } else {
-        setSuccess(true)
-        setTimeout(() => {
-          onSave()
-        }, 1500)
+        return
       }
+      
+      // Save extra references
+      if (product.id) {
+        // First, delete all existing references
+        await supabase
+          .from('product_extra_references')
+          .delete()
+          .eq('product_id', product.id)
+        
+        // Then insert the new ones
+        const refsToInsert = extraReferences.filter(ref => ref.ref_name && ref.ref_value)
+        if (refsToInsert.length > 0) {
+          const { error: refsError } = await supabase
+            .from('product_extra_references')
+            .insert(refsToInsert)
+          
+          if (refsError) {
+            console.error('Error saving extra references:', refsError)
+          }
+        }
+      }
+      
+      setSuccess(true)
+      setTimeout(() => {
+        onSave()
+      }, 1500)
     } catch (err) {
       setError("An unexpected error occurred")
     } finally {
@@ -429,6 +535,106 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
                 className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-orange-500"
               />
             </div>
+          </div>
+
+          {/* Extra References Section */}
+          <div className="col-span-full space-y-4 p-4 bg-gray-700/50 rounded-lg">
+            <div className="flex items-center justify-between">
+              <Label className="text-gray-300 text-sm font-medium">Extra References</Label>
+              <Button
+                type="button"
+                onClick={handleAddExtraReference}
+                size="sm"
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Reference
+              </Button>
+            </div>
+            {loadingRefs ? (
+              <div className="text-gray-400 text-sm">Loading...</div>
+            ) : extraReferences.length === 0 ? (
+              <div className="text-gray-400 text-sm">No extra references</div>
+            ) : (
+              <div className="space-y-3">
+                {extraReferences.map((ref, index) => {
+                  const suggestions = filteredRefNames(index)
+                  const showSuggestions = ref.ref_name && suggestions.length > 0 && suggestions.length < availableRefNames.length
+                  const exactMatch = ref.ref_name && availableRefNames.includes(ref.ref_name)
+                  
+                  return (
+                    <div key={index} className="space-y-2">
+                      <div className="flex gap-2 items-center">
+                        <div className="flex-1">
+                          <Input
+                            value={ref.ref_name || ""}
+                            onChange={(e) => handleExtraReferenceChange(index, 'ref_name', e.target.value)}
+                            placeholder="Reference name"
+                            list={`ref-names-${index}`}
+                            className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                          />
+                          <datalist id={`ref-names-${index}`}>
+                            {availableRefNames.map((name) => (
+                              <option key={name} value={name} />
+                            ))}
+                          </datalist>
+                        </div>
+                        <div className="flex-1">
+                          <Input
+                            value={ref.ref_value || ""}
+                            onChange={(e) => handleExtraReferenceChange(index, 'ref_value', e.target.value)}
+                            placeholder="Reference value"
+                            className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          onClick={() => handleRemoveExtraReference(index)}
+                          size="sm"
+                          variant="outline"
+                          className="border-red-600 text-red-500 hover:bg-red-600 hover:text-white"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      {showSuggestions && !exactMatch && (
+                        <div className="flex flex-wrap gap-2 ml-0">
+                          <span className="text-xs text-gray-400 mr-2">Suggestions:</span>
+                          {suggestions.slice(0, 5).map((name) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => handleExtraReferenceChange(index, 'ref_name', name)}
+                              className="px-2 py-1 text-xs bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 rounded-md cursor-pointer transition-colors"
+                            >
+                              {name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {!ref.ref_name && availableRefNames.length > 0 && (
+                        <div className="flex flex-wrap gap-2 ml-0">
+                          <span className="text-xs text-gray-400 mr-2">Or use existing:</span>
+                          {availableRefNames.slice(0, 5).map((name) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => handleExtraReferenceChange(index, 'ref_name', name)}
+                              className="px-2 py-1 text-xs bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-md cursor-pointer transition-colors"
+                            >
+                              {name}
+                            </button>
+                          ))}
+                          {availableRefNames.length > 5 && (
+                            <span className="text-xs text-gray-500">+{availableRefNames.length - 5} more (type to search)</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
         </CardContent>

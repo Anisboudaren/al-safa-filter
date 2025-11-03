@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import { supabase, type Product } from "@/lib/supabase"
+import { supabase, type Product, type ProductExtraReference } from "@/lib/supabase"
 import { trackFacebookEvent } from "@/lib/pixel"
 import { generateProductPDF } from "@/lib/pdf-generator"
 import MobileHeader from "@/components/mobile-header"
@@ -26,6 +26,7 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [showContactPopup, setShowContactPopup] = useState(false)
   const [generatingPDF, setGeneratingPDF] = useState(false)
+  const [extraReferences, setExtraReferences] = useState<ProductExtraReference[]>([])
 
   const alsafa = decodeURIComponent(params.alsafa as string)
 
@@ -41,6 +42,18 @@ export default function ProductDetailPage() {
         setError("Product not found")
       } else {
         setProduct(data)
+        
+        // Fetch extra references
+        if (data.id) {
+          const { data: refs, error: refsError } = await supabase
+            .from('product_extra_references')
+            .select('*')
+            .eq('product_id', data.id)
+          
+          if (!refsError && refs) {
+            setExtraReferences(refs)
+          }
+        }
       }
 
       setLoading(false)
@@ -472,6 +485,27 @@ export default function ProductDetailPage() {
 
                   {product.filtration_system && (
                     <Separator className="bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                  )}
+
+                  {/* Extra References */}
+                  {extraReferences.length > 0 && (
+                    <>
+                      <Separator className="bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                          <Star className="h-5 w-5 text-orange-500" />
+                          Références supplémentaires
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {extraReferences.map((ref) => (
+                            <div key={ref.id} className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl">
+                              <span className="text-gray-600 text-sm font-medium block mb-2">{ref.ref_name}:</span>
+                              <p className="font-bold text-gray-900 text-lg">{ref.ref_value}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>

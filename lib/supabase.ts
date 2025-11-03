@@ -76,3 +76,11 @@ export type CompatibilityData = {
   engine: Engine
   vehicle: Vehicle
 }
+
+export type ProductExtraReference = {
+  id?: number
+  product_id: number
+  ref_name: string
+  ref_value: string | null
+  created_at?: string
+}

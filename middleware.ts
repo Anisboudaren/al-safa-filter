@@ -9,9 +9,16 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next()
     }
 
-    // For other admin routes, we'll handle authentication in the component
-    // This is a simple approach - in production you might want to use cookies or JWT
-    return NextResponse.next()
+    // Check for Supabase authentication cookies
+    // Supabase stores auth info in cookies with names like "sb-<project-ref>-auth-token"
+    const hasAuthCookie = req.cookies.getAll().some(cookie => 
+      cookie.name.includes('sb-') && cookie.name.includes('-auth-token')
+    )
+    
+    // If no authentication cookie found, redirect to home page
+    if (!hasAuthCookie) {
+      return NextResponse.redirect(new URL('/home', req.url))
+    }
   }
 
   return NextResponse.next()
