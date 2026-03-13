@@ -28,12 +28,15 @@ export default function HomePage() {
   const t = useTranslation()
 
   const carBrands = [
-    { name: "Audi", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-7.webp" },
-    { name: "Toyota", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-8.webp" },
-    { name: "Volkswagen", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-9.webp" },
-    { name: "Ford", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-7.webp" },
-    { name: "Mercedes", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-8.webp" },
-    { name: "BMW", logo: "https://elitifakfilter.com/wp-content/uploads/2024/05/client-9.webp" },
+    { name: "Audi", logo: "/brands of cars/Audi.webp" },
+    { name: "BMW", logo: "/brands of cars/BMW.webp" },
+    { name: "Chevrolet", logo: "/brands of cars/chivrolet.webp" },
+    { name: "Ford", logo: "/brands of cars/ford.webp" },
+    { name: "Hyundai", logo: "/brands of cars/hyundai.webp" },
+    { name: "Mercedes", logo: "/brands of cars/mercides.webp" },
+    { name: "Toyota", logo: "/brands of cars/TOyota.webp" },
+    { name: "Volkswagen", logo: "/brands of cars/volkswagen.webp" },
+    { name: "Zotye", logo: "/brands of cars/zotye.webp" },
   ]
 
   // Update available models when brand changes
@@ -239,7 +242,7 @@ export default function HomePage() {
             >
               <div className="relative z-10">
                 <img
-                  src="https://elitifakfilter.com/wp-content/uploads/revslider/video-media/202501281743_10.jpeg"
+                  src="/hero section image.jpeg"
                   alt={t.automotiveFiltersAlt}
                   className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
                 />
@@ -685,7 +688,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
             {carBrands.map((brand, index) => (
               <motion.div
                 key={brand.name}
@@ -696,19 +699,19 @@ export default function HomePage() {
                 whileHover={{ y: -8, scale: 1.05 }}
                 className="group"
               >
-                <Card className="hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 bg-gradient-to-br from-white to-gray-50 group-hover:from-orange-50 group-hover:to-orange-100">
+                <Card className="hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 bg-gradient-to-br from-gray-800 to-gray-900 group-hover:from-orange-600 group-hover:to-orange-700">
                   <CardContent className="p-6 text-center">
                     <motion.div
-                      className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-800 to-gray-900 group-hover:from-orange-600 group-hover:to-orange-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300"
+                      className="w-20 h-20 mx-auto mb-4 bg-gray-700 group-hover:bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300"
                       whileHover={{ rotate: 5, scale: 1.1 }}
                     >
                       <img 
                         src={brand.logo || "/placeholder.svg"} 
                         alt={brand.name} 
-                        className="w-14 h-14 object-contain filter brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300" 
+                        className="w-16 h-16 object-contain transition-all duration-300" 
                       />
                     </motion.div>
-                    <h3 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-300">
+                    <h3 className="font-bold text-sm text-gray-200 group-hover:text-white transition-colors duration-300">
                       {brand.name}
                     </h3>
                   </CardContent>

@@ -1,7 +1,21 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://qbpgclcndalyzflariuv.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFicGdjbGNuZGFseXpmbGFyaXV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NzE3NDAsImV4cCI6MjA3MDA0Nzc0MH0.eZlhQh-FO4ndlTQu8LZpwyvs6DAr4EAWn71DX9278Mw'
+const supabaseUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ??
+  process.env.SUPABASE_URL
+const supabaseKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  process.env.SUPABASE_ANON_KEY ??
+  process.env.SUPABASE_KEY ??
+  process.env.SUPABSE_KEY
+
+if (!supabaseUrl) {
+  throw new Error('Supabase URL is not configured')
+}
+
+if (!supabaseKey) {
+  throw new Error('Supabase anon key is not configured')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
