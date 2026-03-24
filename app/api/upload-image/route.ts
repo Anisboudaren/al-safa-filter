@@ -2,26 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
 import { createClient } from '@supabase/supabase-js'
 import sharp from 'sharp'
-
-// Create Supabase client for database operations
-const supabaseUrl =
-  process.env.SUPABASE_URL ??
-  process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ??
-  process.env.SUPABASE_ANON_KEY ??
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  process.env.SUPABASE_KEY
-
-if (!supabaseUrl) {
-  throw new Error('Supabase URL is not configured')
-}
-
-if (!supabaseKey) {
-  throw new Error('Supabase key is not configured')
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey)
+import {
+  getServerSupabaseConfig,
+  supabaseMisconfiguredResponse,
+} from '@/lib/supabase-server'
 
 // Set the Vercel Blob token
 process.env.BLOB_READ_WRITE_TOKEN = process.env.Alsafa_READ_WRITE_TOKEN
@@ -120,6 +104,10 @@ export async function POST(request: NextRequest) {
         console.log('Original uploaded successfully:', imageUrl)
       }
     }
+
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
 
     // Update product with image URL
     const { error: updateError } = await supabase

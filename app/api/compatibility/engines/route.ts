@@ -1,27 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl =
-  process.env.SUPABASE_URL ??
-  process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ??
-  process.env.SUPABASE_ANON_KEY ??
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  process.env.SUPABASE_KEY
-
-if (!supabaseUrl) {
-  throw new Error('Supabase URL is not configured')
-}
-
-if (!supabaseKey) {
-  throw new Error('Supabase key is not configured')
-}
+import {
+  getServerSupabaseConfig,
+  supabaseMisconfiguredResponse,
+} from '@/lib/supabase-server'
 
 // GET - Fetch engines (optionally by brand_id)
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
     const { searchParams } = new URL(request.url)
     const brandId = searchParams.get('brand_id')
     const withBrands = searchParams.get('with_brands') === 'true'
@@ -57,7 +46,9 @@ export async function GET(request: NextRequest) {
 // POST - Add new engine
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
     const body = await request.json()
     const { brand_id, name, displacement, fuel_type, technology, power_output } = body
 
@@ -76,7 +67,7 @@ export async function POST(request: NextRequest) {
         displacement: displacement || null,
         fuel_type: fuel_type || null,
         technology: technology || null,
-        power_output: power_output || null
+        power_output: power_output || null,
       })
       .select()
       .single()
@@ -89,10 +80,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ 
-      data, 
-      message: 'Engine added successfully' 
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        data,
+        message: 'Engine added successfully',
+      },
+      { status: 201 }
+    )
   } catch (error: any) {
     console.error('Server error:', error)
     return NextResponse.json(
@@ -101,4 +95,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-

@@ -1,33 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl =
-  process.env.SUPABASE_URL ??
-  process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ??
-  process.env.SUPABASE_ANON_KEY ??
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  process.env.SUPABASE_KEY
-
-if (!supabaseUrl) {
-  throw new Error('Supabase URL is not configured')
-}
-
-if (!supabaseKey) {
-  throw new Error('Supabase key is not configured')
-}
+import {
+  getServerSupabaseConfig,
+  supabaseMisconfiguredResponse,
+} from '@/lib/supabase-server'
 
 // GET - Fetch all compatibilities or by product_id
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
     const { searchParams } = new URL(request.url)
     const productId = searchParams.get('product_id')
 
-    let query = supabase
-      .from('product_compatibilities')
-      .select(`
+    let query = supabase.from('product_compatibilities').select(`
         *,
         vehicles (
           *,
@@ -65,7 +52,9 @@ export async function GET(request: NextRequest) {
 // POST - Add new compatibilities
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
     const body = await request.json()
     const { product_id, vehicle_ids } = body
 
@@ -77,9 +66,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create compatibility records
-    const compatibilities = vehicle_ids.map(vehicle_id => ({
+    const compatibilities = vehicle_ids.map((vehicle_id: number) => ({
       product_id,
-      vehicle_id
+      vehicle_id,
     }))
 
     const { data, error } = await supabase
@@ -95,10 +84,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ 
-      data, 
-      message: `Successfully added ${data.length} compatibilit${data.length === 1 ? 'y' : 'ies'}` 
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        data,
+        message: `Successfully added ${data.length} compatibilit${data.length === 1 ? 'y' : 'ies'}`,
+      },
+      { status: 201 }
+    )
   } catch (error: any) {
     console.error('Server error:', error)
     return NextResponse.json(
@@ -111,7 +103,9 @@ export async function POST(request: NextRequest) {
 // DELETE - Remove a compatibility
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const cfg = getServerSupabaseConfig()
+    if (!cfg) return supabaseMisconfiguredResponse()
+    const supabase = createClient(cfg.url, cfg.key)
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -135,9 +129,12 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ 
-      message: 'Compatibility deleted successfully' 
-    }, { status: 200 })
+    return NextResponse.json(
+      {
+        message: 'Compatibility deleted successfully',
+      },
+      { status: 200 }
+    )
   } catch (error: any) {
     console.error('Server error:', error)
     return NextResponse.json(
@@ -146,4 +143,3 @@ export async function DELETE(request: NextRequest) {
     )
   }
 }
-
