@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import { Search, Filter, Package, ArrowRight, RefreshCw, Grid, List, ChevronLeft, ChevronRight, X, CheckCircle, Zap } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -24,6 +24,7 @@ export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+  const autoFetchFromUrlRef = useRef(false)
   const [origineFilter, setOrigineFilter] = useState<string>("")
   const [alsafaFilter, setAlsafaFilter] = useState<string>("")
   const [filtrationFilter, setFiltrationFilter] = useState<string>("")
@@ -62,6 +63,16 @@ export default function CatalogPage() {
     const internal = searchParams.get("internal")
     const height = searchParams.get("height")
     const correspondence = searchParams.get("correspondence")
+    
+    // Enable exactly one auto-fetch only for initial hydration from URL params.
+    // After the user starts typing, we block auto-fetching to reduce scraping.
+    autoFetchFromUrlRef.current = !!(
+      search ||
+      external ||
+      internal ||
+      height ||
+      correspondence
+    )
     
     if (search) {
       setSearchTerm(search)
@@ -139,7 +150,11 @@ export default function CatalogPage() {
       const conditions: string[] = []
       for (const field of fields) {
         for (const v of variants) {
-          conditions.push(`${field}.ilike.%${v}%`)
+          // Exact match only (no partial/prefix matching), but case-insensitive.
+          // We use `ilike` WITHOUT wildcards; this prevents `obs` from matching `obs-123`,
+          // while still accepting formatting differences (handled by buildReferenceVariants)
+          // and uppercase/lowercase differences.
+          conditions.push(`${field}.ilike.${v}`)
         }
       }
       console.log("Total conditions:", conditions.length, "First few:", conditions.slice(0, 5))
@@ -253,8 +268,9 @@ export default function CatalogPage() {
 
   // Auto-search when URL parameters are present
   useEffect(() => {
-    if (searchTerm && !hasSearched) {
+    if (searchTerm && !hasSearched && autoFetchFromUrlRef.current) {
       fetchProducts()
+      autoFetchFromUrlRef.current = false
     }
   }, [searchTerm])
 
