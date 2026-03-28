@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
+import { adminFetch } from "@/lib/admin-fetch"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -45,7 +46,7 @@ export default function SetupAnalytics() {
 
   const checkEnvironment = async () => {
     try {
-      const response = await fetch('/api/analytics/test')
+      const response = await adminFetch('/api/analytics/test')
       const data = await response.json()
       setEnvCheck(data)
     } catch (error) {

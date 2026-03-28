@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Upload, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { adminFetch } from '@/lib/admin-fetch'
 
 export default function TestBlobPage() {
   const [testing, setTesting] = useState(false)
@@ -17,7 +18,7 @@ export default function TestBlobPage() {
     setResult(null)
 
     try {
-      const response = await fetch('/api/test-blob')
+      const response = await adminFetch('/api/test-blob')
       const data = await response.json()
 
       if (response.ok) {

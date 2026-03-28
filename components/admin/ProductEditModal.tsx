@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { supabase, type Product, type ProductExtraReference } from "@/lib/supabase"
+import { adminFetch } from "@/lib/admin-fetch"
 import { getProductImageUrlWithFallback } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -141,7 +142,7 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
       formData.append('image', file)
       formData.append('productId', product.id.toString())
 
-      const response = await fetch('/api/upload-image', {
+      const response = await adminFetch('/api/upload-image', {
         method: 'POST',
         body: formData,
       })

@@ -26,6 +26,7 @@ import {
   Calendar,
   RefreshCw
 } from "lucide-react"
+import { adminFetch } from "@/lib/admin-fetch"
 
 interface AnalyticsData {
   overview: {
@@ -75,7 +76,7 @@ export default function AnalyticsDashboard() {
     setError(null)
     
     try {
-      const response = await fetch(`/api/analytics?days=${days}`)
+      const response = await adminFetch(`/api/analytics?days=${days}`)
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to fetch analytics data')

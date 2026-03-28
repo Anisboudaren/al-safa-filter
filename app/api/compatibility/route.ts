@@ -4,10 +4,19 @@ import {
   getServerSupabaseConfig,
   supabaseMisconfiguredResponse,
 } from '@/lib/supabase-server'
+import {
+  isPublicProductCompatibilityRead,
+  requireAdmin,
+} from '@/lib/admin-auth'
 
-// GET - Fetch all compatibilities or by product_id
+// GET - Fetch all compatibilities or by product_id (public only when product_id is set)
 export async function GET(request: NextRequest) {
   try {
+    if (!isPublicProductCompatibilityRead(request)) {
+      const denied = await requireAdmin(request)
+      if (denied) return denied
+    }
+
     const cfg = getServerSupabaseConfig()
     if (!cfg) return supabaseMisconfiguredResponse()
     const supabase = createClient(cfg.url, cfg.key)
@@ -52,6 +61,9 @@ export async function GET(request: NextRequest) {
 // POST - Add new compatibilities
 export async function POST(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     const cfg = getServerSupabaseConfig()
     if (!cfg) return supabaseMisconfiguredResponse()
     const supabase = createClient(cfg.url, cfg.key)
@@ -103,6 +115,9 @@ export async function POST(request: NextRequest) {
 // DELETE - Remove a compatibility
 export async function DELETE(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     const cfg = getServerSupabaseConfig()
     if (!cfg) return supabaseMisconfiguredResponse()
     const supabase = createClient(cfg.url, cfg.key)

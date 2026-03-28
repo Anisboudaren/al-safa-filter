@@ -6,12 +6,16 @@ import {
   getServerSupabaseConfig,
   supabaseMisconfiguredResponse,
 } from '@/lib/supabase-server'
+import { requireAdmin } from '@/lib/admin-auth'
 
 // Set the Vercel Blob token
 process.env.BLOB_READ_WRITE_TOKEN = process.env.Alsafa_READ_WRITE_TOKEN
 
 export async function POST(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     console.log('Starting image upload process...')
     
     const formData = await request.formData()

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
+import { requireAdmin } from '@/lib/admin-auth'
 
 export async function GET(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     const { searchParams } = new URL(request.url)
     const days = parseInt(searchParams.get('days') || '7')
     

@@ -4,10 +4,14 @@ import {
   getServerSupabaseConfig,
   supabaseMisconfiguredResponse,
 } from '@/lib/supabase-server'
+import { requireAdmin } from '@/lib/admin-auth'
 
 // GET - Fetch vehicles (optionally by engine_ids)
 export async function GET(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     const cfg = getServerSupabaseConfig()
     if (!cfg) return supabaseMisconfiguredResponse()
     const supabase = createClient(cfg.url, cfg.key)
@@ -46,6 +50,9 @@ export async function GET(request: NextRequest) {
 // POST - Add new vehicle(s)
 export async function POST(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     const cfg = getServerSupabaseConfig()
     if (!cfg) return supabaseMisconfiguredResponse()
     const supabase = createClient(cfg.url, cfg.key)

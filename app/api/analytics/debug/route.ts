@@ -1,8 +1,12 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
+import { requireAdmin } from '@/lib/admin-auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     // Get environment variables
     const gaProjectId = process.env.GA_PROJECT_ID
     const gaPrivateKeyId = process.env.GA_PRIVATE_KEY_ID

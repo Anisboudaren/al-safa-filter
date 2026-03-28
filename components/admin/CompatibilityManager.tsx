@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Plus, Edit, Trash2, Save, X, Car, Cpu, Building2, Search, Filter, Eye, CheckSquare, Square, Loader2 } from "lucide-react"
 import { type Brand, type Engine, type Vehicle, type ProductCompatibility } from "@/lib/supabase"
+import { adminFetch } from "@/lib/admin-fetch"
 
 interface CompatibilityManagerProps {
   productId?: number
@@ -78,7 +79,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   const fetchBrands = async () => {
     setLoadingBrands(true)
     try {
-      const response = await fetch('/api/compatibility/brands')
+      const response = await adminFetch('/api/compatibility/brands')
       const result = await response.json()
       
       if (!response.ok) {
@@ -100,8 +101,8 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoadingEngines(true)
     try {
       const [brandsRes, enginesRes] = await Promise.all([
-        fetch('/api/compatibility/brands'),
-        fetch('/api/compatibility/engines?with_brands=true')
+        adminFetch('/api/compatibility/brands'),
+        adminFetch('/api/compatibility/engines?with_brands=true')
       ])
       
       const brandsResult = await brandsRes.json()
@@ -132,7 +133,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
   const fetchEngines = async (brandId: number) => {
     setLoadingEngines(true)
     try {
-      const response = await fetch(`/api/compatibility/engines?brand_id=${brandId}`)
+      const response = await adminFetch(`/api/compatibility/engines?brand_id=${brandId}`)
       const result = await response.json()
       
       if (!response.ok) {
@@ -157,7 +158,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
 
     setLoadingVehicles(true)
     try {
-      const response = await fetch(`/api/compatibility/vehicles?engine_ids=${engineIds.join(',')}`)
+      const response = await adminFetch(`/api/compatibility/vehicles?engine_ids=${engineIds.join(',')}`)
       const result = await response.json()
       
       if (!response.ok) {
@@ -182,7 +183,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     
     setLoadingCompatibilities(true)
     try {
-      const response = await fetch(`/api/compatibility?product_id=${productId}`)
+      const response = await adminFetch(`/api/compatibility?product_id=${productId}`)
       const result = await response.json()
       
       if (!response.ok) {
@@ -242,7 +243,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoading(true)
     
     try {
-      const response = await fetch('/api/compatibility', {
+      const response = await adminFetch('/api/compatibility', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -273,7 +274,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoading(true)
     
     try {
-      const response = await fetch(`/api/compatibility?id=${compatibilityId}`, {
+      const response = await adminFetch(`/api/compatibility?id=${compatibilityId}`, {
         method: 'DELETE'
       })
       
@@ -317,7 +318,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoading(true)
     
     try {
-      const response = await fetch('/api/compatibility/brands', {
+      const response = await adminFetch('/api/compatibility/brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -371,7 +372,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoading(true)
     
     try {
-      const response = await fetch('/api/compatibility/engines', {
+      const response = await adminFetch('/api/compatibility/engines', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -437,7 +438,7 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
     setLoading(true)
     
     try {
-      const response = await fetch('/api/compatibility/vehicles', {
+      const response = await adminFetch('/api/compatibility/vehicles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

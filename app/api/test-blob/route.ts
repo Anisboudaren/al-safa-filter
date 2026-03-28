@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
+import { requireAdmin } from '@/lib/admin-auth'
 
 // Set the Vercel Blob token
 process.env.BLOB_READ_WRITE_TOKEN = process.env.Alsafa_READ_WRITE_TOKEN
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const denied = await requireAdmin(request)
+    if (denied) return denied
+
     console.log('Testing Vercel Blob...')
     console.log('Token available:', !!process.env.BLOB_READ_WRITE_TOKEN)
     
