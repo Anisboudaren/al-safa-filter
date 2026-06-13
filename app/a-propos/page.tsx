@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -15,7 +14,7 @@ export default function AProposPage() {
   const t = useTranslation()
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <MobileHeader />
       
       {/* Hero Section */}
@@ -133,7 +132,7 @@ export default function AProposPage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative"
+              className="relative overflow-hidden"
             >
               <div className="relative z-10">
                 <img
@@ -213,7 +212,7 @@ export default function AProposPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="relative"
+                className="relative overflow-hidden"
               >
                 <img
                   src="/resources/worker in the factury.webp"
@@ -293,7 +292,7 @@ export default function AProposPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="relative"
+                className="relative overflow-hidden"
               >
                 <img
                   src="/resources/people in the factury.webp"

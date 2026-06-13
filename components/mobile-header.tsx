@@ -70,10 +70,10 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/home">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <Link href="/home" className="min-w-0 flex-shrink">
               <motion.div 
-                className="flex items-center gap-3 sm:gap-4 group"
+                className="flex items-center gap-2 sm:gap-4 group min-w-0"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
@@ -98,15 +98,15 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                     <CheckCircle className="h-3 w-3 text-white" />
                   </motion.div>
                 </motion.div>
-                <div>
-                        <h1 className={`text-lg sm:text-2xl font-bold transition-all duration-300 ${
+                <div className="min-w-0">
+                        <h1 className={`text-base sm:text-2xl font-bold transition-all duration-300 truncate ${
                           forceSolid || isScrolled
                             ? 'text-gray-900 group-hover:text-orange-600'
                             : 'text-white group-hover:text-orange-300'
                         }`}>
                     {t.brandName}
                   </h1>
-                  <p className={`text-xs sm:text-sm transition-colors duration-300 ${
+                  <p className={`text-xs sm:text-sm transition-colors duration-300 truncate ${
                     forceSolid || isScrolled 
                       ? 'text-gray-600 group-hover:text-orange-600' 
                       : 'text-gray-200 group-hover:text-orange-300'
@@ -307,28 +307,26 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
               </div>
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 flex-shrink-0">
               <LanguageSwitcher />
-            </div>
-
-            {/* Mobile Menu Button */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                      className={`md:hidden transition-all duration-300 ${
-                        forceSolid || isScrolled
-                          ? 'bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-200'
-                          : 'bg-white/30 backdrop-blur-sm hover:bg-white/40 text-white border border-white/40 shadow-lg'
-                      }`}
-                onClick={toggleMenu}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </motion.div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                        className={`md:hidden transition-all duration-300 ${
+                          forceSolid || isScrolled
+                            ? 'bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-200'
+                            : 'bg-white/30 backdrop-blur-sm hover:bg-white/40 text-white border border-white/40 shadow-lg'
+                        }`}
+                  onClick={toggleMenu}
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </div>
       </motion.header>

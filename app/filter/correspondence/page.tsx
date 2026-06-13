@@ -134,7 +134,7 @@ function CorrespondenceFilterContent() {
   }, [competitorRef])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 overflow-x-hidden">
       <MobileHeader />
       
       {/* Hero Search Section */}
@@ -580,7 +580,7 @@ export default function CorrespondenceFilterPage() {
   
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 overflow-x-hidden">
         <MobileHeader />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 sm:pt-20">
           <div className="text-center py-20">

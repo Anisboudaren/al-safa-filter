@@ -33,11 +33,11 @@ export function SharedHeader({
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 min-w-0">
           {/* Logo and Title */}
-          <Link href="/home">
+          <Link href="/home" className="min-w-0 flex-shrink">
             <motion.div 
-              className="flex items-center gap-3 sm:gap-4 group"
+              className="flex items-center gap-3 sm:gap-4 group min-w-0"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
@@ -58,19 +58,19 @@ export function SharedHeader({
                   <CheckCircle className="h-3 w-3 text-white" />
                 </motion.div>
               </motion.div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent group-hover:from-orange-600 group-hover:to-orange-500 transition-all duration-300">
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent group-hover:from-orange-600 group-hover:to-orange-500 transition-all duration-300 truncate">
                   {title}
                 </h1>
-                <p className="text-xs sm:text-sm text-gray-600 group-hover:text-orange-600 transition-colors duration-300">
+                <p className="text-xs sm:text-sm text-gray-600 group-hover:text-orange-600 transition-colors duration-300 truncate">
                   {description}
                 </p>
               </div>
             </motion.div>
           </Link>
 
-          {/* Navigation and Actions */}
-          <div className="flex items-center gap-4">
+          {/* Navigation and Actions - desktop only; mobile uses MobileHeader */}
+          <div className="hidden md:flex items-center gap-4 flex-shrink-0">
             {/* Back and Home Buttons */}
             <div className="flex items-center gap-2">
               {showBackButton && (

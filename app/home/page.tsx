@@ -117,7 +117,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <MobileHeader />
       
       {/* Hero Section */}
@@ -173,7 +173,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-5xl md:text-7xl font-bold leading-tight"
+                className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight break-words"
               >
                 {t.highQualityFilters.split(' ').slice(0, -2).join(' ')}
                 <br />
@@ -238,7 +238,7 @@ export default function HomePage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative"
+              className="relative overflow-hidden"
             >
               <div className="relative z-10">
                 <img
@@ -322,7 +322,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative overflow-hidden"
             >
               <img
                 src="/resources/people in the factury.webp"
@@ -510,7 +510,7 @@ export default function HomePage() {
                         }`}
                       >
                         <option.icon className="h-6 w-6" />
-                        <span className="font-medium">{option.label}</span>
+                        <span className="font-medium text-center text-xs sm:text-sm break-words">{option.label}</span>
                       </Button>
                     </motion.div>
                   ))}
@@ -553,16 +553,16 @@ export default function HomePage() {
                   )}
 
                   {filterType === "reference" && (
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                       <Input 
                         placeholder={t.enterFilterReference} 
-                        className="flex-1 h-12 rounded-xl text-lg"
+                        className="flex-1 h-12 rounded-xl text-lg min-w-0"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                       />
                       <Button 
-                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl"
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl w-full sm:w-auto flex-shrink-0"
                         onClick={handleSearch}
                         disabled={!searchTerm.trim()}
                       >
@@ -596,16 +596,16 @@ export default function HomePage() {
                   )}
 
                   {filterType === "correspondence" && (
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                       <Input 
                         placeholder={t.competitorReference} 
-                        className="flex-1 h-12 rounded-xl text-lg"
+                        className="flex-1 h-12 rounded-xl text-lg min-w-0"
                         value={correspondenceRef}
                         onChange={(e) => setCorrespondenceRef(e.target.value)}
                         onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                       />
                       <Button 
-                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl"
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 h-12 px-8 rounded-xl w-full sm:w-auto flex-shrink-0"
                         onClick={handleSearch}
                         disabled={!correspondenceRef.trim()}
                       >

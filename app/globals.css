@@ -67,6 +67,11 @@
   * {
     @apply border-border;
   }
+
+  html {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   
   body {
     @apply bg-background text-foreground;
@@ -76,6 +81,14 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  img,
+  video,
+  svg {
+    max-width: 100%;
   }
   
 /* Arabic font for Arabic language */

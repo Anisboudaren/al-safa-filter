@@ -10,8 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
 import MobileHeader from "@/components/mobile-header"
-import { Share } from "next/font/google"
-import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { useTranslation } from "@/components/language-provider"
 
@@ -105,17 +103,11 @@ export default function ReferenceFilterPage() {
   }, [currentPage])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <MobileHeader />
-      <SharedHeader
-        icon={<Search className="h-6 w-6 text-orange-600" />}
-        title={t.searchByReference}
-        description="Trouvez un filtre par sa référence exacte"
-      />
 
       {/* Results */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24 sm:pt-20">
         {/* Reference Search Form */}
           <Card className="max-w-4xl mx-auto">
             <CardContent className="p-8">

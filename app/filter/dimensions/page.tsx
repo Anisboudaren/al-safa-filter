@@ -142,7 +142,7 @@ export default function DimensionsCatalogPage() {
   }, [external, internal, height])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 overflow-x-hidden">
       <MobileHeader />
       
       {/* Hero Search Section */}

@@ -14,8 +14,9 @@ export function FontWrapper({ children, interClass, cairoClass }: FontWrapperPro
   
   return (
     <div className={cn(
-      interClass, // Always apply Inter as base
-      language === 'ar' && 'font-cairo' // Add Cairo class when Arabic is selected
+      'overflow-x-hidden max-w-full',
+      interClass,
+      language === 'ar' && 'font-cairo'
     )}>
       {children}
     </div>
