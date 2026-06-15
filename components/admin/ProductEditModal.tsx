@@ -298,7 +298,7 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
                     <img 
                       src={imageUrl} 
                       alt={formData.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-1"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none'
                         e.currentTarget.nextElementSibling?.classList.remove('hidden')

@@ -15,6 +15,7 @@ import { supabase, type Product } from "@/lib/supabase"
 import { trackFacebookEvent } from "@/lib/pixel"
 import { generateProductPDF } from "@/lib/pdf-generator"
 import MobileHeader from "@/components/mobile-header"
+import { ProductImage } from "@/components/ProductImage"
 import { SharedFooter } from "@/components/shared-footer"
 import { ProductCompatibilityDisplay } from "@/components/ProductCompatibilityDisplay"
 
@@ -276,23 +277,14 @@ export default function ProductDetailPage() {
             <Card className="overflow-hidden shadow-2xl border-0 bg-white">
               <CardContent className="p-0">
                 <div className="aspect-square bg-white relative overflow-hidden group">
-                  <img
-                    src={product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}
+                  <ProductImage
+                    alsafa={product.ALSAFA}
+                    imageUrl={product.image_url}
                     alt={product.ALSAFA || "Product image"}
-                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.style.display = "none"
-                      const fallback = target.nextElementSibling as HTMLElement
-                      if (fallback) fallback.style.display = "flex"
-                    }}
+                    containerClassName="w-full h-full"
+                    className="transition-transform duration-500 group-hover:scale-105 p-6"
+                    fallbackClassName="bg-white"
                   />
-                  <div className="w-full h-full bg-white hidden items-center justify-center">
-                    <div className="text-center">
-                      <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">Image non disponible</p>
-                    </div>
-                  </div>
                   
                   {/* Image Overlay Actions */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

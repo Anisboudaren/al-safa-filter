@@ -7,6 +7,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
 import { useTranslation } from "@/components/language-provider"
+import { useCatalogueUrl } from "@/hooks/use-catalogue-url"
 
 interface MobileHeaderProps {
   forceSolid?: boolean
@@ -17,6 +18,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
   const [isScrolled, setIsScrolled] = useState(false)
   const [isCatalogDropdownOpen, setIsCatalogDropdownOpen] = useState(false)
   const t = useTranslation()
+  const catalogueUrl = useCatalogueUrl()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -240,7 +242,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                 whileTap={{ scale: 0.95 }}
               >
                 <a
-                  href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/catalogue/CATALOGUE%202025%20%20.pdf"
+                  href={catalogueUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                         className={`font-semibold px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 ${
@@ -492,7 +494,7 @@ export default function MobileHeader({ forceSolid = false }: MobileHeaderProps) 
                   whileTap={{ scale: 0.98 }}
                 >
                   <a
-                    href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/catalogue/CATALOGUE%202025%20%20.pdf"
+                    href={catalogueUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3"

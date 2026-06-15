@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import type { Product } from './supabase'
+import { getProductImageSrc } from './image-utils'
 
 export interface PDFGenerationOptions {
   product: Product
@@ -164,7 +165,7 @@ export const generateProductPDF = async (options: PDFGenerationOptions): Promise
   pdf.rect(imageX, imageY, imageWidth, imageHeight)
   
   // Try to load the actual product image
-  const productImageUrl = product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`
+  const productImageUrl = getProductImageSrc(product.ALSAFA, product.image_url)
   const productImageLoaded = await addImage(productImageUrl, imageX, imageY, imageWidth, imageHeight)
   
   // If image failed to load, show placeholder text
@@ -389,7 +390,7 @@ export const generateProductPDFFromHTML = async (options: PDFGenerationOptions):
       </div>
       
       <div style="width: 120px; height: 120px; border: 2px solid #f97316; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden;">
-        <img src="${product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}" 
+        <img src="${getProductImageSrc(product.ALSAFA, product.image_url)}" 
              alt="Product Image" 
              style="width: 100%; height: 100%; object-fit: cover;" 
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">

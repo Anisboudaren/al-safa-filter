@@ -5,9 +5,11 @@ import { TikTokIcon } from "@/components/ui/tiktok-icon"
 import Link from "next/link"
 import { trackFacebookEvent } from "@/lib/pixel"
 import { useTranslation } from "@/components/language-provider"
+import { useCatalogueUrl } from "@/hooks/use-catalogue-url"
 
 export function SharedFooter() {
   const t = useTranslation()
+  const catalogueUrl = useCatalogueUrl()
   
   return (
     <footer className="relative bg-gray-900 text-white overflow-hidden">
@@ -65,7 +67,7 @@ export function SharedFooter() {
                 </div>
                  <div className="flex items-center gap-4">
                    <a
-               href="https://uq2n5vkavyhuooys.public.blob.vercel-storage.com/catalogue/CATALOGUE%202025%20%20.pdf"
+               href={catalogueUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-orange-500/20 text-orange-400 w-full text-center font-semibold px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition-colors"

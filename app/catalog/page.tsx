@@ -18,6 +18,7 @@ import {
 } from "@/lib/search-utils"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
+import { ProductImage } from "@/components/ProductImage"
 import { SharedFooter } from "@/components/shared-footer"
 import { useTranslation } from "@/components/language-provider"
 
@@ -565,21 +566,15 @@ export default function CatalogPage() {
                               )}
                             </CardHeader>
                             <CardContent>
-                              <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl mb-4 overflow-hidden group-hover:from-orange-100 group-hover:to-orange-200 transition-all duration-300">
-                                <img
-                                  src={product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}
+                              <div className="w-full h-40 bg-white rounded-xl mb-4 overflow-hidden border border-gray-100 group-hover:border-orange-200 transition-all duration-300">
+                                <ProductImage
+                                  alsafa={product.ALSAFA}
+                                  imageUrl={product.image_url}
                                   alt={product.ALSAFA || t.catalogProductImage}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  onError={(e) => {
-                                    const target = e.target as HTMLImageElement
-                                    target.style.display = "none"
-                                    const fallback = target.nextElementSibling as HTMLElement
-                                    if (fallback) fallback.style.display = "flex"
-                                  }}
+                                  containerClassName="w-full h-full"
+                                  className="group-hover:scale-105 transition-transform duration-300 p-2"
+                                  fallbackClassName="bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-orange-100 group-hover:to-orange-200"
                                 />
-                                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl hidden items-center justify-center group-hover:from-orange-100 group-hover:to-orange-200">
-                                  <Package className="h-8 w-8 text-gray-400" />
-                                </div>
                               </div>
 
                               <div className="space-y-3 text-sm">

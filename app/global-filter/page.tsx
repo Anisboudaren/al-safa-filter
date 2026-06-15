@@ -12,6 +12,7 @@ import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
 import { buildReferenceSearchConditions } from "@/lib/search-utils"
 import MobileHeader from "@/components/mobile-header"
+import { ProductImage } from "@/components/ProductImage"
 import { SharedFooter } from "@/components/shared-footer"
 
 const ITEMS_PER_PAGE = 12
@@ -317,21 +318,15 @@ export default function GlobalFilterPage() {
                           )}
                         </CardHeader>
                         <CardContent>
-                          <div className="w-full h-32 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                            <img
-                              src={product.image_url || `https://devlly.net/alsafa/${(product.ALSAFA || "").replace("-", "")}.avif`}
+                          <div className="w-full h-40 bg-white rounded-lg mb-4 overflow-hidden border border-gray-100">
+                            <ProductImage
+                              alsafa={product.ALSAFA}
+                              imageUrl={product.image_url}
                               alt={product.ALSAFA || "Image produit"}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.style.display = "none"
-                                const fallback = target.nextElementSibling as HTMLElement
-                                if (fallback) fallback.style.display = "flex"
-                              }}
+                              containerClassName="w-full h-full"
+                              className="p-2"
+                              fallbackClassName="bg-gray-100"
                             />
-                            <div className="w-full h-full bg-gray-100 rounded-lg hidden items-center justify-center">
-                              <Package className="h-8 w-8 text-gray-400" />
-                            </div>
                           </div>
 
                           <div className="space-y-3 text-sm">

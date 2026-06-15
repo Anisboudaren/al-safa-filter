@@ -22,12 +22,14 @@ import {
   Filter,
   BarChart3,
   Settings,
-  Download
+  Download,
+  FileText
 } from "lucide-react"
 import { ProductEditModal } from "@/components/admin/ProductEditModal"
 import { ProductCreateModal } from "@/components/admin/ProductCreateModal"
 import { CompatibilityManager } from "@/components/admin/CompatibilityManager"
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
+import { CatalogueManager } from "@/components/admin/CatalogueManager"
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
@@ -40,7 +42,7 @@ export default function AdminDashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
-  const [activeTab, setActiveTab] = useState<'products' | 'analytics' | 'compatibility'>('products')
+  const [activeTab, setActiveTab] = useState<'products' | 'analytics' | 'compatibility' | 'settings'>('products')
   const [showCompatibilityManager, setShowCompatibilityManager] = useState(false)
   const router = useRouter()
 
@@ -265,6 +267,17 @@ export default function AdminDashboard() {
               Compatibility
             </button>
             <button
+              onClick={() => setActiveTab('settings')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'settings'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              }`}
+            >
+              <FileText className="h-4 w-4 inline mr-2" />
+              Settings
+            </button>
+            <button
               onClick={() => router.push('/admin/setup-analytics')}
               className="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300 font-medium text-sm transition-colors"
             >
@@ -415,7 +428,7 @@ export default function AdminDashboard() {
                                 <img 
                                   src={imageUrl} 
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-contain p-1"
                                   onError={(e) => {
                                     e.currentTarget.style.display = 'none'
                                     e.currentTarget.nextElementSibling?.classList.remove('hidden')
@@ -512,8 +525,12 @@ export default function AdminDashboard() {
           </>
         ) : activeTab === 'analytics' ? (
           <AnalyticsDashboard />
-        ) : (
+        ) : activeTab === 'compatibility' ? (
           <CompatibilityManager />
+        ) : (
+          <div className="max-w-2xl">
+            <CatalogueManager />
+          </div>
         )}
       </main>
 
