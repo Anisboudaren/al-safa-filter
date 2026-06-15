@@ -10,6 +10,11 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
+import {
+  ALSAFA_REFERENCE_FIELDS,
+  buildReferenceSearchConditions,
+  matchesReferenceValue,
+} from "@/lib/search-utils"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
@@ -28,25 +33,6 @@ function CorrespondenceFilterContent() {
   const [hasSearched, setHasSearched] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
-
-  const buildReferenceVariants = (value: string) => {
-    const base = value.trim()
-    if (!base) return [] as string[]
-    const noDelims = base.replace(/[\s-]+/g, "")
-    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
-    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
-    const swapToSpace = base.replace(/-/g, " ")
-    const swapToHyphen = base.replace(/\s+/g, "-")
-    const setVariants = new Set<string>([
-      base,
-      noDelims,
-      withHyphen,
-      withSpace,
-      swapToSpace,
-      swapToHyphen,
-    ])
-    return Array.from(setVariants).filter(Boolean)
-  }
 
   // Handle URL parameters on page load
   useEffect(() => {
@@ -67,28 +53,12 @@ function CorrespondenceFilterContent() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Search for correspondence in various fields with normalized variants
-    const fields = [
-      "ALSAFA",
-      "SAFI",
-      "SARL_F",
-      "FLEETG",
-      "ASAS",
-      "MECA_F",
-      "REF_ORG",
-      "MANN",
-      "UFI",
-      "HIFI",
-      "WIX",
-    ]
-    const variants = buildReferenceVariants(competitorRef)
-    const conditions: string[] = []
-    for (const field of fields) {
-      for (const v of variants) {
-        conditions.push(`${field}.ilike.%${v}%`)
+    if (competitorRef.trim()) {
+      const conditions = buildReferenceSearchConditions(competitorRef)
+      if (conditions.length > 0) {
+        query = query.or(conditions.join(","))
       }
     }
-    query = query.or(conditions.join(","))
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE
     const to = from + ITEMS_PER_PAGE - 1

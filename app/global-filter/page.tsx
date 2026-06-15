@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
+import { buildReferenceSearchConditions } from "@/lib/search-utils"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 
@@ -67,11 +68,13 @@ export default function GlobalFilterPage() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Apply search filter
     if (searchTerm) {
-      query = query.or(
-        `ALSAFA.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,ASAS.ilike.%${searchTerm}%,SARL_F.ilike.%${searchTerm}%,MECA_F.ilike.%${searchTerm}%,Ext.ilike.%${searchTerm}%,Int.ilike.%${searchTerm}%,H.ilike.%${searchTerm}%,divers_vehicules.ilike.%${searchTerm}%,filtration_system.ilike.%${searchTerm}%`,
-      )
+      const extraFields = ["Ext", "Int", "H", "divers_vehicules"]
+      const conditions = [
+        ...buildReferenceSearchConditions(searchTerm),
+        ...extraFields.map((field) => `${field}.ilike.%${searchTerm}%`),
+      ]
+      query = query.or(conditions.join(","))
     }
 
     // Apply filters

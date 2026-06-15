@@ -11,6 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
+import {
+  buildReferenceSearchConditions,
+  findMatchingReferenceField,
+  REFERENCE_SEARCH_FIELDS,
+} from "@/lib/search-utils"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
@@ -36,25 +41,6 @@ export default function CatalogPage() {
   const [hasSearched, setHasSearched] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
-
-  const buildReferenceVariants = (value: string) => {
-    const base = value.trim()
-    if (!base) return [] as string[]
-    const noDelims = base.replace(/[\s-]+/g, "")
-    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
-    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
-    const swapToSpace = base.replace(/-/g, " ")
-    const swapToHyphen = base.replace(/\s+/g, "-")
-    const setVariants = new Set<string>([
-      base,
-      noDelims,
-      withHyphen,
-      withSpace,
-      swapToSpace,
-      swapToHyphen,
-    ])
-    return Array.from(setVariants).filter(Boolean)
-  }
 
   // Handle URL parameters on page load
   useEffect(() => {
@@ -139,31 +125,9 @@ export default function CatalogPage() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Apply search filter with normalized variants
     if (searchTerm) {
-      const fields = [
-        "ALSAFA", "SAFI", "SARL_F", "FLEETG", "ASAS", "MECA_F", 
-        "REF_ORG", "MANN", "UFI", "HIFI", "WIX", "filtration_system"
-      ]
-      const variants = buildReferenceVariants(searchTerm)
-      console.log("Search term:", searchTerm, "Variants:", variants)
-      const conditions: string[] = []
-      for (const field of fields) {
-        for (const v of variants) {
-          // Exact match only (no partial/prefix matching), but case-insensitive.
-          // We use `ilike` WITHOUT wildcards; this prevents `obs` from matching `obs-123`,
-          // while still accepting formatting differences (handled by buildReferenceVariants)
-          // and uppercase/lowercase differences.
-          conditions.push(`${field}.ilike.${v}`)
-        }
-      }
-      console.log("Total conditions:", conditions.length, "First few:", conditions.slice(0, 5))
-      
-      // Test with a simpler query first
-      if (conditions.length > 100) {
-        console.log("Too many conditions, using first 50")
-        query = query.or(conditions.slice(0, 50).join(","))
-      } else {
+      const conditions = buildReferenceSearchConditions(searchTerm, REFERENCE_SEARCH_FIELDS)
+      if (conditions.length > 0) {
         query = query.or(conditions.join(","))
       }
     }
@@ -231,33 +195,8 @@ export default function CatalogPage() {
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
-  // Function to find which reference field contains the search term
-  const findMatchingReference = (product: Product, searchTerm: string) => {
-    if (!searchTerm) return null
-    
-    const referenceFields = [
-      { key: 'ALSAFA', value: product.ALSAFA },
-      { key: 'SAFI', value: product.SAFI },
-      { key: 'SARL_F', value: product.SARL_F },
-      { key: 'FLEETG', value: product.FLEETG },
-      { key: 'ASAS', value: product.ASAS },
-      { key: 'MECA_F', value: product.MECA_F },
-      { key: 'REF_ORG', value: product.REF_ORG },
-      { key: 'MANN', value: product.MANN },
-      { key: 'UFI', value: product.UFI },
-      { key: 'HIFI', value: product.HIFI },
-      { key: 'WIX', value: product.WIX },
-    ]
-
-    const variants = buildReferenceVariants(searchTerm).map(v => v.toLowerCase())
-    
-    for (const field of referenceFields) {
-      if (field.value && variants.some(v => field.value!.toLowerCase().includes(v))) {
-        return { field: field.key, value: field.value }
-      }
-    }
-    return null
-  }
+  const findMatchingReference = (product: Product, term: string) =>
+    findMatchingReferenceField(product, term, REFERENCE_SEARCH_FIELDS)
 
   // Trigger search when page changes
   useEffect(() => {

@@ -9,6 +9,11 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
+import {
+  ALSAFA_REFERENCE_FIELDS,
+  buildReferenceSearchConditions,
+  matchesReferenceValue,
+} from "@/lib/search-utils"
 import MobileHeader from "@/components/mobile-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { useTranslation } from "@/components/language-provider"
@@ -24,27 +29,6 @@ export default function ReferenceFilterPage() {
   const [totalCount, setTotalCount] = useState(0)
   const [hasSearched, setHasSearched] = useState(false)
 
-  const buildReferenceVariants = (value: string) => {
-    const base = value.trim()
-    if (!base) return [] as string[]
-    const noDelims = base.replace(/[\s-]+/g, "")
-    // Insert a single hyphen or space between alpha/num boundaries when missing
-    const withHyphen = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$&-")
-    const withSpace = noDelims.replace(/([A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])/g, "$& ")
-    // Also include versions that swap existing hyphens/spaces
-    const swapToSpace = base.replace(/-/g, " ")
-    const swapToHyphen = base.replace(/\s+/g, "-")
-    const setVariants = new Set<string>([
-      base,
-      noDelims,
-      withHyphen,
-      withSpace,
-      swapToSpace,
-      swapToHyphen,
-    ])
-    return Array.from(setVariants).filter(Boolean)
-  }
-
   const fetchProducts = async () => {
     if (!reference.trim()) {
       return
@@ -55,16 +39,10 @@ export default function ReferenceFilterPage() {
 
     let query = supabase.from("products").select("*", { count: "exact" })
 
-    // Search by reference in multiple fields with normalized variants
-    const fields = ["ALSAFA", "SAFI", "FLEETG", "ASAS", "SARL_F", "MECA_F"]
-    const variants = buildReferenceVariants(reference)
-    const conditions: string[] = []
-    for (const field of fields) {
-      for (const v of variants) {
-        conditions.push(`${field}.ilike.%${v}%`)
-      }
+    const conditions = buildReferenceSearchConditions(reference, ALSAFA_REFERENCE_FIELDS)
+    if (conditions.length > 0) {
+      query = query.or(conditions.join(","))
     }
-    query = query.or(conditions.join(","))
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE
     const to = from + ITEMS_PER_PAGE - 1
@@ -201,52 +179,27 @@ export default function ReferenceFilterPage() {
                           )}
                           {reference && (
                             <>
-                              {(() => {
-                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
-                                const includesAny = (val?: string) =>
-                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
-                                return includesAny(product.SAFI)
-                              })() && (
+                              {matchesReferenceValue(product.SAFI, reference) && (
                                 <Badge variant="outline" className="text-xs">
                                   SAFI: {product.SAFI}
                                 </Badge>
                               )}
-                              {(() => {
-                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
-                                const includesAny = (val?: string) =>
-                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
-                                return includesAny(product.FLEETG)
-                              })() && (
+                              {matchesReferenceValue(product.FLEETG, reference) && (
                                 <Badge variant="outline" className="text-xs">
                                   FLEETG: {product.FLEETG}
                                 </Badge>
                               )}
-                              {(() => {
-                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
-                                const includesAny = (val?: string) =>
-                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
-                                return includesAny(product.ASAS)
-                              })() && (
+                              {matchesReferenceValue(product.ASAS, reference) && (
                                 <Badge variant="outline" className="text-xs">
                                   ASAS: {product.ASAS}
                                 </Badge>
                               )}
-                              {(() => {
-                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
-                                const includesAny = (val?: string) =>
-                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
-                                return includesAny(product.SARL_F)
-                              })() && (
+                              {matchesReferenceValue(product.SARL_F, reference) && (
                                 <Badge variant="outline" className="text-xs">
                                   SARL_F: {product.SARL_F}
                                 </Badge>
                               )}
-                              {(() => {
-                                const variants = buildReferenceVariants(reference).map((v) => v.toLowerCase())
-                                const includesAny = (val?: string) =>
-                                  !!val && variants.some((v) => val.toLowerCase().includes(v))
-                                return includesAny(product.MECA_F)
-                              })() && (
+                              {matchesReferenceValue(product.MECA_F, reference) && (
                                 <Badge variant="outline" className="text-xs">
                                   MECA_F: {product.MECA_F}
                                 </Badge>
