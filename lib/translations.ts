@@ -373,6 +373,16 @@ export interface Translations {
   catalogCompatible: string
   catalogUnknownProduct: string
   catalogProductImage: string
+
+  // Reference search
+  referenceSearchRulesTitle: string
+  referenceSearchRulesBody: string
+  referenceSearchSuggestionsTitle: string
+  referenceSearchAmbiguous: string
+  referenceSearchAmbiguousHint: string
+  referenceSearchNoMatch: string
+  referenceSearchNoMatchHint: string
+  referenceSearchMatchedVia: string
   
   // RTL specific
   direction: 'ltr' | 'rtl'
@@ -757,6 +767,18 @@ export const translations: Record<SupportedLanguage, Translations> = {
     catalogCompatible: 'Compatible',
     catalogUnknownProduct: 'Unknown Product',
     catalogProductImage: 'Product image',
+
+    referenceSearchRulesTitle: 'Accepted reference formats',
+    referenceSearchRulesBody:
+      'Spaces, hyphens, slashes, and underscores are interchangeable.\nExamples: OBS-100, OBS 100, OBS100, OBS/100\nSearch is case-insensitive.\nCompetitor references (MANN, WIX, etc.) resolve to the Al Safa main reference.',
+    referenceSearchSuggestionsTitle: 'Try searching with',
+    referenceSearchAmbiguous: '{count} products match — please refine your search',
+    referenceSearchAmbiguousHint:
+      'Your search matched several products. Enter the full reference including the prefix (e.g. OBS-100 instead of 100).',
+    referenceSearchNoMatch: 'No reference found',
+    referenceSearchNoMatchHint:
+      'We could not find a product for this reference. Try the suggestions below or adjust the format.',
+    referenceSearchMatchedVia: 'Found via {reference}',
     
     // RTL specific
     direction: 'ltr',
@@ -1140,6 +1162,18 @@ export const translations: Record<SupportedLanguage, Translations> = {
     catalogCompatible: 'Compatible',
     catalogUnknownProduct: 'Produit Inconnu',
     catalogProductImage: 'Image produit',
+
+    referenceSearchRulesTitle: 'Formats de référence acceptés',
+    referenceSearchRulesBody:
+      'Les espaces, tirets, barres obliques et underscores sont interchangeables.\nExemples : OBS-100, OBS 100, OBS100, OBS/100\nLa recherche ne distingue pas les majuscules.\nLes références concurrentes (MANN, WIX, etc.) renvoient à la référence principale Al Safa.',
+    referenceSearchSuggestionsTitle: 'Essayez de rechercher avec',
+    referenceSearchAmbiguous: '{count} produits correspondent — veuillez préciser votre recherche',
+    referenceSearchAmbiguousHint:
+      'Votre recherche correspond à plusieurs produits. Entrez la référence complète avec le préfixe (ex. OBS-100 au lieu de 100).',
+    referenceSearchNoMatch: 'Aucune référence trouvée',
+    referenceSearchNoMatchHint:
+      'Aucun produit ne correspond à cette référence. Essayez les suggestions ci-dessous ou ajustez le format.',
+    referenceSearchMatchedVia: 'Trouvé via {reference}',
     
     // RTL specific
     direction: 'ltr',
@@ -1523,6 +1557,18 @@ export const translations: Record<SupportedLanguage, Translations> = {
     catalogCompatible: 'متوافق',
     catalogUnknownProduct: 'منتج غير معروف',
     catalogProductImage: 'صورة المنتج',
+
+    referenceSearchRulesTitle: 'صيغ المراجع المقبولة',
+    referenceSearchRulesBody:
+      'المسافات والشرطات والشرطات المائلة والشرطات السفلية قابلة للتبادل.\nأمثلة: OBS-100، OBS 100، OBS100، OBS/100\nالبحث لا يميز بين الأحرف الكبيرة والصغيرة.\nمراجع المنافسين (MANN، WIX، إلخ) تُرجع إلى مرجع Al Safa الرئيسي.',
+    referenceSearchSuggestionsTitle: 'جرب البحث باستخدام',
+    referenceSearchAmbiguous: '{count} منتجات مطابقة — يرجى تحديد البحث',
+    referenceSearchAmbiguousHint:
+      'بحثك يطابق عدة منتجات. أدخل المرجع الكامل مع البادئة (مثل OBS-100 بدلاً من 100).',
+    referenceSearchNoMatch: 'لم يتم العثور على مرجع',
+    referenceSearchNoMatchHint:
+      'لم نتمكن من العثور على منتج لهذا المرجع. جرب الاقتراحات أدناه أو عدّل الصيغة.',
+    referenceSearchMatchedVia: 'تم العثور عبر {reference}',
     
     // RTL specific
     direction: 'rtl',

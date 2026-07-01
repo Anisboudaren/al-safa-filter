@@ -10,11 +10,8 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
-import {
-  ALSAFA_REFERENCE_FIELDS,
-  buildReferenceSearchConditions,
-  matchesReferenceValue,
-} from "@/lib/search-utils"
+import { searchProductByReference, type ReferenceSearchResult } from "@/lib/reference-search"
+import { ReferenceSearchResultDisplay } from "@/components/reference-search-result"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { ProductImage } from "@/components/ProductImage"
@@ -32,6 +29,7 @@ function CorrespondenceFilterContent() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const [hasSearched, setHasSearched] = useState(false)
+  const [searchResult, setSearchResult] = useState<ReferenceSearchResult | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
@@ -52,28 +50,10 @@ function CorrespondenceFilterContent() {
     setLoading(true)
     setHasSearched(true)
 
-    let query = supabase.from("products").select("*", { count: "exact" })
-
-    if (competitorRef.trim()) {
-      const conditions = buildReferenceSearchConditions(competitorRef)
-      if (conditions.length > 0) {
-        query = query.or(conditions.join(","))
-      }
-    }
-
-    const from = (currentPage - 1) * ITEMS_PER_PAGE
-    const to = from + ITEMS_PER_PAGE - 1
-    query = query.range(from, to)
-
-    const { data, error, count } = await query
-
-    if (error) {
-      console.error("Error fetching products:", error)
-    } else {
-      setProducts(data || [])
-      setTotalCount(count || 0)
-    }
-
+    const result = await searchProductByReference(supabase, competitorRef)
+    setSearchResult(result)
+    setProducts(result.status === "found" ? [result.product] : [])
+    setTotalCount(result.status === "found" ? 1 : 0)
     setLoading(false)
   }
 
@@ -86,18 +66,12 @@ function CorrespondenceFilterContent() {
     setCompetitorRef("")
     setCurrentPage(1)
     setProducts([])
+    setSearchResult(null)
     setHasSearched(false)
   }
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
-  useEffect(() => {
-    if (hasSearched && currentPage > 1) {
-      fetchProducts()
-    }
-  }, [currentPage])
-
-  // Auto-search when URL parameters are present
   useEffect(() => {
     if (competitorRef && !hasSearched) {
       fetchProducts()
@@ -251,287 +225,12 @@ function CorrespondenceFilterContent() {
             </motion.div>
           </motion.div>
         ) : (
-          <>
-            {/* Results Summary and Controls */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-orange-500" />
-                  <p className="text-lg font-medium text-gray-900">
-                    {loading ? t.searchingInProgress : `${totalCount} ${t.correspondencesFound}`}
-                  </p>
-                </div>
-                {totalPages > 1 && (
-                  <Badge variant="outline" className="text-sm">
-                    {t.pageOf.replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
-                  </Badge>
-                )}
-              </div>
-
-              {/* View Mode Toggle */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("grid")}
-                  className="rounded-lg"
-                >
-                  <Grid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("list")}
-                  className="rounded-lg"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
-            </motion.div>
-
-            {/* Products Grid */}
-            {loading ? (
-              <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.1 }}
-                  >
-                    <Card className="h-64 bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                      <CardHeader className="pb-3">
-                        <Skeleton className="h-4 w-3/4 rounded-lg" />
-                        <Skeleton className="h-3 w-1/2 rounded-lg" />
-                      </CardHeader>
-                      <CardContent>
-                        <Skeleton className="h-32 w-full mb-4 rounded-xl" />
-                        <Skeleton className="h-3 w-full mb-2 rounded-lg" />
-                        <Skeleton className="h-3 w-2/3 rounded-lg" />
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            ) : products.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center py-16"
-              >
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
-                  className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6"
-                >
-                  <RefreshCw className="h-10 w-10 text-gray-400" />
-                </motion.div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucune correspondance trouvée</h3>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Vérifiez la référence ou contactez notre service technique pour assistance.
-                </p>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
-                  >
-                    <X className="h-4 w-4 mr-2" />
-                    Nouvelle recherche
-                  </Button>
-                </motion.div>
-              </motion.div>
-            ) : (
-              <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
-                <AnimatePresence>
-                  {products.map((product, index) => (
-                    <motion.div
-                      key={`${product.ALSAFA}-${index}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      className="group"
-                    >
-                      <Link href={`/product/${encodeURIComponent(product.ALSAFA || "unknown")}`}>
-                        <Card className="h-full hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 bg-white group-hover:bg-gradient-to-br group-hover:from-orange-50 group-hover:to-orange-100 rounded-2xl overflow-hidden">
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-orange-600 transition-colors duration-300">
-                              {product.ALSAFA || "Produit Inconnu"}
-                            </CardTitle>
-                            <div className="flex flex-wrap gap-1 mt-2">
-                              {product.REF_ORG && (
-                                <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
-                                  {product.REF_ORG}
-                                </Badge>
-                              )}
-                              {product.SAFI && (
-                                <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
-                                  SAFI: {product.SAFI}
-                                </Badge>
-                              )}
-                              {product.filtration_system && (
-                                <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
-                                  {product.filtration_system}
-                                </Badge>
-                              )}
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="w-full h-40 bg-white rounded-xl mb-4 overflow-hidden border border-gray-100 group-hover:border-orange-200 transition-all duration-300">
-                              <ProductImage
-                                alsafa={product.ALSAFA}
-                                imageUrl={product.image_url}
-                                alt={product.ALSAFA || "Image produit"}
-                                containerClassName="w-full h-full"
-                                className="group-hover:scale-105 transition-transform duration-300 p-2"
-                                fallbackClassName="bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-orange-100 group-hover:to-orange-200"
-                              />
-                            </div>
-
-                            <div className="space-y-3 text-sm">
-                              {(product.Ext || product.Int || product.H) && (
-                                <div>
-                                  <span className="text-gray-600 font-semibold block mb-2">Dimensions:</span>
-                                  <div className="flex flex-wrap gap-2 text-xs">
-                                    {product.Ext && (
-                                      <Badge variant="outline" className="border-orange-200 text-orange-700">
-                                        Ext: {product.Ext}
-                                      </Badge>
-                                    )}
-                                    {product.Int && (
-                                      <Badge variant="outline" className="border-orange-200 text-orange-700">
-                                        Int: {product.Int}
-                                      </Badge>
-                                    )}
-                                    {product.H && (
-                                      <Badge variant="outline" className="border-orange-200 text-orange-700">
-                                        H: {product.H}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-
-                              {product.description && (
-                                <div>
-                                  <span className="text-gray-600 font-semibold block mb-1">Compatible:</span>
-                                  <p className="text-xs text-gray-700 line-clamp-2">{product.description}</p>
-                                </div>
-                              )}
-
-                              {/* Show correspondence info */}
-                              <div className="space-y-1">
-                                <span className="text-gray-600 font-semibold block text-xs">Correspondances:</span>
-                                <div className="flex flex-wrap gap-1 text-xs">
-                                  {product.MANN && (
-                                    <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
-                                      MANN: {product.MANN}
-                                    </Badge>
-                                  )}
-                                  {product.UFI && (
-                                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                                      UFI: {product.UFI}
-                                    </Badge>
-                                  )}
-                                  {product.REF_ORG && (
-                                    <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
-                                      REF: {product.REF_ORG}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="flex justify-center items-center gap-3 mt-12"
-              >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="outline"
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 disabled:opacity-50"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Précédent
-                  </Button>
-                </motion.div>
-
-                <div className="flex gap-2">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum
-                    if (totalPages <= 5) {
-                      pageNum = i + 1
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i
-                    } else {
-                      pageNum = currentPage - 2 + i
-                    }
-
-                    return (
-                      <motion.div
-                        key={pageNum}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Button
-                          variant={currentPage === pageNum ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setCurrentPage(pageNum)}
-                          className={`rounded-xl ${
-                            currentPage === pageNum
-                              ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg"
-                              : "border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
-                          }`}
-                        >
-                          {pageNum}
-                        </Button>
-                      </motion.div>
-                    )
-                  })}
-                </div>
-
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="outline"
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="rounded-xl border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 disabled:opacity-50"
-                  >
-                    Suivant
-                    <ChevronRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </motion.div>
-              </motion.div>
-            )}
-          </>
+          <ReferenceSearchResultDisplay
+            loading={loading}
+            result={searchResult}
+            hasSearched={hasSearched}
+            onClear={clearFilters}
+          />
         )}
       </main>
       

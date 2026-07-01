@@ -12,10 +12,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { supabase, type Product } from "@/lib/supabase"
 import {
-  buildReferenceSearchConditions,
-  findMatchingReferenceField,
-  REFERENCE_SEARCH_FIELDS,
-} from "@/lib/search-utils"
+  applyReferenceSearchFilters,
+  searchProductByReference,
+  type ReferenceSearchResult,
+} from "@/lib/reference-search"
+import { ReferenceSearchResultDisplay } from "@/components/reference-search-result"
 import { motion, AnimatePresence } from "framer-motion"
 import MobileHeader from "@/components/mobile-header"
 import { ProductImage } from "@/components/ProductImage"
@@ -40,6 +41,7 @@ export default function CatalogPage() {
   const [alsafaOptions, setAlsafaOptions] = useState<string[]>([])
   const [filtrationOptions, setFiltrationOptions] = useState<string[]>([])
   const [hasSearched, setHasSearched] = useState(false)
+  const [searchResult, setSearchResult] = useState<ReferenceSearchResult | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
@@ -124,16 +126,25 @@ export default function CatalogPage() {
     setLoading(true)
     setHasSearched(true)
 
-    let query = supabase.from("products").select("*", { count: "exact" })
+    if (searchTerm.trim()) {
+      const rawResult = await searchProductByReference(supabase, searchTerm)
+      const result = applyReferenceSearchFilters(rawResult, {
+        origine: origineFilter,
+        alsafa: alsafaFilter,
+        filtration: filtrationFilter,
+      }, searchTerm)
 
-    if (searchTerm) {
-      const conditions = buildReferenceSearchConditions(searchTerm, REFERENCE_SEARCH_FIELDS)
-      if (conditions.length > 0) {
-        query = query.or(conditions.join(","))
-      }
+      setSearchResult(result)
+      setProducts(result.status === "found" ? [result.product] : [])
+      setTotalCount(result.status === "found" ? 1 : 0)
+      setLoading(false)
+      return
     }
 
-    // Apply filters
+    setSearchResult(null)
+
+    let query = supabase.from("products").select("*", { count: "exact" })
+
     if (origineFilter && origineFilter !== "all") {
       query = query.eq("REF_ORG", origineFilter)
     }
@@ -144,14 +155,11 @@ export default function CatalogPage() {
       query = query.eq("filtration_system", filtrationFilter)
     }
 
-    // Apply pagination
     const from = (currentPage - 1) * ITEMS_PER_PAGE
     const to = from + ITEMS_PER_PAGE - 1
     query = query.range(from, to)
 
     const { data, error, count } = await query
-
-    console.log("Search results:", { data: data?.length, count, error })
 
     if (error) {
       console.error("Error fetching products:", error)
@@ -164,7 +172,6 @@ export default function CatalogPage() {
   }
 
   const handleSearch = () => {
-    console.log("Search button clicked, searchTerm:", searchTerm)
     setCurrentPage(1)
     fetchProducts()
   }
@@ -191,17 +198,16 @@ export default function CatalogPage() {
     setFiltrationFilter("")
     setCurrentPage(1)
     setProducts([])
+    setSearchResult(null)
     setHasSearched(false)
   }
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
-
-  const findMatchingReference = (product: Product, term: string) =>
-    findMatchingReferenceField(product, term, REFERENCE_SEARCH_FIELDS)
+  const isReferenceSearch = Boolean(searchTerm.trim())
 
   // Trigger search when page changes
   useEffect(() => {
-    if (hasSearched && currentPage > 1) {
+    if (hasSearched && currentPage > 1 && !isReferenceSearch) {
       fetchProducts()
     }
   }, [currentPage])
@@ -416,6 +422,13 @@ export default function CatalogPage() {
               </Button>
             </motion.div>
           </motion.div>
+        ) : isReferenceSearch ? (
+          <ReferenceSearchResultDisplay
+            loading={loading}
+            result={searchResult}
+            hasSearched={hasSearched}
+            onClear={clearFilters}
+          />
         ) : (
           <>
             {/* Results Summary and Controls */}
@@ -522,7 +535,6 @@ export default function CatalogPage() {
                 <AnimatePresence>
                   {products.map((product, index) => {
                     const showAdditionalRefs = searchTerm.length > 0
-                    const matchingRef = findMatchingReference(product, searchTerm)
 
                     return (
                       <motion.div
@@ -542,17 +554,12 @@ export default function CatalogPage() {
                               </CardTitle>
                               {showAdditionalRefs && (
                                 <div className="flex flex-wrap gap-1 mt-2">
-                                  {matchingRef && (
-                                    <Badge variant="default" className="text-xs bg-green-100 text-green-800 border-green-200 font-semibold">
-                                      {matchingRef.field}: {matchingRef.value}
-                                    </Badge>
-                                  )}
-                                  {product.REF_ORG && !matchingRef && (
+                                  {product.REF_ORG && (
                                     <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
                                       {product.REF_ORG}
                                     </Badge>
                                   )}
-                                  {product.SAFI && !matchingRef && (
+                                  {product.SAFI && (
                                     <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
                                       SAFI: {product.SAFI}
                                     </Badge>

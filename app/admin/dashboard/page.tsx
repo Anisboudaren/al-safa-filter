@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase, type Product, type ProductExtraReference } from "@/lib/supabase"
+import { buildExtraReferenceSearchConditions, buildReferenceSearchConditions } from "@/lib/search-utils"
 import { exportProductsToExcel } from "@/lib/excel-export"
 import { getProductImageUrlWithFallback } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
@@ -67,15 +68,41 @@ export default function AdminDashboard() {
     }
   }
 
+  const applySearchFilter = async (search: string) => {
+    const conditions = [
+      ...buildReferenceSearchConditions(search),
+      `name.ilike.%${search}%`,
+    ]
+
+    const extraConditions = buildExtraReferenceSearchConditions(search)
+    let extraProductIds: number[] = []
+
+    if (extraConditions.length > 0) {
+      const { data: extraRefs } = await supabase
+        .from("product_extra_references")
+        .select("product_id")
+        .or(extraConditions.join(","))
+
+      extraProductIds = [...new Set((extraRefs ?? []).map((ref) => ref.product_id))]
+    }
+
+    return { conditions, extraProductIds }
+  }
+
   const fetchProducts = async () => {
     setLoading(true)
     
     let query = supabase.from("products").select("*", { count: "exact" })
 
     if (searchTerm) {
-      query = query.or(
-        `ALSAFA.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`
-      )
+      const { conditions, extraProductIds } = await applySearchFilter(searchTerm)
+      if (conditions.length > 0 && extraProductIds.length > 0) {
+        query = query.or(`${conditions.join(",")},id.in.(${extraProductIds.join(",")})`)
+      } else if (conditions.length > 0) {
+        query = query.or(conditions.join(","))
+      } else if (extraProductIds.length > 0) {
+        query = query.in("id", extraProductIds)
+      }
     }
 
     if (filterSystem !== "all") {
@@ -140,9 +167,14 @@ export default function AdminDashboard() {
       let query = supabase.from("products").select("*")
 
       if (searchTerm) {
-        query = query.or(
-          `ALSAFA.ilike.%${searchTerm}%,REF_ORG.ilike.%${searchTerm}%,SAFI.ilike.%${searchTerm}%,FLEETG.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`
-        )
+        const { conditions, extraProductIds } = await applySearchFilter(searchTerm)
+        if (conditions.length > 0 && extraProductIds.length > 0) {
+          query = query.or(`${conditions.join(",")},id.in.(${extraProductIds.join(",")})`)
+        } else if (conditions.length > 0) {
+          query = query.or(conditions.join(","))
+        } else if (extraProductIds.length > 0) {
+          query = query.in("id", extraProductIds)
+        }
       }
 
       if (filterSystem !== "all") {
