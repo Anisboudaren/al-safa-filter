@@ -67,7 +67,7 @@ export default function ReferenceFilterPage() {
                   <Search className="h-5 w-5 mr-2" />
                   {t.searchReferenceButton}
                 </Button>
-                <Button onClick={clearFilters} variant="outline" size="lg" className="px-8 bg-transparent">
+                <Button onClick={clearFilters} variant="outline" size="lg" className="px-8 text-foreground">
                   {t.clearFilters}
                 </Button>
               </div>

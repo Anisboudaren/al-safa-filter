@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import { Plus, Edit, Trash2, Save, X, Car, Cpu, Building2, Search, Filter, Eye, CheckSquare, Square, Loader2 } from "lucide-react"
 import { type Brand, type Engine, type Vehicle, type ProductCompatibility } from "@/lib/supabase"
 import { adminFetch } from "@/lib/admin-fetch"
+import { CompatibilityPasteImport } from "@/components/admin/CompatibilityPasteImport"
 
 interface CompatibilityManagerProps {
   productId?: number
@@ -608,6 +609,23 @@ export function CompatibilityManager({ productId, onClose }: CompatibilityManage
         </div>
       ) : (
         <div className="space-y-6">
+          {productId ? (
+            <CompatibilityPasteImport
+              productId={productId}
+              onImported={() => {
+                fetchProductCompatibilities()
+                fetchBrands()
+                fetchAllBrandsAndEngines()
+              }}
+            />
+          ) : (
+            <Card className="shadow-xl" style={{ backgroundColor: "#1f2937", borderColor: "#374151" }}>
+              <CardContent className="p-4 text-sm text-gray-400">
+                Paste import is available when you open Compatibility Manager from a product form.
+              </CardContent>
+            </Card>
+          )}
+
           {/* Current Compatibilities */}
           {productId ? (
             <Card className="shadow-xl" style={{backgroundColor: '#1f2937', borderColor: '#374151'}}>

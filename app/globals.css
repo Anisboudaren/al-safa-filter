@@ -90,31 +90,45 @@
   svg {
     max-width: 100%;
   }
-  
+}
+
+@layer components {
+  /*
+   * Outline / light-surface buttons must always keep dark readable labels.
+   * Prevents inherited muted/gray text on white button backgrounds.
+   * Explicit color utilities (e.g. text-orange-500) still override this.
+   */
+  button.bg-background,
+  a.bg-background[class*="inline-flex"] {
+    color: hsl(var(--foreground));
+  }
+
+  button.bg-background:hover,
+  a.bg-background[class*="inline-flex"]:hover {
+    color: hsl(var(--accent-foreground));
+  }
+}
+
 /* Arabic font for Arabic language */
 .font-cairo {
   font-family: var(--font-cairo) !important;
 }
 
-/* Debug: Add a subtle border to see if Cairo class is applied */
-.font-cairo {
-  /* border: 2px solid red; */ /* Uncomment for debugging */
-}
-  
+@layer base {
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-inter);
     font-weight: 600;
     letter-spacing: -0.025em;
     line-height: 1.2;
   }
-  
+
   /* Arabic headings and all text elements - more comprehensive */
   .font-cairo,
-  .font-cairo h1, 
-  .font-cairo h2, 
-  .font-cairo h3, 
-  .font-cairo h4, 
-  .font-cairo h5, 
+  .font-cairo h1,
+  .font-cairo h2,
+  .font-cairo h3,
+  .font-cairo h4,
+  .font-cairo h5,
   .font-cairo h6,
   .font-cairo p,
   .font-cairo span,
@@ -144,11 +158,11 @@
     font-family: var(--font-cairo) !important;
     letter-spacing: 0 !important;
   }
-  
+
   p {
     line-height: 1.6;
   }
-  
+
   /* RTL adjustments when html[dir="rtl"] is set */
   html[dir="rtl"] body {
     direction: rtl;
